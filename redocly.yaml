@@ -1,0 +1,11 @@
+extends:
+  - recommended
+rules:
+# See https://bmi.readthedocs.io/en/stable/ for summaries
+ operation-summary: off
+ 
+ security-defined: off
+ # Using default as catch all
+ operation-4xx-response: off
+ # Most of the time service will be running on localhost
+ no-server-example.com: off  

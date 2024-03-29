@@ -1,0 +1,1060 @@
+openapi: 3.0.3  # dont use 3.1 as tooling is not ready yet
+info:
+  title: BMI
+  description: Basic Moddeling Interface (BMI) Service
+  version: '2.0'
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+  - url: http://localhost:50051
+    description: Default URL for a BMI service
+tags:
+  - name: IRF
+    description: Initialize, run, finalize
+  - name: NURC
+    description: Non-uniform rectilinear, curvilinear
+paths:
+  /initialize:
+    post:
+      operationId: BmiService_initialize     
+      responses:
+        "201":
+          description: A successful response.
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/bmiInitializeRequest'
+      tags:
+        - IRF
+  /update:
+    post:
+      operationId: update
+      responses:
+        "204":
+          description: A successful response.
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      tags:
+        - IRF
+  /update_until:
+    post:
+      operationId: update_until
+      responses:
+        "204":
+          description: A successful response.
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/bmiGetTimeResponse'
+      tags:
+        - IRF
+  /finalize:
+    delete:
+      operationId: finalize
+      responses:
+        "204":
+          description: A successful response.
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      tags:
+        - IRF
+  /component_name:
+    get:
+      operationId: get_component_name
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bmiGetComponentNameResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      tags:
+        -  Exchange items
+  /get_input_item_count:
+    get:
+      operationId: get_input_item_count
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bmiGetCountResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      tags:
+        - Exchange items
+  /get_input_var_names:
+    get:
+      operationId: get_input_var_names
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bmiGetVarNamesResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      tags:
+        - Exchange items
+  /get_output_item_count:
+    get:
+      operationId: get_output_item_count
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bmiGetCountResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      tags:
+        - Exchange items
+  /get_output_var_names:
+    get:
+      operationId: get_output_var_names
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bmiGetVarNamesResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      tags:
+        - Exchange items
+
+  /get_var_grid/{name}:
+    get:
+      operationId: get_var_grid
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bmiGetVarGridResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/VarName'
+      tags:
+        - Variable information
+  /get_var_itemsize/{name}:
+    get:
+      operationId: get_var_itemsize
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bmiGetVarItemSizeResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/VarName'
+      tags:
+        - Variable information
+  /get_var_location/{name}:
+    get:
+      operationId: get_var_location
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetVarLocationResponseLocation'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/VarName'
+      tags:
+        - Variable information
+  /get_var_nbytes/{name}:
+    get:
+      operationId: get_var_nbytes
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bmiGetVarNBytesResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/VarName'
+      tags:
+        - Variable information
+  /get_var_type/{name}:
+    get:
+      operationId: get_var_type
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bmiGetVarTypeResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/VarName'
+      tags:
+        - Variable information
+  /get_var_units/{name}:
+    get:
+      operationId: get_var_units
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bmiGetVarUnitsResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/VarName'
+      tags:
+        - Variable information
+
+  /get_current_time:
+    get:
+      operationId: get_current_time
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bmiGetTimeResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      tags:
+        - Time information
+  /get_end_time:
+    get:
+      operationId: getEndTime
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bmiGetTimeResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      tags:
+        - Time information
+
+  /get_start_time:
+    get:
+      operationId: get_start_time
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bmiGetTimeResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      tags:
+        - Time information
+  /get_time_step:
+    get:
+      operationId: get_time_step
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bmiGetTimeStepResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      tags:
+        - Time information
+  /get_time_units:
+    get:
+      operationId: get_time_units
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bmiGetTimeUnitsResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      tags:
+        - Time information
+
+  /get_value/{name}:
+    get:
+      operationId: BmiService_getValue
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bmiGetValueResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/VarName'
+      tags:
+        - Getters
+  /get_value_at_indices/{name}:
+    post:
+      operationId: get_value_at_indices
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bmiGetValueAtIndicesResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/VarName'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/bmiGetValueAtIndicesRequest'
+      tags:
+        - Getters
+
+  /set_value/{name}:
+    post:
+      operationId: set_value
+      responses:
+        "204":
+          description: A successful response.
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/VarName'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/bmiSetValueRequest'
+      tags:
+        - Setters
+  /set_value_at_indices/{name}:
+    post:
+      operationId: set_value_at_indices
+      responses:
+        "204":
+          description: A successful response.
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/VarName'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/bmiSetValueAtIndicesRequest'
+      tags:
+        - Setters
+
+  /get_grid_rank/{grid}:
+    get:
+      operationId: get_grid_rank
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bmiGetGridRankResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      parameters:
+        - name: grid
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Grid'
+      tags:
+        - Grid information
+
+  /get_grid_type/{grid}:
+    get:
+      operationId: get_grid_type
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bmiGetGridTypeResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      parameters:
+        - name: grid
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Grid'
+      tags:
+        - Grid information
+  /get_grid_size/{grid}:
+    get:
+      operationId: get_grid_size
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bmiGetGridSizeResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      parameters:
+        - name: grid
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Grid'
+      tags:
+        - Grid information
+
+  /get_grid_origin/{grid}:
+    get:
+      operationId: get_grid_origin
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bmiGetGridOriginResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      parameters:
+        - name: grid
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Grid'
+      tags:
+        - Uniform rectilinear
+
+  /get_grid_shape/{grid}:
+    get:
+      operationId: get_grid_shape
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bmiGetGridShapeResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      parameters:
+        - name: grid
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Grid'
+      tags:
+        - Uniform rectilinear
+
+  /get_grid_spacing/{grid}:
+    get:
+      operationId: get_grid_spacing
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bmiGetGridSpacingResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      parameters:
+        - name: grid
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Grid'
+      tags:
+        - Uniform rectilinear
+
+  /get_grid_x/{grid}:
+    get:
+      operationId: get_grid_x
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bmiGetGridPointsResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      parameters:
+        - name: grid
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Grid'
+      tags:
+        - NURC
+  /get_grid_y/{grid}:
+    get:
+      operationId: get_grid_y
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bmiGetGridPointsResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      parameters:
+        - name: grid
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Grid'
+      tags:
+        - NURC
+  /get_grid_z/{grid}:
+    get:
+      operationId: get_grid_z
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bmiGetGridPointsResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      parameters:
+        - name: grid
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Grid'
+      tags:
+        - NURC
+
+  /get_grid_edge_count/{grid}:
+    get:
+      operationId: get_grid_edge_count
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bmiGetCountResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      parameters:
+        - name: grid
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Grid'
+      tags:
+        - Unstructured
+  /get_grid_edge_nodes/{grid}:
+    get:
+      operationId: get_grid_edge_nodes
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bmiGetGridEdgeNodesResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      parameters:
+        - name: grid
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Grid'
+      tags:
+        - Unstructured
+  /get_grid_face_count/{grid}:
+    get:
+      operationId: get_grid_face_count
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bmiGetCountResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      parameters:
+        - name: grid
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Grid'
+      tags:
+        - Unstructured
+  /get_grid_face_edges/{grid}:
+    get:
+      operationId: get_grid_face_edges
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bmiGetGridFaceEdgesResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      parameters:
+        - name: grid
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Grid'
+      tags:
+        - Unstructured
+  /get_grid_face_nodes/{grid}:
+    get:
+      operationId: get_grid_face_nodes
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bmiGetGridFaceNodesResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      parameters:
+        - name: grid
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Grid'
+      tags:
+        - Unstructured
+  /get_grid_node_count/{grid}:
+    get:
+      operationId: get_grid_node_count
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bmiGetCountResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      parameters:
+        - name: grid
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Grid'
+      tags:
+        - Unstructured
+  /get_grid_nodes_per_face/{grid}:
+    get:
+      operationId: get_grid_nodes_per_face
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/bmiGetGridNodesPerFaceResponse'
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+      parameters:
+        - name: grid
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Grid'
+      tags:
+        - Unstructured
+components:
+  schemas:
+    GetVarLocationResponseLocation:
+      type: string
+      enum:
+        - node
+        - edge
+        - face
+      default: node
+    bmiGetComponentNameResponse:
+      type: string
+    bmiGetCountResponse:
+      type: integer
+    bmiGetGridEdgeNodesResponse:
+      type: array
+      items:
+        type: integer
+        format: int64
+    bmiGetGridFaceEdgesResponse:
+      type: array
+      items:
+        type: integer
+        format: int64
+    bmiGetGridFaceNodesResponse:
+      type: array
+      items:
+        type: integer
+        format: int64
+    bmiGetGridNodesPerFaceResponse:
+      type: array
+      items:
+        type: integer
+        format: int64
+    bmiGetGridOriginResponse:
+      type: array
+      items:
+        type: number
+        format: double
+    bmiGetGridPointsResponse:
+      type: array
+      items:
+        type: number
+        format: double
+    bmiGetGridRankResponse:
+      type: integer
+      format: int64
+    bmiGetGridShapeResponse:
+      type: array
+      items:
+        type: integer
+        format: int64
+    bmiGetGridSizeResponse:
+      type: integer
+    bmiGetGridSpacingResponse:
+      type: array
+      items:
+        type: number
+        format: double
+    bmiGetGridTypeResponse:
+      type: string
+      enum:
+        - scalar
+        - points
+        - vector
+        - unstructured
+        - structured_quadrilateral
+        - rectilinear
+        - uniform_rectilinear
+    bmiGetTimeResponse:
+      type: number
+      format: double
+      example: 0.0
+    bmiGetTimeStepResponse:
+      type: number
+      format: double
+      example: 1.0
+    bmiGetTimeUnitsResponse:
+      type: string
+      example: d
+    bmiGetValueAtIndicesRequest:
+      type: array
+      items:
+        type: integer
+        format: int64
+    bmiGetValueAtIndicesResponse:
+      type: array
+      items:
+        type: number
+    bmiGetValueResponse:
+      type: array
+      items:
+        type: number
+    bmiGetVarGridResponse:
+      type: integer
+      format: int32
+    bmiGetVarItemSizeResponse:
+      type: integer
+      format: int64
+    bmiGetVarNBytesResponse:
+      type: integer
+      format: int64
+    bmiGetVarNamesResponse:
+      type: array
+      items:
+        type: string
+    bmiGetVarTypeResponse:
+      type: string
+    bmiGetVarUnitsResponse:
+      type: string
+    bmiInitializeRequest:
+      type: object
+      properties:
+        configFile:
+          type: string
+    bmiSetValueAtIndicesRequest:
+      type: object
+      properties:
+        indices:
+          type: array
+          items:
+            type: integer
+            format: int64
+        values:
+          type: array
+          items:
+            type: number
+    bmiSetValueRequest:
+      type: array
+      items:
+        type: number
+    # Follows https://datatracker.ietf.org/doc/html/rfc7807
+    ProblemDetails:
+      type: object
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        instance:
+          type: string
+      additionalProperties: true
+    Grid:
+      type: integer
+    VarName:
+      type: string

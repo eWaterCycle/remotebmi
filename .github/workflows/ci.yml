@@ -1,0 +1,28 @@
+name: Validate OpenAPI
+
+on:
+    push:
+        paths:
+            - 'openapi.yaml'
+    pull_request:
+        paths:
+            - 'openapi.yaml'
+
+jobs:
+    lintspec:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                sparse-checkout: |
+                    openapi.yaml
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                node-version: 20
+            - name: Install Redocly
+              run: npm install -g @redocly/cli@latest
+
+            - name: Lint OpenAPI
+              run: redocly lint openapi.yaml
