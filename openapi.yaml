@@ -17,7 +17,7 @@ tags:
 paths:
   /initialize:
     post:
-      operationId: BmiService_initialize     
+      operationId: initialize     
       responses:
         "201":
           description: A successful response.
@@ -339,7 +339,7 @@ paths:
         - Time information
   /get_end_time:
     get:
-      operationId: getEndTime
+      operationId: get_end_time
       responses:
         "200":
           description: A successful response.
@@ -413,7 +413,7 @@ paths:
 
   /get_value/{name}:
     get:
-      operationId: BmiService_getValue
+      operationId: get_value
       responses:
         "200":
           description: A successful response.
@@ -1021,7 +1021,7 @@ components:
     bmiInitializeRequest:
       type: object
       properties:
-        configFile:
+        config_file:
           type: string
     bmiSetValueAtIndicesRequest:
       type: object

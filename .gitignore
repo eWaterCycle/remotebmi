@@ -1,0 +1,27 @@
+*.py[cod]
+*.egg-info
+*.eggs
+
+dist
+.cache
+
+htmlcov
+.coverage
+xunit-result.xml
+.pytest_cache/
+coverage.xml
+.mypy_cache
+
+# ide
+.idea
+.eclipse
+.vscode
+
+.scannerwork/
+
+.ipynb_checkpoints
+
+
+__pycache__
+
+/venv
