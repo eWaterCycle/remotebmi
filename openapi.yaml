@@ -83,7 +83,7 @@ paths:
                 $ref: '#/components/schemas/ProblemDetails'
       tags:
         - IRF
-  /component_name:
+  /get_component_name:
     get:
       operationId: get_component_name
       responses:

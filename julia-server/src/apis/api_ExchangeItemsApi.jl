@@ -134,7 +134,7 @@ end
 
 
 function registerExchangeItemsApi(router::HTTP.Router, impl; path_prefix::String="", optional_middlewares...)
-    HTTP.register!(router, "GET", path_prefix * "/component_name", OpenAPI.Servers.middleware(impl, get_component_name_read, get_component_name_validate, get_component_name_invoke; optional_middlewares...))
+    HTTP.register!(router, "GET", path_prefix * "/get_component_name", OpenAPI.Servers.middleware(impl, get_component_name_read, get_component_name_validate, get_component_name_invoke; optional_middlewares...))
     HTTP.register!(router, "GET", path_prefix * "/get_input_item_count", OpenAPI.Servers.middleware(impl, get_input_item_count_read, get_input_item_count_validate, get_input_item_count_invoke; optional_middlewares...))
     HTTP.register!(router, "GET", path_prefix * "/get_input_var_names", OpenAPI.Servers.middleware(impl, get_input_var_names_read, get_input_var_names_validate, get_input_var_names_invoke; optional_middlewares...))
     HTTP.register!(router, "GET", path_prefix * "/get_output_item_count", OpenAPI.Servers.middleware(impl, get_output_item_count_read, get_output_item_count_validate, get_output_item_count_invoke; optional_middlewares...))

@@ -9,7 +9,7 @@ function initialize(req::HTTP.Request, bmi_initialize_request::BmiInitializeRequ
 end
 
 function get_component_name(req::HTTP.Request;) -> String
-    return BMI.component_name(m)
+    return BMI.get_component_name(m)
 end 
 
 function get_input_item_count(req::HTTP.Request;) -> Int64

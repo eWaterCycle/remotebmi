@@ -8,7 +8,7 @@ Encapsulates generated server code for APIServer
 The following server methods must be implemented:
 
 - **get_component_name**
-    - *invocation:* GET /component_name
+    - *invocation:* GET /get_component_name
     - *signature:* get_component_name(req::HTTP.Request;) -> String
 - **get_input_item_count**
     - *invocation:* GET /get_input_item_count

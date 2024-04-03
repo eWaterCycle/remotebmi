@@ -42,7 +42,7 @@ The following server methods must be implemented:
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*ExchangeItemsApi* | [**get_component_name**](docs/ExchangeItemsApi.md#get_component_name) | **GET** /component_name | 
+*ExchangeItemsApi* | [**get_component_name**](docs/ExchangeItemsApi.md#get_component_name) | **GET** /get_component_name | 
 *ExchangeItemsApi* | [**get_input_item_count**](docs/ExchangeItemsApi.md#get_input_item_count) | **GET** /get_input_item_count | 
 *ExchangeItemsApi* | [**get_input_var_names**](docs/ExchangeItemsApi.md#get_input_var_names) | **GET** /get_input_var_names | 
 *ExchangeItemsApi* | [**get_output_item_count**](docs/ExchangeItemsApi.md#get_output_item_count) | **GET** /get_output_item_count | 
