@@ -62,15 +62,14 @@ BMI_MODULE=mypackage BMI_CLASS=MyModel run-bmi-server
 
 ### Julia provider
 
-Given you have a model instance called `my_model` and a BMI called `BMI` inside the `MyModel` package.
+Given you have a model class called `MyModel` and a BMI called `BMI` inside the `MyPackage` package.
 
 ```julia
-using MyModel
+using MyPackage.MyModel
 using RemoteBMI
 
 port = parse(Int, get(ENV, "BMI_PORT", 50051))
-server = RemoteBmiServer(MyModel.my_model, MyModel.BMI, port=port, host="localhost")
-run(server)
+RemoteBMI.run(MyModel, port=port, host="localhost")
 ```
 
 ### R provider
