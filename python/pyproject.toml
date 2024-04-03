@@ -8,9 +8,15 @@ version = "0.1.0"
 requires-python = ">=3.10"
 dependencies = [
     "bmipy",
-    "httpx",
-    "pydantic", 
     "numpy", 
+    # client
+    "httpx",
+    # server
     "connexion",
-    "uvicorn"
+    "uvicorn",
+    # docker
+    "docker",
 ]
+
+[project.scripts]
+run-bmi-server='remotebmi.server:main'

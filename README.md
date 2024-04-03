@@ -11,6 +11,12 @@ The [REST API specification](openapi.yaml) is in the [OpenAPI](https://swagger.i
 
 ### Python consumer
 
+Installation
+
+```shell
+pip install remotebmi
+```
+
 A client can connect to a running server with the following code.
 
 ```python
@@ -48,15 +54,10 @@ If the port is different, you can pass the port as the `image_port` argument to 
 
 ### Python provider
 
-Given you have a model instance called `my_model` that has a BMI.
+Given you have a model class called `MyModel` in a package `mypackage` then the web service can be started with the following command.
 
-```python
-import os
-from remotebmi.server import RemoteBmiServer
-
-port = int(os.environ.get('BMI_PORT', 50051))
-app = RemoteBmiServer(my_model, port=port, host='localhost')
-app.run()
+```shell
+BMI_MODULE=mypackage BMI_CLASS=MyModel run-bmi-server 
 ```
 
 ### Julia provider
