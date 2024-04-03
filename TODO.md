@@ -32,3 +32,7 @@ In BmiClientApptainer and BmiClientDocker we should generate a random API Key an
 ## Julia provider
 
 ## R provider
+
+## Simplify components openapi.yaml
+
+Each path has own request/response schema. Could be used for docs, examples, validation.
