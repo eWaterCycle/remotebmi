@@ -81,7 +81,7 @@ library(remotebmi)
 library(MyModel)
 
 port = as.integer(Sys.getenv("BMI_PORT", 50051))
-server <- RemoteBmiServer$new(MyModel$ModelBmi, port=port, host="localhost")
+server <- RemoteBmiServer(MyModel$ModelBmi, port=port, host="localhost")
 server$run()
 ``` 
 

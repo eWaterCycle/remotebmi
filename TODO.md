@@ -36,3 +36,7 @@ In BmiClientApptainer and BmiClientDocker we should generate a random API Key an
 ## Simplify components openapi.yaml
 
 Each path has own request/response schema. Could be used for docs, examples, validation.
+
+## Dockerfiles
+
+As example how to build a remotebmi server and a model in a container image.
