@@ -1,0 +1,22 @@
+# Changes here will be overwritten by Copier
+AddAllcontributors: false
+AddCodeOfConduct: true
+AddCopierCI: false
+AddGitHubTemplates: true
+AddMacToCI: false
+AddPrecommit: false
+AddWinToCI: false
+AnswerStrategy: ask
+AuthorEmail: s.verhoeven@esciencecenter.nl
+AuthorName: Stefan Verhoeven
+Indentation: 2
+JuliaMinVersion: '1.6'
+License: Apache-2.0
+PackageName: RemoteBMI
+PackageOwner: eWaterCycle
+PackageUUID: 4b6948d5-498c-54b5-b082-cdb1540453e9
+RunJuliaNightlyOnCI: false
+SimplifiedPRTest: true
+UseCirrusCI: false
+_commit: v0.7.1
+_src_path: https://github.com/abelsiqueira/BestieTemplate.jl

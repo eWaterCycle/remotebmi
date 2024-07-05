@@ -65,11 +65,11 @@ BMI_MODULE=mypackage BMI_CLASS=MyModel run-bmi-server
 Given you have a model class called `MyModel` and a BMI called `BMI` inside the `MyPackage` package.
 
 ```julia
-using MyPackage.MyModel
+using MyPackage
 using RemoteBMI
 
 port = parse(Int, get(ENV, "BMI_PORT", 50051))
-RemoteBMI.run(MyModel, port=port, host="localhost")
+RemoteBMI.run(MyPackage.Model, "0.0.0.0", 50555)
 ```
 
 ### R provider

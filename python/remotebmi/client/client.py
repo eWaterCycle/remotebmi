@@ -5,7 +5,7 @@ from numpy import ndarray
 
 class RemoteBmiClient(Bmi):
     def __init__(self, base_url):
-        self.client = Client(base_url)
+        self.client = Client(base_url=base_url)
 
     def __del__(self):
         self.client.close()

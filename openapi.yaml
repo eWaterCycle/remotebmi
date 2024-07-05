@@ -1,7 +1,7 @@
 openapi: 3.0.3  # dont use 3.1 as tooling is not ready yet
 info:
   title: BMI
-  description: Basic Moddeling Interface (BMI) Service
+  description: Basic Modeling Interface (BMI) Service
   version: '2.0'
   license:
     name: Apache 2.0
