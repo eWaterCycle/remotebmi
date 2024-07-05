@@ -1,10 +1,6 @@
-module BMIServer
+module RemoteBmi
 
 using HTTP
-
-# TODO make dynamic, for example read from ARGS and import
-# TODO include https://github.com/csdms/bmi-example-julia as test dependency 
-import Heat.Model
 
 include("./serverimpl.jl")
 using .ServerImpl
@@ -12,11 +8,13 @@ using .ServerImpl
 include("./APIServer.jl")
 using .APIServer
 
-function run_server(port=50051)
+function run_server(model, host="0.0.0.0")
+    port = parse(Int, ENV["BMI_PORT"], default=50051)
+    global MyModel = model
     try
         router = HTTP.Router()
         router = APIServer.register(router, ServerImpl;)
-        server[] = HTTP.serve!(router, port)
+        server[] = HTTP.serve!(router, host, port; verbose=true;)
         wait(server[])
     catch ex
         @error("Server error", exception=(ex, catch_backtrace()))
@@ -24,5 +22,3 @@ function run_server(port=50051)
 end
 
 end
-
-BMIServer.run_server()

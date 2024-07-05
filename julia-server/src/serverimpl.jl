@@ -4,8 +4,7 @@ import BasicModelInterface as BMI
 
 function initialize(req::HTTP.Request, bmi_initialize_request::BmiInitializeRequest;) -> Nothing
     global m
-    # TODO where does Model come from?
-    m = BMI.initialize(Model, bmi_initialize_request.config_file;)
+    m = BMI.initialize(MyModel, bmi_initialize_request.config_file;)
 end
 
 function get_component_name(req::HTTP.Request;) -> String
