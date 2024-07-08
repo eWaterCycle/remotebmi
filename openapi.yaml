@@ -1016,6 +1016,12 @@ components:
         type: string
     bmiGetVarTypeResponse:
       type: string
+      enum:
+       - float32 
+       - float64
+       - int32
+       - int64
+       - bool
     bmiGetVarUnitsResponse:
       type: string
     bmiInitializeRequest:

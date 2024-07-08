@@ -23,3 +23,18 @@ If you use RemoteBMI.jl in your work, please cite using the reference given in [
 
 If you want to make contributions of any kind, please first that a look into our [contributing guide directly on GitHub](docs/src/90-contributing.md) or the [contributing page on the website](https://eWaterCycle.github.io/RemoteBMI.jl/dev/contributing/).
 
+## Code generation
+
+The skeleton of the package was generated with
+
+```jula
+using BestieTemplate
+BestieTemplate.generate("RemoteBMI.jl")
+```
+
+The openapi server stubs where generated using the following command:
+
+```shell
+npx @openapitools/openapi-generator-cli generate -i ./openapi.yaml  -g julia-server -o julia-server --additional-properties=packageName=BmiServer --additional-properties=exportModels=true
+# Copy the generated files to RemoteBMI.jl/src/
+```

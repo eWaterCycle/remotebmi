@@ -25,3 +25,6 @@ coverage.xml
 __pycache__
 
 /venv
+python/.venv/
+python/heat.toml
+RemoteBMI.jl/example/Project.toml

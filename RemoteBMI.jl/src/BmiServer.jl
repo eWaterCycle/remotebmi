@@ -3,7 +3,7 @@
 
 
 @doc raw"""
-Encapsulates generated server code for APIServer
+Encapsulates generated server code for BmiServer
 
 The following server methods must be implemented:
 
@@ -128,7 +128,7 @@ The following server methods must be implemented:
     - *invocation:* GET /get_var_units/{name}
     - *signature:* get_var_units(req::HTTP.Request, name::String;) -> String
 """
-module APIServer
+module BmiServer
 
 using HTTP
 using URIs
@@ -186,4 +186,11 @@ function register(router::HTTP.Router, impl; path_prefix::String="", optional_mi
     return router
 end
 
-end # module APIServer
+# export models
+export BmiGetGridTypeResponse
+export BmiInitializeRequest
+export BmiSetValueAtIndicesRequest
+export GetVarLocationResponseLocation
+export ProblemDetails
+
+end # module BmiServer

@@ -4,5 +4,5 @@ using Heat
 
 import RemoteBMI 
 
-port = parse(Int, get(ENV, "BMI_PORT", 50051))
+port = parse(Int, get(ENV, "BMI_PORT", "50051"))
 RemoteBMI.run(Heat.Model, "0.0.0.0", port)

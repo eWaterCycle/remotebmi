@@ -68,8 +68,8 @@ Given you have a model class called `MyModel` and a BMI called `BMI` inside the 
 using MyPackage
 using RemoteBMI
 
-port = parse(Int, get(ENV, "BMI_PORT", 50051))
-RemoteBMI.run(MyPackage.Model, "0.0.0.0", 50555)
+port = parse(Int, get(ENV, "BMI_PORT", "50051"))
+RemoteBMI.run(MyPackage.Model, "0.0.0.0", port)
 ```
 
 ### R provider
