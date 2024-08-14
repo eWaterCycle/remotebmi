@@ -71,6 +71,13 @@ Given you have a model class called `MyModel` in a package `mypackage` then the 
 BMI_MODULE=mypackage BMI_CLASS=MyModel run-bmi-server 
 ```
 
+For example [leakybucket](https://github.com/eWaterCycle/leakybucket-bmi):
+
+```shell
+pip install leakybucket
+BMI_MODULE=leakybucket.leakybucket_bmi BMI_CLASS=LeakyBucketBmi run-bmi-server
+```
+
 ### Julia provider
 
 Given you have a model class called `MyModel` and a BMI called `BMI` inside the `MyPackage` package.
