@@ -1,13 +1,24 @@
 # Remote BMI
 
+
 The [Basic Model Interface (BMI)](https://bmi.readthedocs.io/en/stable/) is a standard interface for models. 
 The interface is available in different languages and a [language agnosting version in SIDL](https://github.com/csdms/bmi/blob/stable/bmi.sidl).
 
-To have a consumer of the model and the provider of the model seperated you can use grpc4bmi, but this only on languages that have a grpc implementation.
+To have a consumer of the model and the provider of the model seperated you can use [grpc4bmi](), but this only works on languages that have a grpc implementation.
 This repo replaced the gRPC protocol with an REST API.
 The [REST API specification](openapi.yaml) is in the [OpenAPI](https://swagger.io/specification/) format.
 
+## Difference from BMI
+
+- Request body and response body are in JSON format
+- On errors you get 4xx and 5xx responses with [Problem Details](https://tools.ietf.org/html/rfc7807) as response body
+- Variable names must be URL safe
+- Variable type must be in enum.
+- get_value_ptr function is not available
+
 ## Usage
+
+[OpenAPI reference documentation](https://redocly.github.io/redoc/?url=https://github.com/eWaterCycle/remotebmi/raw/main/openapi.yaml)
 
 ### Python consumer
 
