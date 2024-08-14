@@ -1,61 +1,61 @@
 name: Validate OpenAPI
 
 on:
-    push:
-        paths:
-            - 'openapi.yaml'
-    pull_request:
-        paths:
-            - 'openapi.yaml'
+  push:
+    paths:
+      - "openapi.yaml"
+  pull_request:
+    paths:
+      - "openapi.yaml"
 
 jobs:
-    lintspec:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
-              with:
-                sparse-checkout: |
-                    openapi.yaml
-            - name: Setup Node.js
-              uses: actions/setup-node@v4
-              with:
-                node-version: 20
-            - name: Install Redocly
-              run: npm install -g @redocly/cli@latest
+  lintspec:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            openapi.yaml
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install Redocly
+        run: npm install -g @redocly/cli@latest
 
-            - name: Lint OpenAPI with Redocly
-              run: redocly lint openapi.yaml
+      - name: Lint OpenAPI with Redocly
+        run: redocly lint openapi.yaml
 
-            - name: Install spectral
-              run: npm install -g @stoplight/spectral-cli
+      - name: Install spectral
+        run: npm install -g @stoplight/spectral-cli
 
-            - name: Lint OpenAPI with Spectral
-              run: spectral lint openapi.yaml
+      - name: Lint OpenAPI with Spectral
+        run: spectral lint openapi.yaml
 
-            - name: Setup Python
-              uses: actions/setup-python@v5
-              with:
-                python-version: '3.12'
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
 
-            - name: Install yamllint
-              run: pip install yamllint
+      - name: Install yamllint
+        run: pip install yamllint
 
-            - name: Yamllint
-              run: yamllint openapi.yaml
+      - name: Yamllint
+        run: yamllint openapi.yaml
 
   python:
     runs-on: ubuntu-latest
 
     steps:
-        - name: Checkout code
-          uses: actions/checkout@v4
-        - name: Setup Python
-          uses: actions/setup-python@v5
-          with:
-            python-version: '3.12'
-            cache: 'pip'
-        - name: Install ruff
-          run: pip install ruff
-        - name: Run ruff
-          run: ruff check python/remotebmi
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+      - name: Install ruff
+        run: pip install ruff
+      - name: Run ruff
+        run: ruff check python/remotebmi
