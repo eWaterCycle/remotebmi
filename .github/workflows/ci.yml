@@ -40,7 +40,23 @@ jobs:
                 cache: 'pip'
 
             - name: Install yamllint
-              run: pip install --user yamllint
+              run: pip install yamllint
 
             - name: Yamllint
               run: yamllint openapi.yaml
+
+  python:
+    runs-on: ubuntu-latest
+
+    steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+        - name: Setup Python
+          uses: actions/setup-python@v5
+          with:
+            python-version: '3.12'
+            cache: 'pip'
+        - name: Install ruff
+          run: pip install ruff
+        - name: Run ruff
+          run: ruff check python/remotebmi

@@ -4,14 +4,12 @@ import sys
 
 from bmipy import Bmi
 
-
 ENV_BMI_MODULE = "BMI_MODULE"
 ENV_BMI_CLASS = "BMI_CLASS"
 
 
 def from_env() -> Bmi:
-    """
-    Build and return an instance of a BMI implementation based on the environment variables.
+    """Build and return an instance of a BMI implementation based on the environment variables.
 
     The following environment variables are used:
     - BMI_PATH: The path to the BMI implementation module. If provided, the path will be added to the system path.
@@ -27,19 +25,29 @@ def from_env() -> Bmi:
     path = os.environ.get("BMI_PATH", None)
     module_name = os.environ.get(ENV_BMI_MODULE, "")
     if not module_name:
-        raise ValueError("Missing module name: module could not be derived from environment "
-                         "variable %s" % (ENV_BMI_MODULE))
+        msg = (
+            "Missing module name: module could not be derived from environment "
+            f"variable {ENV_BMI_MODULE}"
+        )
+        raise ValueError(
+            msg
+        )
 
     class_name = os.environ.get(ENV_BMI_CLASS, "")
     if not class_name:
-        raise ValueError("Missing bmi implementation: class could not be derived from environment"
-                         "variable %s" % (ENV_BMI_CLASS))
+        msg = (
+            "Missing bmi implementation: class could not be derived from environment"
+            f"variable {ENV_BMI_CLASS}"
+        )
+        raise ValueError(
+            msg
+        )
 
     return build(module_name, class_name, path)
 
+
 def build(module_name: str, class_name: str, path=None) -> Bmi:
-    """
-    Build and return an instance of a BMI implementation based on the provided module and class names.
+    """Build and return an instance of a BMI implementation based on the provided module and class names.
 
     Args:
         module_name: The name of the BMI implementation module.

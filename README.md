@@ -31,7 +31,7 @@ pip install remotebmi
 A client can connect to a running server with the following code.
 
 ```python
-from remotebmi.client import BmiClient
+from remotebmi.client.client import RemoteBmiClient
 
 model = RemoteBmiClient('http://localhost:50051')
 # Now you can use the BMI methods on model
@@ -44,7 +44,7 @@ model.get_value('var_name')
 A client can also start a [Apptainer](https://apptainer.org) container containing the model and the server.
 
 ```python
-from remotebmi.client import BmiClientApptainer
+from remotebmi.client.apptainer import BmiClientApptainer
 
 model = BmiClientApptainer('my_model.sif', work_dir='/tmp')
 ```
@@ -55,7 +55,7 @@ The port is passed to the container using the `BMI_PORT` environment variable.
 A client can also start a [Docker](https://docs.docker.com/engine/) container containing the model and the server.
 
 ```python
-from remotebmi.client import BmiClientDocker
+from remotebmi.client.docker import BmiClientDocker
 
 model = BmiClientDocker('ewatercycle/wflowjl:0.7.3', work_dir='/tmp')
 ```
@@ -76,6 +76,15 @@ For example [leakybucket](https://github.com/eWaterCycle/leakybucket-bmi):
 ```shell
 pip install leakybucket
 BMI_MODULE=leakybucket.leakybucket_bmi BMI_CLASS=LeakyBucketBmi run-bmi-server
+```
+
+and the client can connect to it with the following code.
+
+```python
+> from remotebmi.client.client import RemoteBmiClient
+> client = RemoteBmiClient('http://localhost:50051')
+> client.get_component_name()
+leakybucket
 ```
 
 ### Julia provider

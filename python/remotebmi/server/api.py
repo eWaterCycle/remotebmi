@@ -1,9 +1,19 @@
 from typing import Literal
+
+import numpy as np
 from bmipy import Bmi
 from connexion import request
-import numpy as np
 
-from remotebmi.reserve import reserve_grid_edge_nodes, reserve_grid_face_, reserve_grid_nodes, reserve_grid_nodes_per_face, reserve_grid_padding, reserve_grid_shape, reserve_values, reserve_values_at_indices
+from remotebmi.reserve import (
+    reserve_grid_edge_nodes,
+    reserve_grid_face_,
+    reserve_grid_nodes,
+    reserve_grid_nodes_per_face,
+    reserve_grid_padding,
+    reserve_grid_shape,
+    reserve_values,
+    reserve_values_at_indices,
+)
 
 
 def model() -> Bmi:
@@ -11,8 +21,8 @@ def model() -> Bmi:
     return request.state.model
 
 
-def initialize(body: dict[Literal['config_file'], str]):
-    model().initialize(body['config_file'])
+def initialize(body: dict[Literal["config_file"], str]):
+    model().initialize(body["config_file"])
 
 
 def update():

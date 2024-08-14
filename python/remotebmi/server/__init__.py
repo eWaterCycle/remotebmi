@@ -1,25 +1,29 @@
 import contextlib
+from collections.abc import AsyncIterator
 from os import environ
 from traceback import format_exception
-from typing import AsyncIterator
 
+import uvicorn
 from bmipy import Bmi
 from connexion import AsyncApp, ConnexionMiddleware, problem
 from connexion.lifecycle import ConnexionRequest, ConnexionResponse
-from connexion.resolver import RelativeResolver
 from connexion.options import SwaggerUIOptions
-import uvicorn
+from connexion.resolver import RelativeResolver
 
 from remotebmi.server.build import from_env
 
-def handle_model_error(request: ConnexionRequest, exc: Exception) -> ConnexionResponse:
+
+def handle_model_error(request: ConnexionRequest, exc: Exception) -> ConnexionResponse:  # noqa: ARG001
     exc_class = str(exc.__class__.__name__)
     ext = {"traceback": format_exception(exc)}
-    return problem(500, type=exc_class, title="Model raised " + exc_class, detail=str(exc), ext=ext)
+    return problem(
+        500, type=exc_class, title="Model raised " + exc_class, detail=str(exc), ext=ext
+    )
+
 
 def make_app(model: Bmi):
     @contextlib.asynccontextmanager
-    async def lifespan_handler(app: ConnexionMiddleware) -> AsyncIterator:
+    async def lifespan_handler(app: ConnexionMiddleware) -> AsyncIterator:  # noqa: ARG001
         yield {"model": model}
 
     app = AsyncApp(
@@ -33,11 +37,13 @@ def make_app(model: Bmi):
     app.add_error_handler(Exception, handle_model_error)
     return app
 
+
 def main(**kwargs):
     model = from_env()
     app = make_app(model)
-    port = int(environ.get('BMI_PORT', 50051))
+    port = int(environ.get("BMI_PORT", 50051))
     uvicorn.run(app, port=port, **kwargs)
+
 
 if __name__ == "__main__":
     main()
