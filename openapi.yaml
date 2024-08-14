@@ -4,8 +4,9 @@ info:
   title: BMI
   description: >
     OpenAPI specification for the Basic Modeling Interface (BMI).
-    All functions are described on the [BMI homepage](https://bmi.readthedocs.io/).
-  version: '2.0'
+    All functions are described on the
+    [BMI homepage](https://bmi.readthedocs.io/).
+  version: "2.0"
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
@@ -19,7 +20,7 @@ tags:
   - name: IRF
     description: Initialize, run, finalize
   - name: Exchange items
-    description: > 
+    description: >
       Supply the model name and the model’s exchange items –
       the variables that the model can use from and provide
       to other models that have a BMI.
@@ -30,11 +31,17 @@ tags:
   - name: Time information
     description: Provide information on model time.
   - name: Variable information
-    description: These BMI functions provide information about a particular input or output variable. 
+    description: >
+      These BMI functions provide information about a particular input
+      or output variable.
   - name: Grid information
-    description: These BMI functions provide information about the grid on which a variable is defined.
+    description: >
+      These BMI functions provide information about the grid on which
+      a variable is defined.
   - name: NURC
-    description: Used for describing rectilinear, structured quadrilateral, and all unstructured grids.
+    description: >
+      Used for describing rectilinear, structured quadrilateral,
+      and all unstructured grids.
   - name: Uniform rectilinear
     description: Uniform rectilinear grid
   - name: Unstructured
@@ -43,7 +50,9 @@ paths:
   /initialize:
     post:
       operationId: initialize
-      description: Performs all tasks that are to take place before entering the model’s time loop.
+      description: >
+        Performs all tasks that are to take place before entering
+        the model’s time loop.
       externalDocs:
         url: https://bmi.readthedocs.io/en/stable/#initialize
       responses:
@@ -54,7 +63,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       requestBody:
         required: true
         content:
@@ -64,7 +73,7 @@ paths:
           # This is for every default response in any path.
           application/json:
             schema:
-              $ref: '#/components/schemas/InitializeRequest'
+              $ref: "#/components/schemas/InitializeRequest"
       tags:
         - IRF
   /update:
@@ -81,7 +90,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       tags:
         - IRF
   /update_until:
@@ -98,19 +107,20 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/GetTimeResponse'
+              $ref: "#/components/schemas/GetTimeResponse"
       tags:
         - IRF
   /finalize:
     delete:
       operationId: finalize
-      description: Performs all tasks that take place after exiting the model’s time loop.
+      description: >
+        Performs all tasks that take place after exiting the model’s time loop.
       externalDocs:
         url: https://bmi.readthedocs.io/en/stable/#finalize
       responses:
@@ -121,7 +131,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       tags:
         - IRF
   /get_component_name:
@@ -136,19 +146,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetComponentNameResponse'
+                $ref: "#/components/schemas/GetComponentNameResponse"
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       tags:
         - Exchange items
   /get_input_item_count:
     get:
       operationId: get_input_item_count
-      description: The number of variables the model can use from other models implementing a BMI.
+      description: >
+        The number of variables the model can use from other models
+        implementing a BMI.
       externalDocs:
         url: https://bmi.readthedocs.io/en/stable/#get-input-item-count
       responses:
@@ -157,19 +169,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Count'
+                $ref: "#/components/schemas/Count"
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       tags:
         - Exchange items
   /get_input_var_names:
     get:
       operationId: get_input_var_names
-      description: Gets an array of names for the variables the model can use from other models implementing a BMI.
+      description: >
+        Gets an array of names for the variables the model can use
+        from other models implementing a BMI.
       externalDocs:
         url: https://bmi.readthedocs.io/en/stable/#get-input-var-names
       responses:
@@ -178,19 +192,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetVarNamesResponse'
+                $ref: "#/components/schemas/GetVarNamesResponse"
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       tags:
         - Exchange items
   /get_output_item_count:
     get:
       operationId: get_output_item_count
-      description: The number of variables the model can provide other models implementing a BMI.
+      description: >
+        The number of variables the model can provide other models
+        implementing a BMI.
       externalDocs:
         url: https://bmi.readthedocs.io/en/stable/#get-output-item-count
       responses:
@@ -199,19 +215,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Count'
+                $ref: "#/components/schemas/Count"
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       tags:
         - Exchange items
   /get_output_var_names:
     get:
       operationId: get_output_var_names
-      description: Gets an array of names for the variables the model can provide to other models implementing a BMI.
+      description: >
+        Gets an array of names for the variables the model can provide to
+        other models implementing a BMI.
       externalDocs:
         url: https://bmi.readthedocs.io/en/stable/#get-output-var-names
       responses:
@@ -220,20 +238,22 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetVarNamesResponse'
+                $ref: "#/components/schemas/GetVarNamesResponse"
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       tags:
         - Exchange items
 
   /get_var_grid/{name}:
     get:
       operationId: get_var_grid
-      description: Each input and output variable is defined on a grid. This function returns the grid identifier for a given variable.
+      description: >
+        Each input and output variable is defined on a grid.
+        This function returns the grid identifier for a given variable.
       externalDocs:
         url: https://bmi.readthedocs.io/en/stable/#get-var-grid
       responses:
@@ -242,25 +262,27 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetVarGridResponse'
+                $ref: "#/components/schemas/GetVarGridResponse"
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       parameters:
         - name: name
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/VarName'
+            $ref: "#/components/schemas/VarName"
       tags:
         - Variable information
   /get_var_itemsize/{name}:
     get:
       operationId: get_var_itemsize
-      description: Provides the size, in bytes, of a single element of the variable.
+      description: >
+        Provides the size, in bytes, of a single element of
+        the variable.
       externalDocs:
         url: https://bmi.readthedocs.io/en/stable/#get-var-itemsize
       responses:
@@ -269,19 +291,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetVarItemSizeResponse'
+                $ref: "#/components/schemas/GetVarItemSizeResponse"
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       parameters:
         - name: name
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/VarName'
+            $ref: "#/components/schemas/VarName"
       tags:
         - Variable information
   /get_var_location/{name}:
@@ -296,25 +318,28 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetVarLocationResponseLocation'
+                $ref: "#/components/schemas/GetVarLocationResponseLocation"
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       parameters:
         - name: name
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/VarName'
+            $ref: "#/components/schemas/VarName"
       tags:
         - Variable information
   /get_var_nbytes/{name}:
     get:
       operationId: get_var_nbytes
-      description: Provides the total amount of memory used to store a variable; i.e., the number of items multiplied by the size of each item.
+      description: >
+        Provides the total amount of memory used to store
+        a variable; i.e., the number of items multiplied by
+        the size of each item.
       externalDocs:
         url: https://bmi.readthedocs.io/en/stable/#get-var-nbytes
       responses:
@@ -323,19 +348,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetVarNBytesResponse'
+                $ref: "#/components/schemas/GetVarNBytesResponse"
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       parameters:
         - name: name
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/VarName'
+            $ref: "#/components/schemas/VarName"
       tags:
         - Variable information
   /get_var_type/{name}:
@@ -350,19 +375,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetVarTypeResponse'
+                $ref: "#/components/schemas/GetVarTypeResponse"
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       parameters:
         - name: name
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/VarName'
+            $ref: "#/components/schemas/VarName"
       tags:
         - Variable information
   /get_var_units/{name}:
@@ -377,19 +402,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetVarUnitsResponse'
+                $ref: "#/components/schemas/GetVarUnitsResponse"
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       parameters:
         - name: name
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/VarName'
+            $ref: "#/components/schemas/VarName"
       tags:
         - Variable information
 
@@ -405,13 +430,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetTimeResponse'
+                $ref: "#/components/schemas/GetTimeResponse"
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       tags:
         - Time information
   /get_end_time:
@@ -426,13 +451,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetTimeResponse'
+                $ref: "#/components/schemas/GetTimeResponse"
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       tags:
         - Time information
 
@@ -448,13 +473,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetTimeResponse'
+                $ref: "#/components/schemas/GetTimeResponse"
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       tags:
         - Time information
   /get_time_step:
@@ -469,23 +494,23 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetTimeStepResponse'
+                $ref: "#/components/schemas/GetTimeStepResponse"
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       tags:
         - Time information
   /get_time_units:
     get:
       operationId: get_time_units
-      description: > 
+      description: >
         Get the units of time as reported by the model’s BMI.
-        
-        If model has absolute start time, you can use `since` format, 
-        see [cfconventions](https://cfconventions.org/cf-conventions/cf-conventions#time-coordinate).
+
+        If model has absolute start time, you can use `since` format, see
+        [cfconventions](https://cfconventions.org/cf-conventions/cf-conventions#time-coordinate).
       externalDocs:
         url: https://bmi.readthedocs.io/en/stable/#get-time-units
       responses:
@@ -494,9 +519,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetTimeUnitsResponse'
+                $ref: "#/components/schemas/GetTimeUnitsResponse"
               examples:
-                hourly: 
+                hourly:
                   value: h
                 dayssince:
                   value: days since 2000-01-01
@@ -505,7 +530,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       tags:
         - Time information
 
@@ -521,19 +546,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetValueResponse'
+                $ref: "#/components/schemas/GetValueResponse"
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       parameters:
         - name: name
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/VarName'
+            $ref: "#/components/schemas/VarName"
       tags:
         - Getters
   /get_value_at_indices/{name}:
@@ -548,25 +573,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetValueAtIndicesResponse'
+                $ref: "#/components/schemas/GetValueAtIndicesResponse"
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       parameters:
         - name: name
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/VarName'
+            $ref: "#/components/schemas/VarName"
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Indices'
+              $ref: "#/components/schemas/Indices"
       tags:
         - Getters
 
@@ -584,19 +609,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       parameters:
         - name: name
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/VarName'
+            $ref: "#/components/schemas/VarName"
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SetValueRequest'
+              $ref: "#/components/schemas/SetValueRequest"
       tags:
         - Setters
   /set_value_at_indices/{name}:
@@ -613,26 +638,28 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       parameters:
         - name: name
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/VarName'
+            $ref: "#/components/schemas/VarName"
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SetValueAtIndicesRequest'
+              $ref: "#/components/schemas/SetValueAtIndicesRequest"
       tags:
         - Setters
 
   /get_grid_rank/{grid}:
     get:
       operationId: get_grid_rank
-      description: Given a grid identifier, get the rank (the number of dimensions) of that grid as an integer.
+      description: >
+        Given a grid identifier, get the rank
+        (the number of dimensions) of that grid as an integer.
       externalDocs:
         url: https://bmi.readthedocs.io/en/stable/#get-grid-rank
       responses:
@@ -641,26 +668,27 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetGridRankResponse'
+                $ref: "#/components/schemas/GetGridRankResponse"
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       parameters:
         - name: grid
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/Grid'
+            $ref: "#/components/schemas/Grid"
       tags:
         - Grid information
 
   /get_grid_type/{grid}:
     get:
       operationId: get_grid_type
-      description: Given a grid identifier, get the type of that grid as a string.
+      description: >
+        Given a grid identifier, get the type of that grid as a string.
       externalDocs:
         url: https://bmi.readthedocs.io/en/stable/#get-grid-type
       responses:
@@ -669,25 +697,27 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetGridTypeResponse'
+                $ref: "#/components/schemas/GetGridTypeResponse"
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       parameters:
         - name: grid
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/Grid'
+            $ref: "#/components/schemas/Grid"
       tags:
         - Grid information
   /get_grid_size/{grid}:
     get:
       operationId: get_grid_size
-      description: Given a grid identifier, get the total number of elements (or nodes) of that grid as an integer.
+      description: >
+        Given a grid identifier, get the total number of elements
+        (or nodes) of that grid as an integer.
       externalDocs:
         url: https://bmi.readthedocs.io/en/stable/#get-grid-size
       responses:
@@ -696,26 +726,27 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetGridSizeResponse'
+                $ref: "#/components/schemas/GetGridSizeResponse"
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       parameters:
         - name: grid
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/Grid'
+            $ref: "#/components/schemas/Grid"
       tags:
         - Grid information
 
   /get_grid_origin/{grid}:
     get:
       operationId: get_grid_origin
-      description: Get the coordinates of the lower-left corner of the model grid.
+      description: >
+        Get the coordinates of the lower-left corner of the model grid.
       externalDocs:
         url: https://bmi.readthedocs.io/en/stable/#get-grid-origin
       responses:
@@ -724,19 +755,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Doubles'
+                $ref: "#/components/schemas/Doubles"
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       parameters:
         - name: grid
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/Grid'
+            $ref: "#/components/schemas/Grid"
       tags:
         - Uniform rectilinear
 
@@ -752,19 +783,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Indices'
+                $ref: "#/components/schemas/Indices"
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       parameters:
         - name: grid
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/Grid'
+            $ref: "#/components/schemas/Grid"
       tags:
         - Uniform rectilinear
 
@@ -780,26 +811,27 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Doubles'
+                $ref: "#/components/schemas/Doubles"
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       parameters:
         - name: grid
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/Grid'
+            $ref: "#/components/schemas/Grid"
       tags:
         - Uniform rectilinear
 
   /get_grid_x/{grid}:
     get:
       operationId: get_grid_x
-      description: Get the locations of the grid nodes in the first coordinate direction.
+      description: >
+        Get the locations of the grid nodes in the first coordinate direction.
       externalDocs:
         url: https://bmi.readthedocs.io/en/stable/#get-grid-x
       responses:
@@ -808,25 +840,26 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Doubles'
+                $ref: "#/components/schemas/Doubles"
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       parameters:
         - name: grid
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/Grid'
+            $ref: "#/components/schemas/Grid"
       tags:
         - NURC
   /get_grid_y/{grid}:
     get:
       operationId: get_grid_y
-      description: Get the locations of the grid nodes in the second coordinate direction.
+      description: >
+        Get the locations of the grid nodes in the second coordinate direction.
       externalDocs:
         url: https://bmi.readthedocs.io/en/stable/#get-grid-y
       responses:
@@ -835,25 +868,26 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Doubles'
+                $ref: "#/components/schemas/Doubles"
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       parameters:
         - name: grid
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/Grid'
+            $ref: "#/components/schemas/Grid"
       tags:
         - NURC
   /get_grid_z/{grid}:
     get:
       operationId: get_grid_z
-      description: Get the locations of the grid nodes in the third coordinate direction.
+      description: >
+        Get the locations of the grid nodes in the third coordinate direction.
       externalDocs:
         url: https://bmi.readthedocs.io/en/stable/#get-grid-z
       responses:
@@ -862,19 +896,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Doubles'
+                $ref: "#/components/schemas/Doubles"
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       parameters:
         - name: grid
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/Grid'
+            $ref: "#/components/schemas/Grid"
       tags:
         - NURC
 
@@ -890,19 +924,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Count'
+                $ref: "#/components/schemas/Count"
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       parameters:
         - name: grid
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/Grid'
+            $ref: "#/components/schemas/Grid"
       tags:
         - Unstructured
   /get_grid_edge_nodes/{grid}:
@@ -917,19 +951,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Indices'
+                $ref: "#/components/schemas/Indices"
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       parameters:
         - name: grid
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/Grid'
+            $ref: "#/components/schemas/Grid"
       tags:
         - Unstructured
   /get_grid_face_count/{grid}:
@@ -944,19 +978,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Count'
+                $ref: "#/components/schemas/Count"
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       parameters:
         - name: grid
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/Grid'
+            $ref: "#/components/schemas/Grid"
       tags:
         - Unstructured
   /get_grid_face_edges/{grid}:
@@ -971,19 +1005,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Indices'
+                $ref: "#/components/schemas/Indices"
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       parameters:
         - name: grid
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/Grid'
+            $ref: "#/components/schemas/Grid"
       tags:
         - Unstructured
   /get_grid_face_nodes/{grid}:
@@ -998,19 +1032,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Indices'
+                $ref: "#/components/schemas/Indices"
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       parameters:
         - name: grid
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/Grid'
+            $ref: "#/components/schemas/Grid"
       tags:
         - Unstructured
   /get_grid_node_count/{grid}:
@@ -1025,19 +1059,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Count'
+                $ref: "#/components/schemas/Count"
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       parameters:
         - name: grid
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/Grid'
+            $ref: "#/components/schemas/Grid"
       tags:
         - Unstructured
   /get_grid_nodes_per_face/{grid}:
@@ -1052,19 +1086,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Indices'
+                $ref: "#/components/schemas/Indices"
         default:
           description: An unexpected error response.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProblemDetails'
+                $ref: "#/components/schemas/ProblemDetails"
       parameters:
         - name: grid
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/Grid'
+            $ref: "#/components/schemas/Grid"
       tags:
         - Unstructured
 components:
@@ -1148,7 +1182,7 @@ components:
     GetVarTypeResponse:
       type: string
       externalDocs:
-        url: https://swagger.io/docs/specification/data-models/data-types/#numbers
+        url: https://swagger.io/docs/specification/data-models/data-types/#numbers  # yamllint disable-line rule:line-length
       enum:
         - float
         - double
@@ -1162,7 +1196,8 @@ components:
       properties:
         config_file:
           type: string
-          description: Path to the configuration file. Should resolvable by web service.
+          description: >
+            Path to the configuration file. Should resolvable by web service.
           minLength: 0
       required:
         - config_file
@@ -1208,21 +1243,24 @@ components:
           description: A URI reference that identifies the problem type.
         title:
           type: string
-          description: 'A short, human-readable summary of the problem type.'
+          description: "A short, human-readable summary of the problem type."
         status:
           type: integer
           description: >-
-            The HTTP status code generated by the origin server for this occurrence of
-            the problem.
+            The HTTP status code generated by the origin server for
+            this occurrence of the problem.
           minimum: 100
           maximum: 599
         detail:
           type: string
-          description: A human-readable explanation specific to this occurrence of the problem.
+          description: >
+            A human-readable explanation specific to this occurrence
+            of the problem.
         instance:
           type: string
           format: uri-reference
           description: >-
-            A URI reference that identifies the specific occurrence of the problem. It
-            may or may not yield further information if dereferenced.
+            A URI reference that identifies the specific occurrence
+            of the problem.
+            It may or may not yield further information if dereferenced.
       additionalProperties: true

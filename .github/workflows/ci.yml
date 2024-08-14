@@ -24,5 +24,23 @@ jobs:
             - name: Install Redocly
               run: npm install -g @redocly/cli@latest
 
-            - name: Lint OpenAPI
+            - name: Lint OpenAPI with Redocly
               run: redocly lint openapi.yaml
+
+            - name: Install spectral
+              run: npm install -g @stoplight/spectral-cli
+
+            - name: Lint OpenAPI with Spectral
+              run: spectral lint openapi.yaml
+
+            - name: Setup Python
+              uses: actions/setup-python@v5
+              with:
+                python-version: '3.12'
+                cache: 'pip'
+
+            - name: Install yamllint
+              run: pip install --user yamllint
+
+            - name: Yamllint
+              run: yamllint openapi.yaml
