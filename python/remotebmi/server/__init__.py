@@ -26,6 +26,9 @@ def make_app(model: Bmi):
     async def lifespan_handler(app: ConnexionMiddleware) -> AsyncIterator:  # noqa: ARG001
         yield {"model": model}
 
+    if environ.get("BMI_API_KEY", None):
+        environ["APIKEYINFO_FUNC"] = "remotebmi.server.auth.apikey_auth"
+
     app = AsyncApp(
         "remotebmi.server",
         strict_validation=True,

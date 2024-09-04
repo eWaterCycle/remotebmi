@@ -16,6 +16,10 @@ info:
 servers:
   - url: http://localhost:50051
     description: Default URL for a BMI service
+security:
+  # TODO allow server in anonymous or apikey mode
+  # - {}
+  - apikey: []
 tags:
   - name: IRF
     description: Initialize, run, finalize
@@ -1264,3 +1268,8 @@ components:
             of the problem.
             It may or may not yield further information if dereferenced.
       additionalProperties: true
+  securitySchemes:
+    apikey:
+      type: apiKey
+      name: X-Auth
+      in: header

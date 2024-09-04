@@ -68,21 +68,21 @@ If the port is different, you can pass the port as the `image_port` argument to 
 Given you have a model class called `MyModel` in a package `mypackage` then the web service can be started with the following command.
 
 ```shell
-BMI_MODULE=mypackage BMI_CLASS=MyModel run-bmi-server 
+BMI_MODULE=mypackage BMI_CLASS=MyModel BMI_API_KEY=somesecret run-bmi-server
 ```
 
 For example [leakybucket](https://github.com/eWaterCycle/leakybucket-bmi):
 
 ```shell
 pip install leakybucket
-BMI_MODULE=leakybucket.leakybucket_bmi BMI_CLASS=LeakyBucketBmi run-bmi-server
+BMI_MODULE=leakybucket.leakybucket_bmi BMI_CLASS=LeakyBucketBmi BMI_API_KEY=somesecret run-bmi-server
 ```
 
 and the client can connect to it with the following code.
 
 ```python
 > from remotebmi.client.client import RemoteBmiClient
-> client = RemoteBmiClient('http://localhost:50051')
+> client = RemoteBmiClient('http://localhost:50051', api_key='somesecret')
 > client.get_component_name()
 leakybucket
 ```

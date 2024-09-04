@@ -37,4 +37,9 @@ The openapi server stubs where generated using the following command:
 ```shell
 npx @openapitools/openapi-generator-cli generate -i ./openapi.yaml  -g julia-server -o julia-server --additional-properties=packageName=BmiServer --additional-properties=exportModels=true
 # Copy the generated files to RemoteBMI.jl/src/
+
+# TODO find out why api key is not in the generated code
+# At example https://github.com/JuliaComputing/OpenAPI.jl/blob/2d447986b6377a6724ae59380f087c2b270e7795/test/server/openapigenerator_petstore_v3/petstore/src/apis/api_PetApi.jl#L56
+# It is given to impl function as second argument
+# but in the generated code it is missing
 ```

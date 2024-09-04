@@ -5,8 +5,11 @@ from numpy import ndarray
 
 
 class RemoteBmiClient(Bmi):
-    def __init__(self, base_url):
-        self.client = Client(base_url=base_url)
+    def __init__(self, base_url, api_key=None):
+        headers = {}
+        if api_key:
+            headers["X-Auth"] = api_key
+        self.client = Client(base_url=base_url, headers=headers)
 
     def __del__(self):
         self.client.close()

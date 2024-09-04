@@ -2,6 +2,17 @@ module RemoteBMI
 
 using HTTP
 
+# Treat returned string as something that must be JSON serialized
+# At https://github.com/JuliaComputing/OpenAPI.jl/blob/2d447986b6377a6724ae59380f087c2b270e7795/src/server.jl#L167
+# string is force tod return as plain text
+# Treat returned string from route implementations as thing that must be JSON serialized
+# Without this, the string would be returned as plain text
+#using OpenAPI
+#using OpenAPI.Servers
+#OpenAPI.Servers.server_response(resp::AbstractString, headers=HTTP.Headers()) = OpenAPI.Servers.server_response(OpenAPI.to_json(resp), [Pair("Content-Type", "application/json")])
+# TODO find way that does not break OpenAPI.Servers.server_response as with overwrite a client request is timing out
+# TODO Alternative is to return plain/text in paths that return strings
+
 include("./BmiServer.jl")
 using .BmiServer
 
@@ -9,7 +20,7 @@ import BasicModelInterface as BMI
 
 # TODO move route implementations to own module
 
-function initialize(req::HTTP.Request, bmi_initialize_request::BmiInitializeRequest)::Nothing
+function initialize(req::HTTP.Request, bmi_initialize_request::InitializeRequest)::Nothing
     global m
     m = BMI.initialize(MyModel, bmi_initialize_request.config_file)
     return nothing
@@ -119,6 +130,7 @@ function reserve_grid_coords(m, grid::Int64, dim_index::Int8)::Vector{Float64}
         size = BMI.get_grid_node_count(m, grid)
     else
         error("Unsupported grid type: $mtype")
+    end
     return zeros(Float64, size)
 end
 
@@ -141,7 +153,7 @@ function set_value(req::HTTP.Request, name::String, request_body::Vector{Float64
     BMI.set_value(m, name, request_body)
 end
 
-function set_value_at_indices(req::HTTP.Request, name::String, bmi_set_value_at_indices_request::BmiSetValueAtIndicesRequest;)::Nothing
+function set_value_at_indices(req::HTTP.Request, name::String, bmi_set_value_at_indices_request::SetValueAtIndicesRequest;)::Nothing
     BMI.set_value_at_indices(m, name, bmi_set_value_at_indices_request)
 end
 
@@ -274,7 +286,7 @@ function get_var_units(req::HTTP.Request, name::String;)::String
     return BMI.get_var_units(m, name)
 end
 
-function run(model, host, port)
+function run(model, host, port, trusted_apikey)
     global MyModel = model
     try
         router = HTTP.Router()

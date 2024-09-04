@@ -31,7 +31,7 @@ end
 function initialize_read(handler)
     function initialize_read_handler(req::HTTP.Request)
         openapi_params = Dict{String,Any}()
-        openapi_params["BmiInitializeRequest"] = OpenAPI.Servers.to_param_type(BmiInitializeRequest, String(req.body))
+        openapi_params["InitializeRequest"] = OpenAPI.Servers.to_param_type(InitializeRequest, String(req.body))
         req.context[:openapi_params] = openapi_params
 
         return handler(req)
@@ -49,7 +49,7 @@ end
 function initialize_invoke(impl; post_invoke=nothing)
     function initialize_invoke_handler(req::HTTP.Request)
         openapi_params = req.context[:openapi_params]
-        ret = impl.initialize(req::HTTP.Request, openapi_params["BmiInitializeRequest"];)
+        ret = impl.initialize(req::HTTP.Request, openapi_params["InitializeRequest"];)
         resp = OpenAPI.Servers.server_response(ret)
         return (post_invoke === nothing) ? resp : post_invoke(req, resp)
     end
