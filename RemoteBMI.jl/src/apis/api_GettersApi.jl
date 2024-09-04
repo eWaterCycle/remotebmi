@@ -17,6 +17,8 @@ function get_value_validate(handler)
     function get_value_validate_handler(req::HTTP.Request)
         openapi_params = req.context[:openapi_params]
         
+        OpenAPI.validate_param("name", "get_value", :minLength, openapi_params["name"], 1)
+        
         return handler(req)
     end
 end
@@ -45,6 +47,8 @@ end
 function get_value_at_indices_validate(handler)
     function get_value_at_indices_validate_handler(req::HTTP.Request)
         openapi_params = req.context[:openapi_params]
+        
+        OpenAPI.validate_param("name", "get_value_at_indices", :minLength, openapi_params["name"], 1)
         
         return handler(req)
     end

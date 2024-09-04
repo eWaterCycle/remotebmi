@@ -36,13 +36,13 @@ The following server methods must be implemented:
     - *signature:* get_grid_size(req::HTTP.Request, grid::Int64;) -> Int64
 - **get_grid_type**
     - *invocation:* GET /get_grid_type/{grid}
-    - *signature:* get_grid_type(req::HTTP.Request, grid::Int64;) -> BmiGetGridTypeResponse
+    - *signature:* get_grid_type(req::HTTP.Request, grid::Int64;) -> GetGridTypeResponse
 - **finalize**
     - *invocation:* DELETE /finalize
     - *signature:* finalize(req::HTTP.Request;) -> Nothing
 - **initialize**
     - *invocation:* POST /initialize
-    - *signature:* initialize(req::HTTP.Request, bmi_initialize_request::BmiInitializeRequest;) -> Nothing
+    - *signature:* initialize(req::HTTP.Request, initialize_request::InitializeRequest;) -> Nothing
 - **update**
     - *invocation:* POST /update
     - *signature:* update(req::HTTP.Request;) -> Nothing
@@ -63,7 +63,7 @@ The following server methods must be implemented:
     - *signature:* set_value(req::HTTP.Request, name::String, request_body::Vector{Float64};) -> Nothing
 - **set_value_at_indices**
     - *invocation:* POST /set_value_at_indices/{name}
-    - *signature:* set_value_at_indices(req::HTTP.Request, name::String, bmi_set_value_at_indices_request::BmiSetValueAtIndicesRequest;) -> Nothing
+    - *signature:* set_value_at_indices(req::HTTP.Request, name::String, set_value_at_indices_request::SetValueAtIndicesRequest;) -> Nothing
 - **get_current_time**
     - *invocation:* GET /get_current_time
     - *signature:* get_current_time(req::HTTP.Request;) -> Float64
@@ -123,7 +123,7 @@ The following server methods must be implemented:
     - *signature:* get_var_nbytes(req::HTTP.Request, name::String;) -> Int64
 - **get_var_type**
     - *invocation:* GET /get_var_type/{name}
-    - *signature:* get_var_type(req::HTTP.Request, name::String;) -> String
+    - *signature:* get_var_type(req::HTTP.Request, name::String;) -> GetVarTypeResponse
 - **get_var_units**
     - *invocation:* GET /get_var_units/{name}
     - *signature:* get_var_units(req::HTTP.Request, name::String;) -> String
@@ -187,10 +187,11 @@ function register(router::HTTP.Router, impl; path_prefix::String="", optional_mi
 end
 
 # export models
-export BmiGetGridTypeResponse
-export BmiInitializeRequest
-export BmiSetValueAtIndicesRequest
+export GetGridTypeResponse
 export GetVarLocationResponseLocation
+export GetVarTypeResponse
+export InitializeRequest
 export ProblemDetails
+export SetValueAtIndicesRequest
 
 end # module BmiServer
