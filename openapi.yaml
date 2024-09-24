@@ -522,9 +522,11 @@ paths:
                 $ref: "#/components/schemas/GetTimeUnitsResponse"
               examples:
                 hourly:
-                  value: h
+                  value:
+                    units: h
                 dayssince:
-                  value: days since 2000-01-01
+                  value:
+                    units: days since 2000-01-01
         default:
           description: An unexpected error response.
           content:
@@ -1104,15 +1106,27 @@ paths:
 components:
   schemas:
     GetVarLocationResponseLocation:
-      type: string
-      enum:
-        - node
-        - edge
-        - face
-      default: node
+      type: object
+      properties:
+        location:
+          type: string
+          enum:
+            - node
+            - edge
+            - face
+          default: node
+      additionalProperties: false
+      required:
+        - location
     GetComponentNameResponse:
-      type: string
-      minLength: 1
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+      required:
+        - name
+      additionalProperties: false
     Count:
       type: integer
       format: int32
@@ -1136,15 +1150,21 @@ components:
       type: integer
       format: int64
     GetGridTypeResponse:
-      type: string
-      enum:
-        - scalar
-        - points
-        - vector
-        - unstructured
-        - structured_quadrilateral
-        - rectilinear
-        - uniform_rectilinear
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - scalar
+            - points
+            - vector
+            - unstructured
+            - structured_quadrilateral
+            - rectilinear
+            - uniform_rectilinear
+      required:
+        - type
+      additionalProperties: false
     GetTimeResponse:
       type: number
       format: double
@@ -1154,8 +1174,14 @@ components:
       format: double
       example: 1.0
     GetTimeUnitsResponse:
-      type: string
-      minLength: 1
+      type: object
+      properties:
+        units:
+          type: string
+          minLength: 1
+      required:
+        - units
+      additionalProperties: false
     GetValueAtIndicesResponse:
       type: array
       items:
@@ -1180,17 +1206,29 @@ components:
         type: string
         minLength: 1
     GetVarTypeResponse:
-      type: string
-      externalDocs:
-        url: https://swagger.io/docs/specification/data-models/data-types/#numbers  # yamllint disable-line rule:line-length
-      enum:
-        - float
-        - double
-        - int32
-        - int64
+      type: object
+      properties:
+        type:
+          type: string
+          externalDocs:
+            url: https://swagger.io/docs/specification/data-models/data-types/#numbers  # yamllint disable-line rule:line-length
+          enum:
+            - float
+            - double
+            - int32
+            - int64
+      required:
+        - type
+      additionalProperties: false
     GetVarUnitsResponse:
-      type: string
-      minLength: 1
+      type: object
+      properties:
+        units:
+          type: string
+          minLength: 1
+      required:
+        - units
+      additionalProperties: false
     InitializeRequest:
       type: object
       properties:
@@ -1201,6 +1239,7 @@ components:
           minLength: 0
       required:
         - config_file
+      additionalProperties: false
     SetValueAtIndicesRequest:
       type: object
       properties:
@@ -1218,6 +1257,7 @@ components:
       required:
         - indices
         - values
+      additionalProperties: false
     SetValueRequest:
       type: array
       items:
