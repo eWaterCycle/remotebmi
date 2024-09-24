@@ -9,13 +9,13 @@ import BasicModelInterface as BMI
 
 # TODO move route implementations to own module
 
-function initialize(req::HTTP.Request, bmi_initialize_request::BmiInitializeRequest)::Nothing
+function initialize(req::HTTP.Request, initialize_request::InitializeRequest)::Nothing
     global m
-    m = BMI.initialize(MyModel, bmi_initialize_request.config_file)
+    m = BMI.initialize(MyModel, initialize_request.config_file)
     return nothing
 end
 
-function get_component_name(req::HTTP.Request)::GetComponentNameResponse
+function get_component_name(req::HTTP.Request)::Dict{String, String}
     return Dict("name" => BMI.get_component_name(m))
 end
 
@@ -89,7 +89,7 @@ function get_grid_size(req::HTTP.Request, grid::Int64;)::Int64
     return BMI.get_grid_size(m, grid)
 end
 
-function get_grid_type(req::HTTP.Request, grid::Int64;)::BmiGetGridTypeResponse
+function get_grid_type(req::HTTP.Request, grid::Int64;)::Dict{String, String}
     return Dict("type" => BMI.get_grid_type(m, grid))
 end
 
@@ -142,8 +142,8 @@ function set_value(req::HTTP.Request, name::String, request_body::Vector{Float64
     BMI.set_value(m, name, request_body)
 end
 
-function set_value_at_indices(req::HTTP.Request, name::String, bmi_set_value_at_indices_request::BmiSetValueAtIndicesRequest;)::Nothing
-    BMI.set_value_at_indices(m, name, bmi_set_value_at_indices_request)
+function set_value_at_indices(req::HTTP.Request, name::String, set_value_at_indices_request::SetValueAtIndicesRequest;)::Nothing
+    BMI.set_value_at_indices(m, name, set_value_at_indices_request)
 end
 
 function get_current_time(req::HTTP.Request;)::Float64
@@ -162,7 +162,7 @@ function get_time_step(req::HTTP.Request;)::Float64
     return BMI.get_time_step(m)
 end
 
-function get_time_units(req::HTTP.Request;)::GetTimeUnitsResponse
+function get_time_units(req::HTTP.Request;)::Dict{String, String}
     return Dict("units" => BMI.get_time_units(m))
 end
 
@@ -247,7 +247,7 @@ function get_var_itemsize(req::HTTP.Request, name::String;)::Int64
     return BMI.get_var_itemsize(m, name)
 end
 
-function get_var_location(req::HTTP.Request, name::String;)::GetVarLocationResponseLocation
+function get_var_location(req::HTTP.Request, name::String;)::Dict{String, String}
     return Dict("location" => BMI.get_var_location(m, name))
 end
 
@@ -255,10 +255,10 @@ function get_var_nbytes(req::HTTP.Request, name::String;)::Int64
     return BMI.get_var_nbytes(m, name)
 end
 
-function get_var_type(req::HTTP.Request, name::String;)::GetVarTypeResponse
+function get_var_type(req::HTTP.Request, name::String;)::Dict{String, String}
     raw_type = BMI.get_var_type(m, name)
     map = Dict(
-        "Float64" => "float64",
+        "Float64" => "double",
         "Float32" => "float32",
         "Int64" => "int64",
         "Int32" => "int32",
@@ -271,7 +271,7 @@ function get_var_type(req::HTTP.Request, name::String;)::GetVarTypeResponse
     return Dict("type" => type)
 end
 
-function get_var_units(req::HTTP.Request, name::String;)::GetVarUnitsResponse
+function get_var_units(req::HTTP.Request, name::String;)::Dict{String, String}
     return Dict("units" => BMI.get_var_units(m, name))
 end
 
