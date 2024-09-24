@@ -15,8 +15,8 @@ function initialize(req::HTTP.Request, initialize_request::InitializeRequest)::N
     return nothing
 end
 
-function get_component_name(req::HTTP.Request)::Dict{String, String}
-    return Dict("name" => BMI.get_component_name(m))
+function get_component_name(req::HTTP.Request)::GetComponentNameResponse
+    return GetComponentNameResponse(BMI.get_component_name(m))
 end
 
 function get_input_item_count(req::HTTP.Request;)::Int64
@@ -89,8 +89,8 @@ function get_grid_size(req::HTTP.Request, grid::Int64;)::Int64
     return BMI.get_grid_size(m, grid)
 end
 
-function get_grid_type(req::HTTP.Request, grid::Int64;)::Dict{String, String}
-    return Dict("type" => BMI.get_grid_type(m, grid))
+function get_grid_type(req::HTTP.Request, grid::Int64;)::GetGridTypeResponse
+    return GetGridTypeResponse(type=BMI.get_grid_type(m, grid))
 end
 
 function finalize(req::HTTP.Request;)::Nothing
@@ -151,6 +151,8 @@ function get_current_time(req::HTTP.Request;)::Float64
 end
 
 function get_end_time(req::HTTP.Request;)::Float64
+    # Julia Heat model returns Inf, but that is not a valid JSON number. 
+    # Therefore, it gets converted to null in the JSON response.
     return BMI.get_end_time(m)
 end
 
@@ -162,8 +164,8 @@ function get_time_step(req::HTTP.Request;)::Float64
     return BMI.get_time_step(m)
 end
 
-function get_time_units(req::HTTP.Request;)::Dict{String, String}
-    return Dict("units" => BMI.get_time_units(m))
+function get_time_units(req::HTTP.Request;)::GetTimeUnitsResponse
+    return GetTimeUnitsResponse(BMI.get_time_units(m))
 end
 
 function get_grid_origin(req::HTTP.Request, grid::Int64;)::Vector{Float64}
@@ -247,15 +249,15 @@ function get_var_itemsize(req::HTTP.Request, name::String;)::Int64
     return BMI.get_var_itemsize(m, name)
 end
 
-function get_var_location(req::HTTP.Request, name::String;)::Dict{String, String}
-    return Dict("location" => BMI.get_var_location(m, name))
+function get_var_location(req::HTTP.Request, name::String;)::GetVarLocationResponseLocation
+    return GetVarLocationResponseLocation(BMI.get_var_location(m, name))
 end
 
 function get_var_nbytes(req::HTTP.Request, name::String;)::Int64
     return BMI.get_var_nbytes(m, name)
 end
 
-function get_var_type(req::HTTP.Request, name::String;)::Dict{String, String}
+function get_var_type(req::HTTP.Request, name::String;)::GetVarTypeResponse
     raw_type = BMI.get_var_type(m, name)
     map = Dict(
         "Float64" => "double",
@@ -268,11 +270,11 @@ function get_var_type(req::HTTP.Request, name::String;)::Dict{String, String}
     if type == Any
         error("Invalid data type returned by model: $raw_type, allowed types are: Float64, Float32, Int64, Int32")
     end
-    return Dict("type" => type)
+    return GetVarTypeResponse(type)
 end
 
-function get_var_units(req::HTTP.Request, name::String;)::Dict{String, String}
-    return Dict("units" => BMI.get_var_units(m, name))
+function get_var_units(req::HTTP.Request, name::String;)::GetVarUnitsResponse
+    return GetVarUnitsResponse(BMI.get_var_units(m, name))
 end
 
 function run(model, host, port)
