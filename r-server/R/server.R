@@ -10,7 +10,7 @@ get_component_name <- function(request, response, keys, ...) {
     response$status <- 200L
     response$type <- 'application/json'
     # TODO call model method
-    response$body <- "Some model name"
+    response$body <- list(name = "Some model name")
     response$format(json = format_json())
     return(FALSE)
 }
