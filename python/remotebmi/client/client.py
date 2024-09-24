@@ -30,7 +30,7 @@ class RemoteBmiClient(Bmi):
     def get_component_name(self):
         response = self.client.get("/get_component_name")
         response.raise_for_status()
-        return response.json()
+        return response.json()["name"]
 
     def get_input_var_names(self):
         response = self.client.get("/get_input_var_names")
@@ -60,7 +60,7 @@ class RemoteBmiClient(Bmi):
     def get_var_type(self, name):
         response = self.client.get(f"/get_var_type/{name}")
         response.raise_for_status()
-        raw_type = response.json()
+        raw_type = response.json()["type"]
         lookup = {
             "double": np.float64,
             "float": np.float32,
@@ -72,7 +72,7 @@ class RemoteBmiClient(Bmi):
     def get_var_units(self, name):
         response = self.client.get(f"/get_var_units/{name}")
         response.raise_for_status()
-        return response.json()
+        return response.json()["units"]
 
     def get_var_nbytes(self, name):
         response = self.client.get(f"/get_var_nbytes/{name}")
@@ -82,7 +82,7 @@ class RemoteBmiClient(Bmi):
     def get_var_location(self, name):
         response = self.client.get(f"/get_var_location/{name}")
         response.raise_for_status()
-        return response.json()
+        return response.json()["location"]
 
     def get_var_itemsize(self, name):
         response = self.client.get(f"/get_var_itemsize/{name}")
@@ -107,7 +107,7 @@ class RemoteBmiClient(Bmi):
     def get_time_units(self) -> str:
         response = self.client.get("/get_time_units")
         response.raise_for_status()
-        return response.json()
+        return response.json()["units"]
 
     def get_time_step(self) -> float:
         response = self.client.get("/get_time_step")
@@ -155,7 +155,7 @@ class RemoteBmiClient(Bmi):
     def get_grid_type(self, grid: int) -> str:
         response = self.client.get(f"/get_grid_type/{grid}")
         response.raise_for_status()
-        return response.json()
+        return response.json()["type"]
 
     def get_grid_origin(self, grid: int, origin: ndarray) -> ndarray:
         response = self.client.get(f"/get_grid_origin/{grid}")

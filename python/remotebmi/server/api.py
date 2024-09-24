@@ -38,7 +38,7 @@ def finalize():
 
 
 def get_component_name():
-    return model().get_component_name()
+    return {"name": model().get_component_name()}
 
 
 def get_input_var_names():
@@ -62,11 +62,11 @@ def get_var_grid(name: str):
 
 
 def get_var_type(name: str):
-    return model().get_var_type(name)
+    return {"type": model().get_var_type(name) }
 
 
 def get_var_units(name: str):
-    return model().get_var_units(name)
+    return {"units": model().get_var_units(name)}
 
 
 def get_var_nbytes(name: str):
@@ -74,7 +74,7 @@ def get_var_nbytes(name: str):
 
 
 def get_var_location(name: str):
-    return model().get_var_location(name)
+    return {"location": model().get_var_location(name)}
 
 
 def get_var_itemsize(name: str):
@@ -85,6 +85,7 @@ def get_value(name: str):
     items = reserve_values(model(), name)
     return model().get_value(name, items)
 
+# TODO correct typings
 
 def get_value_at_indices(name: str, indices: list):
     items = reserve_values_at_indices(model(), name, indices)
@@ -106,7 +107,7 @@ def get_grid_rank(name: str):
 
 
 def get_grid_type(name: str):
-    return model().get_grid_type(name)
+    return {"type": model().get_grid_type(name)}
 
 
 def get_grid_shape(name: str):
@@ -160,7 +161,7 @@ def get_time_step():
 
 
 def get_time_units():
-    return model().get_time_units()
+    return {"units": model().get_time_units()}
 
 
 def get_grid_edge_count(name: str):
