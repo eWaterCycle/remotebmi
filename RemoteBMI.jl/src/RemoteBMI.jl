@@ -15,8 +15,8 @@ function initialize(req::HTTP.Request, bmi_initialize_request::BmiInitializeRequ
     return nothing
 end
 
-function get_component_name(req::HTTP.Request;)::String
-    return BMI.get_component_name(m)
+function get_component_name(req::HTTP.Request)::GetComponentNameResponse
+    return Dict("name" => BMI.get_component_name(m))
 end
 
 function get_input_item_count(req::HTTP.Request;)::Int64
@@ -90,7 +90,7 @@ function get_grid_size(req::HTTP.Request, grid::Int64;)::Int64
 end
 
 function get_grid_type(req::HTTP.Request, grid::Int64;)::BmiGetGridTypeResponse
-    return BMI.get_grid_type(m, grid)
+    return Dict("type" => BMI.get_grid_type(m, grid))
 end
 
 function finalize(req::HTTP.Request;)::Nothing
@@ -119,6 +119,7 @@ function reserve_grid_coords(m, grid::Int64, dim_index::Int8)::Vector{Float64}
         size = BMI.get_grid_node_count(m, grid)
     else
         error("Unsupported grid type: $mtype")
+    end
     return zeros(Float64, size)
 end
 
@@ -161,8 +162,8 @@ function get_time_step(req::HTTP.Request;)::Float64
     return BMI.get_time_step(m)
 end
 
-function get_time_units(req::HTTP.Request;)::String
-    return BMI.get_time_units(m)
+function get_time_units(req::HTTP.Request;)::GetTimeUnitsResponse
+    return Dict("units" => BMI.get_time_units(m))
 end
 
 function get_grid_origin(req::HTTP.Request, grid::Int64;)::Vector{Float64}
@@ -247,14 +248,14 @@ function get_var_itemsize(req::HTTP.Request, name::String;)::Int64
 end
 
 function get_var_location(req::HTTP.Request, name::String;)::GetVarLocationResponseLocation
-    return BMI.get_var_location(m, name)
+    return Dict("location" => BMI.get_var_location(m, name))
 end
 
 function get_var_nbytes(req::HTTP.Request, name::String;)::Int64
     return BMI.get_var_nbytes(m, name)
 end
 
-function get_var_type(req::HTTP.Request, name::String;)::String
+function get_var_type(req::HTTP.Request, name::String;)::GetVarTypeResponse
     raw_type = BMI.get_var_type(m, name)
     map = Dict(
         "Float64" => "float64",
@@ -267,11 +268,11 @@ function get_var_type(req::HTTP.Request, name::String;)::String
     if type == Any
         error("Invalid data type returned by model: $raw_type, allowed types are: Float64, Float32, Int64, Int32")
     end
-    return type
+    return Dict("type" => type)
 end
 
-function get_var_units(req::HTTP.Request, name::String;)::String
-    return BMI.get_var_units(m, name)
+function get_var_units(req::HTTP.Request, name::String;)::GetVarUnitsResponse
+    return Dict("units" => BMI.get_var_units(m, name))
 end
 
 function run(model, host, port)
