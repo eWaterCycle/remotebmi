@@ -2,8 +2,33 @@
 # Do not modify this file directly. Modify the OpenAPI specification instead.
 
 
-if !isdefined(@__MODULE__, :GetVarLocationResponseLocation)
-    const GetVarLocationResponseLocation = String
-else
-    @warn("Skipping redefinition of GetVarLocationResponseLocation to String")
+@doc raw"""GetVarLocationResponseLocation
+
+    GetVarLocationResponseLocation(;
+        location="node",
+    )
+
+    - location::String
+"""
+Base.@kwdef mutable struct GetVarLocationResponseLocation <: OpenAPI.APIModel
+    location::Union{Nothing, String} = "node"
+
+    function GetVarLocationResponseLocation(location, )
+        OpenAPI.validate_property(GetVarLocationResponseLocation, Symbol("location"), location)
+        return new(location, )
+    end
+end # type GetVarLocationResponseLocation
+
+const _property_types_GetVarLocationResponseLocation = Dict{Symbol,String}(Symbol("location")=>"String", )
+OpenAPI.property_type(::Type{ GetVarLocationResponseLocation }, name::Symbol) = Union{Nothing,eval(Base.Meta.parse(_property_types_GetVarLocationResponseLocation[name]))}
+
+function check_required(o::GetVarLocationResponseLocation)
+    o.location === nothing && (return false)
+    true
+end
+
+function OpenAPI.validate_property(::Type{ GetVarLocationResponseLocation }, name::Symbol, val)
+    if name === Symbol("location")
+        OpenAPI.validate_param(name, "GetVarLocationResponseLocation", :enum, val, ["node", "edge", "face"])
+    end
 end

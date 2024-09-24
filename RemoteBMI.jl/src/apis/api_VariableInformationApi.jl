@@ -17,6 +17,8 @@ function get_var_grid_validate(handler)
     function get_var_grid_validate_handler(req::HTTP.Request)
         openapi_params = req.context[:openapi_params]
         
+        OpenAPI.validate_param("name", "get_var_grid", :minLength, openapi_params["name"], 1)
+        
         return handler(req)
     end
 end
@@ -44,6 +46,8 @@ end
 function get_var_itemsize_validate(handler)
     function get_var_itemsize_validate_handler(req::HTTP.Request)
         openapi_params = req.context[:openapi_params]
+        
+        OpenAPI.validate_param("name", "get_var_itemsize", :minLength, openapi_params["name"], 1)
         
         return handler(req)
     end
@@ -73,6 +77,8 @@ function get_var_location_validate(handler)
     function get_var_location_validate_handler(req::HTTP.Request)
         openapi_params = req.context[:openapi_params]
         
+        OpenAPI.validate_param("name", "get_var_location", :minLength, openapi_params["name"], 1)
+        
         return handler(req)
     end
 end
@@ -100,6 +106,8 @@ end
 function get_var_nbytes_validate(handler)
     function get_var_nbytes_validate_handler(req::HTTP.Request)
         openapi_params = req.context[:openapi_params]
+        
+        OpenAPI.validate_param("name", "get_var_nbytes", :minLength, openapi_params["name"], 1)
         
         return handler(req)
     end
@@ -129,6 +137,8 @@ function get_var_type_validate(handler)
     function get_var_type_validate_handler(req::HTTP.Request)
         openapi_params = req.context[:openapi_params]
         
+        OpenAPI.validate_param("name", "get_var_type", :minLength, openapi_params["name"], 1)
+        
         return handler(req)
     end
 end
@@ -156,6 +166,8 @@ end
 function get_var_units_validate(handler)
     function get_var_units_validate_handler(req::HTTP.Request)
         openapi_params = req.context[:openapi_params]
+        
+        OpenAPI.validate_param("name", "get_var_units", :minLength, openapi_params["name"], 1)
         
         return handler(req)
     end
