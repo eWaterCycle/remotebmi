@@ -2,42 +2,26 @@ library(fiery)
 library(routr)
 library(reqres)
 
-# TODO move routes to separate file
-bmi_initialize <- function(request, response, keys, ...) {
-    request$parse(json = parse_json())
-    model$bmi_initialize(request$body$config_file)
-    response$status <- 201L
-    return(FALSE)
-}
-
-get_component_name <- function(request, response, keys, ...) {
-    response$status <- 200L
-    response$type <- 'application/json'
-    response$body <- list(name = model$get_component_name())
-    response$format(json = format_json())
-    return(FALSE)
-}
-
-get_output_var_names <- function(request, response, keys, ...) {
-    response$status <- 200L
-    response$type <- 'application/json'
-    response$body <- model$get_output_var_names()
-    response$format(json = format_json())
-    return(FALSE)
-}
-
-serve <- function(port = 50051) {
-    route <- Route$new()
-    route$add_handler('get', '/get_component_name', get_component_name)
-    route$add_handler('get', '/get_output_var_names', get_output_var_names)
-    route$add_handler('post', '/initialize', bmi_initialize)
-
-    router <- RouteStack$new()
+#' Serve the BMI model
+#'
+#' This function serves the model on a specified port and host.
+#'
+#' @param model The model instance to be served. Must implement the subclass of [AbstractBmi](https://github.com/eWaterCycle/bmi-r/blob/master/R/abstract-bmi.R)
+#' @param port The port to serve the model on. Default is 50051 or if BMI_PORT environment variable is set, it will be used.
+#' @param host The host to serve the model on. Default is "127.0.0.1".
+#' @param ignite Whether to ignite the server immediately and block. Default is TRUE.
+#' @return The server application.
+#' @export
+serve <- function(model, port = 50051, host = "127.0.0.1", ignite = TRUE) {
+    route = create_route(model)
+    router <- routr::RouteStack$new()
     router$add_route(route, 'bmi')
 
     port = as.integer(Sys.getenv("BMI_PORT", port))
-    # TODO set-able host
-    app <- Fire$new(port=port)
+    app <- fiery::Fire$new(host=host, port=port)
     app$attach(router)
-    app$ignite()
+    if (ignite) {
+        app$ignite()
+    }
+    return(app)
 }

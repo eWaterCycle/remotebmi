@@ -4,7 +4,7 @@ Version: 0.0.0.9000
 Authors@R: 
     person("Stefan", "Verhoeven", , "s.verhoeven@esciencecenter.nl", role = c("aut", "cre"),
            comment = c(ORCID = "https://orcid.org/0000-0002-5821-2060"))
-Description: Run a R BMI model as a http json web service
+Description: Runs a BMI model as a http json web service.
 URL: https://github.com/eWaterCycle/remotebmi
 License: Apache License (>= 2)
 Encoding: UTF-8
