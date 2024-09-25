@@ -5,10 +5,14 @@ on:
     paths:
       - "openapi.yaml"
       - .github/workflows/openapi.yml
-  pull_request:
+  pull_request_target:
     paths:
       - "openapi.yaml"
       - .github/workflows/openapi.yml
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   lintspec:

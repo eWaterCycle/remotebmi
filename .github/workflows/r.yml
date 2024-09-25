@@ -5,10 +5,14 @@ on:
     paths:
       - "R/remotebmi/**"
       - .github/workflows/r.yml
-  pull_request:
+  pull_request_target:
     paths:
       - "R/remotebmi/**"
       - .github/workflows/r.yml
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   r:

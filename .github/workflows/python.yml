@@ -6,11 +6,15 @@ on:
       - "openapi.yaml"
       - "python/remotebmi/**"
       - .github/workflows/python.yml
-  pull_request:
+  pull_request_target:
     paths:
       - "openapi.yaml"
       - "python/remotebmi/**"
       - .github/workflows/python.yml
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   python:
