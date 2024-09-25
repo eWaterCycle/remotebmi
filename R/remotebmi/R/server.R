@@ -13,15 +13,15 @@ library(reqres)
 #' @return The server application.
 #' @export
 serve <- function(model, port = 50051, host = "127.0.0.1", ignite = TRUE) {
-    route = create_route(model)
-    router <- routr::RouteStack$new()
-    router$add_route(route, 'bmi')
+  route <- create_route(model)
+  router <- routr::RouteStack$new()
+  router$add_route(route, "bmi")
 
-    port = as.integer(Sys.getenv("BMI_PORT", port))
-    app <- fiery::Fire$new(host=host, port=port)
-    app$attach(router)
-    if (ignite) {
-        app$ignite()
-    }
-    return(app)
+  port <- as.integer(Sys.getenv("BMI_PORT", port))
+  app <- fiery::Fire$new(host = host, port = port)
+  app$attach(router)
+  if (ignite) {
+    app$ignite()
+  }
+  return(app)
 }
