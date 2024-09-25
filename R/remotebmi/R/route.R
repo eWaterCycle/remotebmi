@@ -1,5 +1,6 @@
 last_segment <- function(path) {
-  # keys values are lowercase at https://github.com/thomasp85/routr/blob/8605611a10607016a83660f83f310075787a27b2/R/route.R#L250
+  # keys values are lowercase at
+  # https://github.com/thomasp85/routr/blob/8605611a10607016a83660f83f310075787a27b2/R/route.R#L250 # nolint: line_length_linter.
   # need untouched version
   segments <- unlist(strsplit(path, "/"))
   return(segments[length(segments)])
@@ -11,7 +12,9 @@ last_segment <- function(path) {
 #' This function generates a route for the specified model. The route is used to
 #' facilitate communication and interaction with the model.
 #'
-#' @param model The model instance to be used in route handlers Must implement the subclass of [AbstractBmi](https://github.com/eWaterCycle/bmi-r/blob/master/R/abstract-bmi.R)
+#' @param model The model instance to be used in route handlers.
+#' Must implement the subclass of
+#' [AbstractBmi](https://github.com/eWaterCycle/bmi-r/blob/master/R/abstract-bmi.R) # nolint: line_length_linter.
 #'
 #' @return A route object that can be used to interact with the model.
 #'
@@ -37,8 +40,8 @@ create_route <- function(model) {
 
   update_until <- function(request, response, keys, ...) {
     request$parse(json = reqres::parse_json())
-    until <- request$body
-    model$updateUntil(until)
+    time <- request$body
+    model$updateUntil(time)
     response$status <- 204L
     return(FALSE)
   }
@@ -65,11 +68,27 @@ create_route <- function(model) {
     return(FALSE)
   }
 
+  get_output_item_count <- function(request, response, keys, ...) {
+    response$status <- 200L
+    response$type <- "application/json"
+    response$body <- model$getOutputItemCount()
+    response$format(json = reqres::format_json(auto_unbox = TRUE))
+    return(FALSE)
+  }
+
   get_input_var_names <- function(request, response, keys, ...) {
     response$status <- 200L
     response$type <- "application/json"
     response$body <- model$getInputVarNames()
     response$format(json = reqres::format_json())
+    return(FALSE)
+  }
+
+  get_input_item_count <- function(request, response, keys, ...) {
+    response$status <- 200L
+    response$type <- "application/json"
+    response$body <- model$getInputItemCount()
+    response$format(json = reqres::format_json(auto_unbox = TRUE))
     return(FALSE)
   }
 
@@ -124,7 +143,8 @@ create_route <- function(model) {
   get_var_type <- function(request, response, keys, ...) {
     response$status <- 200L
     response$type <- "application/json"
-    rawType <- model$getVarType(last_segment(request$path))
+    name <- last_segment(request$path)
+    rawType <- model$getVarType(name) # nolint: object_name_linter.
     type <- ifelse(rawType == "float64", "double", rawType)
     # TODO map other types to double, float, int32 or int64
     response$body <- list(type = type)
@@ -156,6 +176,15 @@ create_route <- function(model) {
     return(FALSE)
   }
 
+  get_var_location <- function(request, response, keys, ...) {
+    response$status <- 200L
+    response$type <- "application/json"
+    name <- last_segment(request$path)
+    response$body <- list(location = model$getVarLocation(name))
+    response$format(json = reqres::format_json(auto_unbox = TRUE))
+    return(FALSE)
+  }
+
   get_value <- function(request, response, keys, ...) {
     response$status <- 200L
     response$type <- "application/json"
@@ -168,7 +197,8 @@ create_route <- function(model) {
     request$parse(json = reqres::parse_json())
     response$status <- 200L
     response$type <- "application/json"
-    response$body <- model$getValueAtIndices(last_segment(request$path), request$body)
+    name <- last_segment(request$path)
+    response$body <- model$getValueAtIndices(name, request$body)
     response$format(json = reqres::format_json())
     return(FALSE)
   }
@@ -182,7 +212,8 @@ create_route <- function(model) {
 
   set_value_at_indices <- function(request, response, keys, ...) {
     request$parse(json = reqres::parse_json())
-    model$setValueAtIndices(last_segment(request$path), request$body$indices, request$body$values)
+    name <- last_segment(request$path)
+    model$setValueAtIndices(name, request$body$indices, request$body$values)
     response$status <- 204L
     return(FALSE)
   }
@@ -259,18 +290,58 @@ create_route <- function(model) {
     return(FALSE)
   }
 
-  get_grid_connectivity <- function(request, response, keys, ...) {
+  get_grid_node_count <- function(request, response, keys, ...) {
     response$status <- 200L
     response$type <- "application/json"
-    response$body <- model$getGridConnectivity(keys$grid)
+    response$body <- model$getGridNodeCount(keys$grid)
     response$format(json = reqres::format_json())
     return(FALSE)
   }
 
-  get_grid_offset <- function(request, response, keys, ...) {
+  get_grid_edge_count <- function(request, response, keys, ...) {
     response$status <- 200L
     response$type <- "application/json"
-    response$body <- model$getGridOffset(keys$grid)
+    response$body <- model$getGridEdgeCount(keys$grid)
+    response$format(json = reqres::format_json())
+    return(FALSE)
+  }
+
+  get_grid_face_count <- function(request, response, keys, ...) {
+    response$status <- 200L
+    response$type <- "application/json"
+    response$body <- model$getGridFaceCount(keys$grid)
+    response$format(json = reqres::format_json())
+    return(FALSE)
+  }
+
+  get_grid_edge_nodes <- function(request, response, keys, ...) {
+    response$status <- 200L
+    response$type <- "application/json"
+    response$body <- model$getGridEdgeNodes(keys$grid)
+    response$format(json = reqres::format_json())
+    return(FALSE)
+  }
+
+  get_grid_face_edges <- function(request, response, keys, ...) {
+    response$status <- 200L
+    response$type <- "application/json"
+    response$body <- model$getGridFaceEdges(keys$grid)
+    response$format(json = reqres::format_json())
+    return(FALSE)
+  }
+
+  get_grid_face_nodes <- function(request, response, keys, ...) {
+    response$status <- 200L
+    response$type <- "application/json"
+    response$body <- model$getGridFaceNodes(keys$grid)
+    response$format(json = reqres::format_json())
+    return(FALSE)
+  }
+
+  get_grid_nodes_per_face <- function(request, response, keys, ...) {
+    response$status <- 200L
+    response$type <- "application/json"
+    response$body <- model$getGridNodesPerFace(keys$grid)
     response$format(json = reqres::format_json())
     return(FALSE)
   }
@@ -285,7 +356,9 @@ create_route <- function(model) {
   # Exchange items
   route$add_handler("get", "/get_component_name", get_component_name)
   route$add_handler("get", "/get_output_var_names", get_output_var_names)
+  route$add_handler("get", "/get_output_item_count", get_output_item_count)
   route$add_handler("get", "/get_input_var_names", get_input_var_names)
+  route$add_handler("get", "/get_input_item_count", get_input_item_count)
 
   # Getters
   route$add_handler("get", "/get_value/:name", get_value)
@@ -308,6 +381,7 @@ create_route <- function(model) {
   route$add_handler("get", "/get_var_itemsize/:name", get_var_itemsize)
   route$add_handler("get", "/get_var_units/:name", get_var_units)
   route$add_handler("get", "/get_var_nbytes/:name", get_var_nbytes)
+  route$add_handler("get", "/get_var_location/:name", get_var_location)
 
   # Grid information
   route$add_handler("get", "/get_grid_rank/:grid", get_grid_rank)
@@ -324,18 +398,23 @@ create_route <- function(model) {
   route$add_handler("get", "/get_grid_shape/:grid", get_grid_shape)
   route$add_handler("get", "/get_grid_spacing/:grid", get_grid_spacing)
 
-  # Unstructured
-  route$add_handler("get", "/get_grid_connectivity/:grid", get_grid_connectivity)
-  route$add_handler("get", "/get_grid_offset/:grid", get_grid_offset)
+  # # Unstructured
+  route$add_handler("get", "/get_grid_node_count/:grid", get_grid_node_count)
+  route$add_handler("get", "/get_grid_edge_count/:grid", get_grid_edge_count)
+  route$add_handler("get", "/get_grid_face_count/:grid", get_grid_face_count)
+  route$add_handler("get", "/get_grid_edge_nodes/:grid", get_grid_edge_nodes)
+  route$add_handler("get", "/get_grid_face_edges/:grid", get_grid_face_edges)
+  route$add_handler("get", "/get_grid_face_nodes/:grid", get_grid_face_nodes)
+  route$add_handler("get", "/get_grid_nodes_per_face/:grid", get_grid_nodes_per_face) # nolint: line_length_linter.
 
   # TODO Needed?
-  hFallback <- function(request, response, keys, ...) {
+  fallback <- function(request, response, keys, ...) {
     response$status <- 404L
     response$type <- "text/plain"
     response$body <- "Not found"
     return(FALSE)
   }
-  route$add_handler("get", "/*", hFallback)
+  route$add_handler("get", "/*", fallback)
 
   return(route)
 }
