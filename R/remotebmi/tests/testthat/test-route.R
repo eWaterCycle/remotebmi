@@ -1,12 +1,17 @@
 # Poor mans mock
 bmi_initialize_called_with <<- ""
+bmi_get_var_units_called_with <<- ""
 # Mock model object
 mock_model <- list(
   bmi_initialize = function(config_file) {
     bmi_initialize_called_with <<- config_file
   },
   getComponentName = function() "Mock Component",
-  getOutputVarNames = function() c("var1", "var2")
+  getOutputVarNames = function() c("var1", "var2"),
+  getVarUnits = function(name) {
+    bmi_get_var_units_called_with <<- name
+    return("unit1")
+  }
 )
 
 route <- create_route(mock_model)
@@ -41,4 +46,14 @@ test_that("/initialize", {
   route$dispatch(req)
   expect_equal(res$status, 201)
   expect_equal(bmi_initialize_called_with, "some_config")
+})
+
+test_that("/get_var_units", {
+  fake_rook <- fiery::fake_request("/get_var_units/Q")
+  req <- reqres::Request$new(fake_rook)
+  res <- req$respond()
+  route$dispatch(req)
+  expect_equal(res$status, 200)
+  expect_equal(res$body, formatter(list(units = "unit1")))
+  expect_equal(bmi_get_var_units_called_with, "Q")
 })
