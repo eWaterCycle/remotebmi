@@ -7,9 +7,9 @@
 serve(model, port = 50051, host = "127.0.0.1", ignite = TRUE)
 }
 \arguments{
-\item{model}{The model to be served. Must implement the subclass of \href{https://github.com/eWaterCycle/bmi-r/blob/master/R/abstract-bmi.R}{AbstractBmi}}
+\item{model}{The model instance to be served. Must implement the subclass of \href{https://github.com/eWaterCycle/bmi-r/blob/master/R/abstract-bmi.R}{AbstractBmi}}
 
-\item{port}{The port to serve the model on. Default is 50051.}
+\item{port}{The port to serve the model on. Default is 50051 or if BMI_PORT environment variable is set, it will be used.}
 
 \item{host}{The host to serve the model on. Default is "127.0.0.1".}
 

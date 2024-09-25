@@ -1,7 +1,7 @@
 
 
 last_segment <- function(path) {
-    # keys get toLower at https://github.com/thomasp85/routr/blob/8605611a10607016a83660f83f310075787a27b2/R/route.R#L250
+    # keys values are lowercase at https://github.com/thomasp85/routr/blob/8605611a10607016a83660f83f310075787a27b2/R/route.R#L250
     # need untouched version
     segments <- unlist(strsplit(path, '/'))
     return(segments[length(segments)])
@@ -23,7 +23,6 @@ last_segment <- function(path) {
 #'   route <- create_route(model)
 #' }
 #'
-#' @export
 create_route <- function(model) {
     bmi_initialize <- function(request, response, keys, ...) {
         request$parse(json = reqres::parse_json())
