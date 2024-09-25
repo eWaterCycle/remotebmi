@@ -28,3 +28,6 @@ __pycache__
 python/.venv/
 python/heat.toml
 RemoteBMI.jl/example/Project.toml
+RemoteBMI.jl/example/heat.toml
+openapi-generator-cli.jar
+openapitools.json

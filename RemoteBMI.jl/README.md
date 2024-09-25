@@ -35,6 +35,7 @@ BestieTemplate.generate("RemoteBMI.jl")
 The openapi server stubs where generated using the following command:
 
 ```shell
-npx @openapitools/openapi-generator-cli generate -i ./openapi.yaml  -g julia-server -o julia-server --additional-properties=packageName=BmiServer --additional-properties=exportModels=true
+wget https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/7.8.0/openapi-generator-cli-7.8.0.jar -O openapi-generator-cli.jar
+java -jar ./openapi-generator-cli.jar  generate -i ./openapi.yaml  -g julia-server -o julia-server --additional-properties=packageName=BmiServer --additional-properties=exportModels=true
 # Copy the generated files to RemoteBMI.jl/src/
 ```

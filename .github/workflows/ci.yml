@@ -21,17 +21,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Install Redocly
-        run: npm install -g @redocly/cli@latest
 
       - name: Lint OpenAPI with Redocly
-        run: redocly lint openapi.yaml
-
-      - name: Install spectral
-        run: npm install -g @stoplight/spectral-cli
+        run: npx --package @redocly/cli@latest redocly lint openapi.yaml
 
       - name: Lint OpenAPI with Spectral
-        run: spectral lint openapi.yaml
+        run: npx --package @stoplight/spectral-cli spectral lint openapi.yaml
 
       - name: Setup Python
         uses: actions/setup-python@v5

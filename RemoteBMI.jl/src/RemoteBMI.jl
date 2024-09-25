@@ -9,14 +9,14 @@ import BasicModelInterface as BMI
 
 # TODO move route implementations to own module
 
-function initialize(req::HTTP.Request, bmi_initialize_request::BmiInitializeRequest)::Nothing
+function initialize(req::HTTP.Request, initialize_request::InitializeRequest)::Nothing
     global m
-    m = BMI.initialize(MyModel, bmi_initialize_request.config_file)
+    m = BMI.initialize(MyModel, initialize_request.config_file)
     return nothing
 end
 
-function get_component_name(req::HTTP.Request;)::String
-    return BMI.get_component_name(m)
+function get_component_name(req::HTTP.Request)::GetComponentNameResponse
+    return GetComponentNameResponse(BMI.get_component_name(m))
 end
 
 function get_input_item_count(req::HTTP.Request;)::Int64
@@ -89,8 +89,8 @@ function get_grid_size(req::HTTP.Request, grid::Int64;)::Int64
     return BMI.get_grid_size(m, grid)
 end
 
-function get_grid_type(req::HTTP.Request, grid::Int64;)::BmiGetGridTypeResponse
-    return BMI.get_grid_type(m, grid)
+function get_grid_type(req::HTTP.Request, grid::Int64;)::GetGridTypeResponse
+    return GetGridTypeResponse(type=BMI.get_grid_type(m, grid))
 end
 
 function finalize(req::HTTP.Request;)::Nothing
@@ -119,6 +119,7 @@ function reserve_grid_coords(m, grid::Int64, dim_index::Int8)::Vector{Float64}
         size = BMI.get_grid_node_count(m, grid)
     else
         error("Unsupported grid type: $mtype")
+    end
     return zeros(Float64, size)
 end
 
@@ -141,8 +142,8 @@ function set_value(req::HTTP.Request, name::String, request_body::Vector{Float64
     BMI.set_value(m, name, request_body)
 end
 
-function set_value_at_indices(req::HTTP.Request, name::String, bmi_set_value_at_indices_request::BmiSetValueAtIndicesRequest;)::Nothing
-    BMI.set_value_at_indices(m, name, bmi_set_value_at_indices_request)
+function set_value_at_indices(req::HTTP.Request, name::String, set_value_at_indices_request::SetValueAtIndicesRequest;)::Nothing
+    BMI.set_value_at_indices(m, name, set_value_at_indices_request)
 end
 
 function get_current_time(req::HTTP.Request;)::Float64
@@ -150,6 +151,8 @@ function get_current_time(req::HTTP.Request;)::Float64
 end
 
 function get_end_time(req::HTTP.Request;)::Float64
+    # Julia Heat model returns Inf, but that is not a valid JSON number. 
+    # Therefore, it gets converted to null in the JSON response.
     return BMI.get_end_time(m)
 end
 
@@ -161,8 +164,8 @@ function get_time_step(req::HTTP.Request;)::Float64
     return BMI.get_time_step(m)
 end
 
-function get_time_units(req::HTTP.Request;)::String
-    return BMI.get_time_units(m)
+function get_time_units(req::HTTP.Request;)::GetTimeUnitsResponse
+    return GetTimeUnitsResponse(BMI.get_time_units(m))
 end
 
 function get_grid_origin(req::HTTP.Request, grid::Int64;)::Vector{Float64}
@@ -247,17 +250,17 @@ function get_var_itemsize(req::HTTP.Request, name::String;)::Int64
 end
 
 function get_var_location(req::HTTP.Request, name::String;)::GetVarLocationResponseLocation
-    return BMI.get_var_location(m, name)
+    return GetVarLocationResponseLocation(BMI.get_var_location(m, name))
 end
 
 function get_var_nbytes(req::HTTP.Request, name::String;)::Int64
     return BMI.get_var_nbytes(m, name)
 end
 
-function get_var_type(req::HTTP.Request, name::String;)::String
+function get_var_type(req::HTTP.Request, name::String;)::GetVarTypeResponse
     raw_type = BMI.get_var_type(m, name)
     map = Dict(
-        "Float64" => "float64",
+        "Float64" => "double",
         "Float32" => "float32",
         "Int64" => "int64",
         "Int32" => "int32",
@@ -267,11 +270,11 @@ function get_var_type(req::HTTP.Request, name::String;)::String
     if type == Any
         error("Invalid data type returned by model: $raw_type, allowed types are: Float64, Float32, Int64, Int32")
     end
-    return type
+    return GetVarTypeResponse(type)
 end
 
-function get_var_units(req::HTTP.Request, name::String;)::String
-    return BMI.get_var_units(m, name)
+function get_var_units(req::HTTP.Request, name::String;)::GetVarUnitsResponse
+    return GetVarUnitsResponse(BMI.get_var_units(m, name))
 end
 
 function run(model, host, port)
