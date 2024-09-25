@@ -4,9 +4,11 @@ on:
   push:
     paths:
       - "openapi.yaml"
+      - .github/workflows/openapi.yml
   pull_request:
     paths:
       - "openapi.yaml"
+      - .github/workflows/openapi.yml
 
 jobs:
   lintspec:
