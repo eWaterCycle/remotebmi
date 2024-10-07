@@ -14,6 +14,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  id-token: write # This is required for requesting the JWT
+
 jobs:
   r:
     runs-on: ubuntu-latest
@@ -23,13 +26,43 @@ jobs:
         with:
           sparse-checkout: |
             R/remotebmi
-          path: root
-      - name: Move R package to cwd
-        run: shopt -s dotglob && mv root/R/remotebmi/* . && rm -rf root
       - name: Setup R
         uses: r-lib/actions/setup-r@v2
+        working-directory: R/remotebmi
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::rcmdcheck
-          needs: check
+          extra-packages: any::rcmdcheck, any::covr, any::xml2
+          needs: check, coverage
+        working-directory: R/remotebmi
       - uses: r-lib/actions/check-r-package@v2
+        working-directory: R/remotebmi
+      - name: Test coverage
+        working-directory: R/remotebmi
+        run: |
+          cov <- covr::package_coverage(
+            quiet = FALSE,
+            clean = FALSE,
+            install_path = file.path(normalizePath(Sys.getenv("RUNNER_TEMP"), winslash = "/"), "package")
+          )
+          covr::to_cobertura(cov)
+        shell: Rscript {0}
+      - uses: codecov/codecov-action@v4
+        with:
+          fail_ci_if_error: ${{ github.event_name != 'pull_request' && true || false }}
+          file: ./R/remotebmi/cobertura.xml
+          plugin: noop
+          disable_search: true
+          use_oidc: true
+      - name: Show testthat output
+        if: always()
+        run: |
+            ## --------------------------------------------------------------------
+            find '${{ runner.temp }}/R/remotebmi/package' -name 'testthat.Rout*' -exec cat '{}' \; || true
+        shell: bash
+  
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+            name: coverage-test-failures
+            path: ${{ runner.temp }}/R/remotebmi/package
