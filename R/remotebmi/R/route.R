@@ -362,7 +362,7 @@ create_route <- function(model) {
 
   # Getters
   route$add_handler("get", "/get_value/:name", get_value)
-  route$add_handler("get", "/get_value_at_indices/:name", get_value_at_indices)
+  route$add_handler("post", "/get_value_at_indices/:name", get_value_at_indices)
 
   # Setters
   route$add_handler("post", "/set_value/:name", set_value)
