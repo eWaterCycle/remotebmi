@@ -25,7 +25,7 @@ jobs:
             R/remotebmi
           path: root
       - name: Move R package to cwd
-        run: shopt -s dotglob && mv root/R/remotebmi/* .
+        run: shopt -s dotglob && mv root/R/remotebmi/* . && rm -rf root
       - name: Setup R
         uses: r-lib/actions/setup-r@v2
       - uses: r-lib/actions/setup-r-dependencies@v2
