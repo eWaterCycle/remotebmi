@@ -1,27 +1,21 @@
-library(R6)
-library(bmi)
-
 # Poor mans mock
 bmi_initialize_called_with <<- ""
 bmi_get_var_units_called_with <<- ""
 # Mock model object
-# Modelled after
+# TODO add more functions see
 # https://github.com/eWaterCycle/grpc4bmi/blob/main/test/fake_models.py
-MockedBmi <- R6Class("MockedBmi",
-  inherit = AbstractBmi,
-  public = list(
-    bmi_initialize = function(config_file) {
-      bmi_initialize_called_with <<- config_file
-    },
-    get_component_name = function() "Mock Component",
-    get_output_var_names = function() c("var1", "var2"),
-    get_var_units = function(name) {
-      bmi_get_var_units_called_with <<- name
-      return("unit1")
-    }
-  )
+# TODO use bmi-r::AbstractModel and R6Class to make proper subclass
+mock_model <- list(
+  bmi_initialize = function(config_file) {
+    bmi_initialize_called_with <<- config_file
+  },
+  get_component_name = function() "Mock Component",
+  get_output_var_names = function() c("var1", "var2"),
+  get_var_units = function(name) {
+    bmi_get_var_units_called_with <<- name
+    return("unit1")
+  }
 )
-mock_model <- MockedBmi$new()
 
 route <- create_route(mock_model)
 formatter <- reqres::format_json(auto_unbox = TRUE)
