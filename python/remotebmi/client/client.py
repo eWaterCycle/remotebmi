@@ -1,12 +1,15 @@
 import numpy as np
 from bmipy import Bmi
-from httpx import Client
+from httpx import Client, Limits
 from numpy import ndarray
 
 
 class RemoteBmiClient(Bmi):
-    def __init__(self, base_url):
-        self.client = Client(base_url=base_url)
+    def __init__(self, base_url, max_keepalive_connections=0):
+        # In some Python environments the reusing connection causes `illegal status line: bytesarray(b'14')` error
+        # So we need to disable keepalive connections to be more reliable, but less efficient
+        limits = Limits(max_keepalive_connections=max_keepalive_connections)
+        self.client = Client(base_url=base_url, limits=limits)
 
     def __del__(self):
         self.client.close()

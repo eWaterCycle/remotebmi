@@ -68,8 +68,6 @@ client.get_value('Q', dest=np.array([.1]))
 array([0.0044])
 client.get_var_nbytes('Q')
 'mm/h'
-# TODO get_var_nbytes should return int not str
-# this breaks reserve_values() aswell
 dest = reserve_values(client, 'Q')
 r = client.get_value('Q', dest)
 r
