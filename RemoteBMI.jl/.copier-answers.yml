@@ -19,4 +19,4 @@ RunJuliaNightlyOnCI: false
 SimplifiedPRTest: true
 UseCirrusCI: false
 _commit: v0.7.1
-_src_path: https://github.com/abelsiqueira/BestieTemplate.jl
+_src_path: https://github.com/JuliaBesties/BestieTemplate.jl
