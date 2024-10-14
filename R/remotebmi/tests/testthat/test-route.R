@@ -11,6 +11,10 @@ mock_model <- list(
   },
   get_component_name = function() "Mock Component",
   get_output_var_names = function() c("var1", "var2"),
+  get_output_item_count = function() 2,
+  get_input_var_names = function() c(),
+  get_input_item_count = function() 0,
+  get_time_units = function() "h",
   get_var_units = function(name) {
     bmi_get_var_units_called_with <<- name
     return("unit1")
@@ -19,6 +23,7 @@ mock_model <- list(
 
 route <- create_route(mock_model)
 formatter <- reqres::format_json(auto_unbox = TRUE)
+formatter_plain <- reqres::format_json()
 
 test_that("/get_component_name", {
   fake_rook <- fiery::fake_request("/get_component_name")
@@ -59,4 +64,41 @@ test_that("/get_var_units", {
   expect_equal(res$status, 200)
   expect_equal(res$body, formatter(list(units = "unit1")))
   expect_equal(bmi_get_var_units_called_with, "Q")
+})
+
+test_that("/get_input_var_names", {
+  fake_rook <- fiery::fake_request("/get_input_var_names")
+  req <- reqres::Request$new(fake_rook)
+  res <- req$respond()
+  route$dispatch(req)
+  expect_equal(res$status, 200)
+  # TODO should return json string `[]`
+  expect_equal(res$body, NULL)
+})
+
+test_that("/get_input_item_count", {
+  fake_rook <- fiery::fake_request("/get_input_item_count")
+  req <- reqres::Request$new(fake_rook)
+  res <- req$respond()
+  route$dispatch(req)
+  expect_equal(res$status, 200)
+  expect_equal(res$body, formatter(0))
+})
+
+test_that("/get_output_item_count", {
+  fake_rook <- fiery::fake_request("/get_output_item_count")
+  req <- reqres::Request$new(fake_rook)
+  res <- req$respond()
+  route$dispatch(req)
+  expect_equal(res$status, 200)
+  expect_equal(res$body, formatter(2))
+})
+
+test_that("/get_time_units", {
+  fake_rook <- fiery::fake_request("/get_time_units")
+  req <- reqres::Request$new(fake_rook)
+  res <- req$respond()
+  route$dispatch(req)
+  expect_equal(res$status, 200)
+  expect_equal(res$body, formatter(list(units = "h")))
 })
