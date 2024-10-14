@@ -135,7 +135,6 @@ mock_model <- list(
 
 route <- create_route(mock_model)
 formatter <- reqres::format_json(auto_unbox = TRUE)
-formatter_plain <- reqres::format_json()
 
 test_that("/get_component_name", {
   fake_rook <- fiery::fake_request("/get_component_name")
@@ -548,4 +547,13 @@ test_that("/get_grid_nodes_per_face", {
   expect_equal(res$status, 200)
   expect_equal(res$body, formatter(c(4, 4, 3)))
   expect_equal(method_called_with[["get_grid_nodes_per_face"]], "1")
+})
+
+test_that("fallback route", {
+  fake_rook <- fiery::fake_request("/random_url_is_not_found")
+  req <- reqres::Request$new(fake_rook)
+  res <- req$respond()
+  route$dispatch(req)
+  expect_equal(res$status, 404)
+  expect_equal(res$body, "Not found")
 })
