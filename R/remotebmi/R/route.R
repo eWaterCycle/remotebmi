@@ -163,7 +163,8 @@ create_route <- function(model) {
   get_var_units <- function(request, response, keys, ...) {
     response$status <- 200L
     response$type <- "application/json"
-    response$body <- list(units = model$get_var_units(last_segment(request$path)))
+    units <- model$get_var_units(last_segment(request$path))
+    response$body <- list(units = units)
     response$format(json = reqres::format_json(auto_unbox = TRUE))
     return(FALSE)
   }
@@ -294,7 +295,7 @@ create_route <- function(model) {
     response$status <- 200L
     response$type <- "application/json"
     response$body <- model$get_grid_node_count(keys$grid)
-    response$format(json = reqres::format_json())
+    response$format(json = reqres::format_json(auto_unbox = TRUE))
     return(FALSE)
   }
 
@@ -302,7 +303,7 @@ create_route <- function(model) {
     response$status <- 200L
     response$type <- "application/json"
     response$body <- model$get_grid_edge_count(keys$grid)
-    response$format(json = reqres::format_json())
+    response$format(json = reqres::format_json(auto_unbox = TRUE))
     return(FALSE)
   }
 
@@ -310,7 +311,7 @@ create_route <- function(model) {
     response$status <- 200L
     response$type <- "application/json"
     response$body <- model$get_grid_face_count(keys$grid)
-    response$format(json = reqres::format_json())
+    response$format(json = reqres::format_json(auto_unbox = TRUE))
     return(FALSE)
   }
 
