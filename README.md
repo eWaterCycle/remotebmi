@@ -1,5 +1,6 @@
 # Remote BMI
 
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 
 The [Basic Model Interface (BMI)](https://bmi.readthedocs.io/en/stable/) is a standard interface for models. 
 The interface is available in different languages and a [language agnosting version in SIDL](https://github.com/csdms/bmi/blob/stable/bmi.sidl).
@@ -19,6 +20,12 @@ The [REST API specification](openapi.yaml) is in the [OpenAPI](https://swagger.i
 ## Usage
 
 [OpenAPI reference documentation](https://redocly.github.io/redoc/?url=https://github.com/eWaterCycle/remotebmi/raw/main/openapi.yaml)
+
+## Structure
+
+This repository is a monorepo containing packages for different languages.
+1. Python client and server, in [./python/](./python) directory
+2. Julia server, in [./RemoteBMI.jl/](./RemoteBMI.jl/) directory
 
 ### Python consumer
 
