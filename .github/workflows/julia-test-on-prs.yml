@@ -5,9 +5,9 @@ on:
     # branches:
     #   - main
     paths:
-      - "src/**"
-      - "test/**"
-      - "*.toml"
+      - "RemoteBMI.jl/src/**"
+      - "RemoteBMI.jl/test/**"
+      - "RemoteBMI.jl/*.toml"
     types: [opened, synchronize, reopened]
 
 concurrency:
