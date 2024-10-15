@@ -9,10 +9,6 @@ on:
         - "RemoteBMI.jl/**"
         - .github/workflows/julia-test.yml
   workflow_dispatch:
-  pull_request_target:
-    paths:
-      - "RemoteBMI.jl/**"
-      - .github/workflows/julia-test.yml
 
 jobs:
   test:
