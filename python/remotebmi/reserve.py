@@ -23,7 +23,7 @@ def reserve_grid_padding(model: Bmi, grid_id: int) -> np.ndarray:
     return np.empty(model.get_grid_rank(grid_id), dtype=np.float64)
 
 
-def reserve_grid_nodes(model: Bmi, grid_id: int, dim_index: int) -> np.ndarray:
+def reserve_grid_nodes(model: Bmi, grid_id: int, dim_index: int = 0) -> np.ndarray:
     """Reserve dest for :func:`bmipy.Bmi.get_grid_x`, :func:`bmipy.Bmi.get_grid_y` and :func:`bmipy.Bmi.get_grid_z`
 
     The dim_index goes x,y,z and model.get_grid_shape goes z,y,x or y,x so index is inverted

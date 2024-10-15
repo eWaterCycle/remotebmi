@@ -5,8 +5,15 @@ from numpy import ndarray
 
 
 class RemoteBmiClient(Bmi):
-    def __init__(self, base_url):
-        self.client = Client(base_url=base_url)
+    def __init__(self, base_url, timeout=60 * 60 * 24):
+        """RemoteBmiClient constructor
+
+        Args:
+            base_url: Where the remote BMI server is running.
+            timeout: How long a response can take. 
+                Defaults to 1 day. Set to None to disable timeout.
+        """
+        self.client = Client(base_url=base_url, timeout=timeout)
 
     def __del__(self):
         self.client.close()

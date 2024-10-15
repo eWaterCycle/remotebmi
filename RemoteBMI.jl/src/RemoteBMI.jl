@@ -124,17 +124,17 @@ function reserve_grid_coords(m, grid::Int64, dim_index::Int8)::Vector{Float64}
 end
 
 function get_grid_x(req::HTTP.Request, grid::Int64;)::Vector{Float64}
-    x = reserve_grid_coords(m, grid, 1)
+    x = reserve_grid_coords(m, grid, Int8(1))
     return BMI.get_grid_x(m, grid, x)
 end
 
 function get_grid_y(req::HTTP.Request, grid::Int64;)::Vector{Float64}
-    y = reserve_grid_coords(m, grid, 2)
+    y = reserve_grid_coords(m, grid, Int8(2))
     return BMI.get_grid_y(m, grid, y)
 end
 
 function get_grid_z(req::HTTP.Request, grid::Int64;)::Vector{Float64}
-    z = reserve_grid_coords(m, grid, 3)
+    z = reserve_grid_coords(m, grid, Int8(3))
     return BMI.get_grid_z(m, grid, z)
 end
 
