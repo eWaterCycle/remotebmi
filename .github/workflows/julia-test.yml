@@ -12,7 +12,7 @@ on:
 
 jobs:
   test:
-    uses: ./RemoteBMI.jl/.github/workflows/ReusableTest.yml
+    uses: ./.github/workflows/JuliaReusableTest.yml
     with:
       os: ${{ matrix.os }}
       version: ${{ matrix.version }}
