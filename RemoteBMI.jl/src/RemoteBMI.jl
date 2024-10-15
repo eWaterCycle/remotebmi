@@ -277,6 +277,17 @@ function get_var_units(req::HTTP.Request, name::String;)::GetVarUnitsResponse
     return GetVarUnitsResponse(BMI.get_var_units(m, name))
 end
 
+"""
+    run(model, host, port)
+
+Expose the specified model as web service.
+
+# Arguments
+- `model`: The model to be initialized and run.
+- `host`: The hostname or IP address.
+- `port`: The port number on to run the service.
+
+"""
 function run(model, host, port)
     global MyModel = model
     try
@@ -288,5 +299,8 @@ function run(model, host, port)
         @error("Server error", exception=(ex, catch_backtrace()))
     end
 end
+
+include("Client.jl")
+export Client
 
 end

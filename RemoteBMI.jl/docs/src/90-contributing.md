@@ -23,3 +23,9 @@ Otherwise, say what your proposed solution is and wait for a discussion around i
 
 If your solution involves code (or something that requires running the package locally), check the [developer documentation](91-developer.md).
 Otherwise, you can use the GitHub interface directly to create your pull request.
+
+## Running tests
+
+```shell
+julia -e 'using Pkg; Pkg.activate("."); Pkg.test()'
+```
