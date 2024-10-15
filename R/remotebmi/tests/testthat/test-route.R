@@ -208,8 +208,7 @@ test_that("/get_input_var_names", {
   res <- req$respond()
   route$dispatch(req)
   expect_equal(res$status, 200)
-  # TODO should return json string `[]`
-  expect_equal(res$body, NULL)
+  expect_equal(res$body, "[]")
 })
 
 test_that("/get_input_item_count", {
@@ -358,6 +357,54 @@ test_that("/get_value_at_indices", {
   expect_equal(res$body, formatter(list(4.2)))
   expected <- list(name = "Q", indices = c(1, 2, 3))
   expect_equal(method_called_with[["get_value_at_indices"]], expected)
+})
+
+test_that("/get_value_at_indices, given string", {
+  fake_rook <- fiery::fake_request("/get_value_at_indices/Q",
+    content = "foobar",
+    method = "post",
+    headers = list("Content_Type" = "application/json")
+  )
+  req <- reqres::Request$new(fake_rook)
+  res <- req$respond()
+  route$dispatch(req)
+  expect_equal(res$status, 400)
+  expected <- list(
+    title = "Request body must be an array"
+  )
+  expect_equal(res$body, formatter(expected))
+})
+
+test_that("/get_value_at_indices, given empty list", {
+  fake_rook <- fiery::fake_request("/get_value_at_indices/Q",
+    content = "[]",
+    method = "post",
+    headers = list("Content_Type" = "application/json")
+  )
+  req <- reqres::Request$new(fake_rook)
+  res <- req$respond()
+  route$dispatch(req)
+  expect_equal(res$status, 400)
+  expected <- list(
+    title = "Request body must be a non-empty list"
+  )
+  expect_equal(res$body, formatter(expected))
+})
+
+test_that("/get_value_at_indices, given negative index", {
+  fake_rook <- fiery::fake_request("/get_value_at_indices/Q",
+    content = "[-1]",
+    method = "post",
+    headers = list("Content_Type" = "application/json")
+  )
+  req <- reqres::Request$new(fake_rook)
+  res <- req$respond()
+  route$dispatch(req)
+  expect_equal(res$status, 400)
+  expected <- list(
+    title = "Each request body item must be a non-negative integer"
+  )
+  expect_equal(res$body, formatter(expected))
 })
 
 test_that("/set_value", {

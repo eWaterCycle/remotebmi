@@ -63,8 +63,13 @@ create_route <- function(model) {
   get_output_var_names <- function(request, response, keys, ...) {
     response$status <- 200L
     response$type <- "application/json"
-    response$body <- model$get_output_var_names()
-    response$format(json = reqres::format_json())
+    names <- model$get_output_var_names()
+    if (is.null(names)) {
+      response$body <- "[]"
+    } else {
+      response$body <- names
+      response$format(json = reqres::format_json())
+    }
     return(FALSE)
   }
 
@@ -79,8 +84,13 @@ create_route <- function(model) {
   get_input_var_names <- function(request, response, keys, ...) {
     response$status <- 200L
     response$type <- "application/json"
-    response$body <- model$get_input_var_names()
-    response$format(json = reqres::format_json())
+    names <- model$get_input_var_names()
+    if (is.null(names)) {
+      response$body <- "[]"
+    } else {
+      response$body <- names
+      response$format(json = reqres::format_json())
+    }
     return(FALSE)
   }
 
@@ -199,7 +209,25 @@ create_route <- function(model) {
     response$status <- 200L
     response$type <- "application/json"
     name <- last_segment(request$path)
-    response$body <- model$get_value_at_indices(name, request$body)
+    indices <- request$body
+    if (!is.integer(indices) && !is.list(indices)) {
+      response$status <- 400L
+      response$body <- list(title = "Request body must be an array")
+      response$format(json = reqres::format_json(auto_unbox = TRUE))
+      return(FALSE)
+    } else if (length(indices) == 0) {
+      response$status <- 400L
+      response$body <- list(title = "Request body must be a non-empty list")
+      response$format(json = reqres::format_json(auto_unbox = TRUE))
+      return(FALSE)
+    } else if (any(indices < 0)) {
+      response$status <- 400L
+      title <- "Each request body item must be a non-negative integer"
+      response$body <- list(title = title)
+      response$format(json = reqres::format_json(auto_unbox = TRUE))
+      return(FALSE)
+    }
+    response$body <- model$get_value_at_indices(name, indices)
     response$format(json = reqres::format_json())
     return(FALSE)
   }

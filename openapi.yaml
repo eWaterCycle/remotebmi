@@ -1138,11 +1138,13 @@ components:
         format: int64
         description: Values of variable are indexed 0-based.
         minimum: 0
+      minItems: 1
     Doubles:
       type: array
       items:
         type: number
         format: double
+      minItems: 1
     GetGridRankResponse:
       type: integer
       format: int32
@@ -1186,10 +1188,12 @@ components:
       type: array
       items:
         type: number
+      minItems: 1
     GetValueResponse:
       type: array
       items:
         type: number
+      minItems: 1
     GetVarGridResponse:
       type: integer
       format: int32
@@ -1250,10 +1254,12 @@ components:
             description: Values of variable are indexed 0-based.
             format: int64
             minimum: 0
+          minItems: 1
         values:
           type: array
           items:
             type: number
+          minItems: 1
       required:
         - indices
         - values
@@ -1262,6 +1268,7 @@ components:
       type: array
       items:
         type: number
+      minItems: 1
     Grid:
       type: integer
       format: int32
