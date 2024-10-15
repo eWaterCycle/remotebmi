@@ -10,7 +10,7 @@ class RemoteBmiClient(Bmi):
 
         Args:
             base_url: Where the remote BMI server is running.
-            timeout: How long a response can take. 
+            timeout: How long a response can take.
                 Defaults to 1 day. Set to None to disable timeout.
         """
         self.client = Client(base_url=base_url, timeout=timeout)
