@@ -173,14 +173,8 @@ function get_grid_origin(req::HTTP.Request, grid::Int64;)::Vector{Float64}
     return BMI.get_grid_origin(m, grid, origin)
 end
 
-function reserve_grid_shape(m, grid::Int64;)::Vector{Int64}
-    rank = BMI.get_grid_rank(m, grid)
-    return zeros(Int64, rank)
-end
-
 function get_grid_shape(req::HTTP.Request, grid::Int64;)::Vector{Int64}
-    shape = reserve_grid_shape(m, grid)
-    return BMI.get_grid_shape(m, grid, shape)
+    return BMI.get_grid_shape(m, grid)
 end
 
 function reserve_grid_spacing(m, grid::Int64;)::Vector{Float64}

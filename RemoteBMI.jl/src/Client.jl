@@ -5,6 +5,8 @@ using JSON
 using OpenAPI
 include("modelincludes.jl")
 
+# TODO generate http client with openapi generator
+
 import BasicModelInterface as BMI
 
 Base.@kwdef mutable struct ClientModel
@@ -35,6 +37,32 @@ function BMI.get_component_name(m::ClientModel)
     url = m.base_url * "/get_component_name"
     response = HTTP.get(url)
     return JSON.parse(String(response.body))["name"]
+end
+
+function BMI.get_grid_type(m::ClientModel, grid)
+    url = m.base_url * "/get_grid_type/$grid"
+    response = HTTP.get(url)
+    return JSON.parse(String(response.body))["type"]
+end
+
+function BMI.get_grid_shape(m::ClientModel, grid)
+    url = m.base_url * "/get_grid_shape/$grid"
+    response = HTTP.get(url)
+    return JSON.parse(String(response.body))
+end
+
+function BMI.get_grid_rank(m::ClientModel, grid)
+    url = m.base_url * "/get_grid_rank/$grid"
+    response = HTTP.get(url)
+    return JSON.parse(String(response.body))
+end
+
+function BMI.get_grid_x(m::ClientModel, grid, x::Vector{T}) where {T<:AbstractFloat}
+    url = m.base_url * "/get_grid_x/$grid"
+    raw_response = HTTP.get(url)
+    response = JSON.parse(String(raw_response.body))
+    copyto!(x, response)
+    return x
 end
 
 end

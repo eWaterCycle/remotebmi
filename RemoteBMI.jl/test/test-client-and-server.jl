@@ -22,6 +22,16 @@ end
   model = BMI.initialize(model, "config_file")
 
   @test BMI.get_component_name(model) == "FakeModel"
+  @test BMI.get_grid_type(model, 1) == "uniform_rectilinear"
+  @test BMI.get_grid_shape(model, 1) == [2, 3, 4]
+  @test BMI.get_grid_x(model, 1, zeros(4)) == [0.1, 0.2, 0.3, 0.4]
+  # Test that given array is filled after get_grid_x call
+  function test_grid_x_filled()
+    x = zeros(4)
+    BMI.get_grid_x(model, 1, x)
+    return x
+  end
+  @test test_grid_x_filled() == [0.1, 0.2, 0.3, 0.4]
 
   # TODO Stop server, now gets killed when Julia exits
 end
