@@ -3,9 +3,8 @@ module Client
 using HTTP
 using JSON
 using OpenAPI
-include("modelincludes.jl")
-
-# TODO generate http client with openapi generator
+import OpenAPI.Clients
+include("client/BmiClient.jl")
 
 import BasicModelInterface as BMI
 
@@ -24,43 +23,35 @@ end
 # here we use an instance that has be setup with the base_url
 # TODO is this ok? Could move base_url arg here, but will need other args like timeouts.
 function BMI.initialize(m::ClientModel, config_file::String)
-    url = m.base_url * "/initialize"
-    HTTP.post(
-        url,
-        ["Content-Type" => "application/json"],
-        json(InitializeRequest(config_file))
-    )
-    return m
+    api = IRFApi(OpenAPI.Clients.Client(m.base_url))
+    return api.initialize(InitializeRequest(config_file))
 end
 
 function BMI.get_component_name(m::ClientModel)
-    url = m.base_url * "/get_component_name"
-    response = HTTP.get(url)
-    return JSON.parse(String(response.body))["name"]
+    api = ExchangeItemsApi(OpenAPI.Clients.Client(m.base_url))
+    response = api.get_component_name()
+    return response.name
 end
 
 function BMI.get_grid_type(m::ClientModel, grid)
-    url = m.base_url * "/get_grid_type/$grid"
-    response = HTTP.get(url)
-    return JSON.parse(String(response.body))["type"]
+    api = GridInformationApi(OpenAPI.Clients.Client(m.base_url))
+    response = api.get_grid_type(grid)
+    return response.type
 end
 
 function BMI.get_grid_shape(m::ClientModel, grid)
-    url = m.base_url * "/get_grid_shape/$grid"
-    response = HTTP.get(url)
-    return JSON.parse(String(response.body))
+    api = GridInformationApi(OpenAPI.Clients.Client(m.base_url))
+    return api.get_grid_shape(grid)
 end
 
 function BMI.get_grid_rank(m::ClientModel, grid)
-    url = m.base_url * "/get_grid_rank/$grid"
-    response = HTTP.get(url)
-    return JSON.parse(String(response.body))
+    api = GridInformationApi(OpenAPI.Clients.Client(m.base_url))
+    return api.get_grid_rank(grid)
 end
 
 function BMI.get_grid_x(m::ClientModel, grid, x::Vector{T}) where {T<:AbstractFloat}
-    url = m.base_url * "/get_grid_x/$grid"
-    raw_response = HTTP.get(url)
-    response = JSON.parse(String(raw_response.body))
+    api = NURCApi(OpenAPI.Clients.Client(m.base_url))
+    response = api.get_grid_x(grid)
     copyto!(x, response)
     return x
 end
