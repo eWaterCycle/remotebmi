@@ -1,12 +1,18 @@
-name: Validate OpenAPI
+name: Validate OpenAPI.yaml
 
 on:
   push:
     paths:
       - "openapi.yaml"
-  pull_request:
+      - .github/workflows/openapi.yml
+  pull_request_target:
     paths:
       - "openapi.yaml"
+      - .github/workflows/openapi.yml
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   lintspec:
@@ -38,19 +44,3 @@ jobs:
 
       - name: Yamllint
         run: yamllint openapi.yaml
-
-  python:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: "pip"
-      - name: Install ruff
-        run: pip install ruff
-      - name: Run ruff
-        run: ruff check python/remotebmi
