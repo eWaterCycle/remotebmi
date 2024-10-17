@@ -117,9 +117,3 @@ serve(MyModel::ModelBmi$new(), port=port, host="localhost")
 Any language that can run a HTTP server and parse/load JSON can be used as a provider.
 
 The server should implement the [openapi.yaml specification](openapi.yaml).
-
-## AI Disclaimer
-
-The documentation/software code in this repository has been generated and/or refined using
-GitHub CoPilot. All AI-output has been verified for correctness,
-accuracy and completeness, adapted where needed, and approved by the author.
