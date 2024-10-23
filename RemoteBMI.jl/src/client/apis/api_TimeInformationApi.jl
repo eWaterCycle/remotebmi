@@ -2,25 +2,31 @@
 # Do not modify this file directly. Modify the OpenAPI specification instead.
 
 struct TimeInformationApi <: OpenAPI.APIClientImpl
-    client::OpenAPI.Clients.Client
+  client::OpenAPI.Clients.Client
 end
 
 """
 The default API base path for APIs in `TimeInformationApi`.
 This can be used to construct the `OpenAPI.Clients.Client` instance.
 """
-basepath(::Type{ TimeInformationApi }) = "http://localhost:50051"
+basepath(::Type{TimeInformationApi}) = "http://localhost:50051"
 
-const _returntypes_get_current_time_TimeInformationApi = Dict{Regex,Type}(
-    Regex("^" * replace("200", "x"=>".") * "\$") => Float64,
-    Regex("^" * replace("0", "x"=>".") * "\$") => ProblemDetails,
+const _returntypes_get_current_time_TimeInformationApi = Dict{Regex, Type}(
+  Regex("^" * replace("200", "x" => ".") * "\$") => Float64,
+  Regex("^" * replace("0", "x" => ".") * "\$") => ProblemDetails,
 )
 
-function _oacinternal_get_current_time(_api::TimeInformationApi; _mediaType=nothing)
-    _ctx = OpenAPI.Clients.Ctx(_api.client, "GET", _returntypes_get_current_time_TimeInformationApi, "/get_current_time", [])
-    OpenAPI.Clients.set_header_accept(_ctx, ["application/json", ])
-    OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
-    return _ctx
+function _oacinternal_get_current_time(_api::TimeInformationApi; _mediaType = nothing)
+  _ctx = OpenAPI.Clients.Ctx(
+    _api.client,
+    "GET",
+    _returntypes_get_current_time_TimeInformationApi,
+    "/get_current_time",
+    [],
+  )
+  OpenAPI.Clients.set_header_accept(_ctx, ["application/json"])
+  OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
+  return _ctx
 end
 
 @doc raw"""The current model time.
@@ -29,26 +35,32 @@ Params:
 
 Return: Float64, OpenAPI.Clients.ApiResponse
 """
-function get_current_time(_api::TimeInformationApi; _mediaType=nothing)
-    _ctx = _oacinternal_get_current_time(_api; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx)
+function get_current_time(_api::TimeInformationApi; _mediaType = nothing)
+  _ctx = _oacinternal_get_current_time(_api; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx)
 end
 
-function get_current_time(_api::TimeInformationApi, response_stream::Channel; _mediaType=nothing)
-    _ctx = _oacinternal_get_current_time(_api; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx, response_stream)
+function get_current_time(_api::TimeInformationApi, response_stream::Channel; _mediaType = nothing)
+  _ctx = _oacinternal_get_current_time(_api; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx, response_stream)
 end
 
-const _returntypes_get_end_time_TimeInformationApi = Dict{Regex,Type}(
-    Regex("^" * replace("200", "x"=>".") * "\$") => Float64,
-    Regex("^" * replace("0", "x"=>".") * "\$") => ProblemDetails,
+const _returntypes_get_end_time_TimeInformationApi = Dict{Regex, Type}(
+  Regex("^" * replace("200", "x" => ".") * "\$") => Float64,
+  Regex("^" * replace("0", "x" => ".") * "\$") => ProblemDetails,
 )
 
-function _oacinternal_get_end_time(_api::TimeInformationApi; _mediaType=nothing)
-    _ctx = OpenAPI.Clients.Ctx(_api.client, "GET", _returntypes_get_end_time_TimeInformationApi, "/get_end_time", [])
-    OpenAPI.Clients.set_header_accept(_ctx, ["application/json", ])
-    OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
-    return _ctx
+function _oacinternal_get_end_time(_api::TimeInformationApi; _mediaType = nothing)
+  _ctx = OpenAPI.Clients.Ctx(
+    _api.client,
+    "GET",
+    _returntypes_get_end_time_TimeInformationApi,
+    "/get_end_time",
+    [],
+  )
+  OpenAPI.Clients.set_header_accept(_ctx, ["application/json"])
+  OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
+  return _ctx
 end
 
 @doc raw"""The end time of the model.
@@ -57,26 +69,32 @@ Params:
 
 Return: Float64, OpenAPI.Clients.ApiResponse
 """
-function get_end_time(_api::TimeInformationApi; _mediaType=nothing)
-    _ctx = _oacinternal_get_end_time(_api; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx)
+function get_end_time(_api::TimeInformationApi; _mediaType = nothing)
+  _ctx = _oacinternal_get_end_time(_api; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx)
 end
 
-function get_end_time(_api::TimeInformationApi, response_stream::Channel; _mediaType=nothing)
-    _ctx = _oacinternal_get_end_time(_api; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx, response_stream)
+function get_end_time(_api::TimeInformationApi, response_stream::Channel; _mediaType = nothing)
+  _ctx = _oacinternal_get_end_time(_api; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx, response_stream)
 end
 
-const _returntypes_get_start_time_TimeInformationApi = Dict{Regex,Type}(
-    Regex("^" * replace("200", "x"=>".") * "\$") => Float64,
-    Regex("^" * replace("0", "x"=>".") * "\$") => ProblemDetails,
+const _returntypes_get_start_time_TimeInformationApi = Dict{Regex, Type}(
+  Regex("^" * replace("200", "x" => ".") * "\$") => Float64,
+  Regex("^" * replace("0", "x" => ".") * "\$") => ProblemDetails,
 )
 
-function _oacinternal_get_start_time(_api::TimeInformationApi; _mediaType=nothing)
-    _ctx = OpenAPI.Clients.Ctx(_api.client, "GET", _returntypes_get_start_time_TimeInformationApi, "/get_start_time", [])
-    OpenAPI.Clients.set_header_accept(_ctx, ["application/json", ])
-    OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
-    return _ctx
+function _oacinternal_get_start_time(_api::TimeInformationApi; _mediaType = nothing)
+  _ctx = OpenAPI.Clients.Ctx(
+    _api.client,
+    "GET",
+    _returntypes_get_start_time_TimeInformationApi,
+    "/get_start_time",
+    [],
+  )
+  OpenAPI.Clients.set_header_accept(_ctx, ["application/json"])
+  OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
+  return _ctx
 end
 
 @doc raw"""The start time of the model.
@@ -85,26 +103,32 @@ Params:
 
 Return: Float64, OpenAPI.Clients.ApiResponse
 """
-function get_start_time(_api::TimeInformationApi; _mediaType=nothing)
-    _ctx = _oacinternal_get_start_time(_api; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx)
+function get_start_time(_api::TimeInformationApi; _mediaType = nothing)
+  _ctx = _oacinternal_get_start_time(_api; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx)
 end
 
-function get_start_time(_api::TimeInformationApi, response_stream::Channel; _mediaType=nothing)
-    _ctx = _oacinternal_get_start_time(_api; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx, response_stream)
+function get_start_time(_api::TimeInformationApi, response_stream::Channel; _mediaType = nothing)
+  _ctx = _oacinternal_get_start_time(_api; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx, response_stream)
 end
 
-const _returntypes_get_time_step_TimeInformationApi = Dict{Regex,Type}(
-    Regex("^" * replace("200", "x"=>".") * "\$") => Float64,
-    Regex("^" * replace("0", "x"=>".") * "\$") => ProblemDetails,
+const _returntypes_get_time_step_TimeInformationApi = Dict{Regex, Type}(
+  Regex("^" * replace("200", "x" => ".") * "\$") => Float64,
+  Regex("^" * replace("0", "x" => ".") * "\$") => ProblemDetails,
 )
 
-function _oacinternal_get_time_step(_api::TimeInformationApi; _mediaType=nothing)
-    _ctx = OpenAPI.Clients.Ctx(_api.client, "GET", _returntypes_get_time_step_TimeInformationApi, "/get_time_step", [])
-    OpenAPI.Clients.set_header_accept(_ctx, ["application/json", ])
-    OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
-    return _ctx
+function _oacinternal_get_time_step(_api::TimeInformationApi; _mediaType = nothing)
+  _ctx = OpenAPI.Clients.Ctx(
+    _api.client,
+    "GET",
+    _returntypes_get_time_step_TimeInformationApi,
+    "/get_time_step",
+    [],
+  )
+  OpenAPI.Clients.set_header_accept(_ctx, ["application/json"])
+  OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
+  return _ctx
 end
 
 @doc raw"""Get the time step used in the model.
@@ -113,26 +137,32 @@ Params:
 
 Return: Float64, OpenAPI.Clients.ApiResponse
 """
-function get_time_step(_api::TimeInformationApi; _mediaType=nothing)
-    _ctx = _oacinternal_get_time_step(_api; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx)
+function get_time_step(_api::TimeInformationApi; _mediaType = nothing)
+  _ctx = _oacinternal_get_time_step(_api; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx)
 end
 
-function get_time_step(_api::TimeInformationApi, response_stream::Channel; _mediaType=nothing)
-    _ctx = _oacinternal_get_time_step(_api; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx, response_stream)
+function get_time_step(_api::TimeInformationApi, response_stream::Channel; _mediaType = nothing)
+  _ctx = _oacinternal_get_time_step(_api; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx, response_stream)
 end
 
-const _returntypes_get_time_units_TimeInformationApi = Dict{Regex,Type}(
-    Regex("^" * replace("200", "x"=>".") * "\$") => GetTimeUnitsResponse,
-    Regex("^" * replace("0", "x"=>".") * "\$") => ProblemDetails,
+const _returntypes_get_time_units_TimeInformationApi = Dict{Regex, Type}(
+  Regex("^" * replace("200", "x" => ".") * "\$") => GetTimeUnitsResponse,
+  Regex("^" * replace("0", "x" => ".") * "\$") => ProblemDetails,
 )
 
-function _oacinternal_get_time_units(_api::TimeInformationApi; _mediaType=nothing)
-    _ctx = OpenAPI.Clients.Ctx(_api.client, "GET", _returntypes_get_time_units_TimeInformationApi, "/get_time_units", [])
-    OpenAPI.Clients.set_header_accept(_ctx, ["application/json", ])
-    OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
-    return _ctx
+function _oacinternal_get_time_units(_api::TimeInformationApi; _mediaType = nothing)
+  _ctx = OpenAPI.Clients.Ctx(
+    _api.client,
+    "GET",
+    _returntypes_get_time_units_TimeInformationApi,
+    "/get_time_units",
+    [],
+  )
+  OpenAPI.Clients.set_header_accept(_ctx, ["application/json"])
+  OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
+  return _ctx
 end
 
 @doc raw"""Get the units of time as reported by the model’s BMI. If model has absolute start time, you can use `since` format, see [cfconventions](https://cfconventions.org/cf-conventions/cf-conventions#time-coordinate). 
@@ -141,14 +171,14 @@ Params:
 
 Return: GetTimeUnitsResponse, OpenAPI.Clients.ApiResponse
 """
-function get_time_units(_api::TimeInformationApi; _mediaType=nothing)
-    _ctx = _oacinternal_get_time_units(_api; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx)
+function get_time_units(_api::TimeInformationApi; _mediaType = nothing)
+  _ctx = _oacinternal_get_time_units(_api; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx)
 end
 
-function get_time_units(_api::TimeInformationApi, response_stream::Channel; _mediaType=nothing)
-    _ctx = _oacinternal_get_time_units(_api; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx, response_stream)
+function get_time_units(_api::TimeInformationApi, response_stream::Channel; _mediaType = nothing)
+  _ctx = _oacinternal_get_time_units(_api; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx, response_stream)
 end
 
 export get_current_time

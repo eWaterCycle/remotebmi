@@ -2,28 +2,34 @@
 # Do not modify this file directly. Modify the OpenAPI specification instead.
 
 struct VariableInformationApi <: OpenAPI.APIClientImpl
-    client::OpenAPI.Clients.Client
+  client::OpenAPI.Clients.Client
 end
 
 """
 The default API base path for APIs in `VariableInformationApi`.
 This can be used to construct the `OpenAPI.Clients.Client` instance.
 """
-basepath(::Type{ VariableInformationApi }) = "http://localhost:50051"
+basepath(::Type{VariableInformationApi}) = "http://localhost:50051"
 
-const _returntypes_get_var_grid_VariableInformationApi = Dict{Regex,Type}(
-    Regex("^" * replace("200", "x"=>".") * "\$") => Int64,
-    Regex("^" * replace("0", "x"=>".") * "\$") => ProblemDetails,
+const _returntypes_get_var_grid_VariableInformationApi = Dict{Regex, Type}(
+  Regex("^" * replace("200", "x" => ".") * "\$") => Int64,
+  Regex("^" * replace("0", "x" => ".") * "\$") => ProblemDetails,
 )
 
-function _oacinternal_get_var_grid(_api::VariableInformationApi, name::String; _mediaType=nothing)
-    OpenAPI.validate_param("name", "get_var_grid", :minLength, name, 1)
+function _oacinternal_get_var_grid(_api::VariableInformationApi, name::String; _mediaType = nothing)
+  OpenAPI.validate_param("name", "get_var_grid", :minLength, name, 1)
 
-    _ctx = OpenAPI.Clients.Ctx(_api.client, "GET", _returntypes_get_var_grid_VariableInformationApi, "/get_var_grid/{name}", [])
-    OpenAPI.Clients.set_param(_ctx.path, "name", name)  # type String
-    OpenAPI.Clients.set_header_accept(_ctx, ["application/json", ])
-    OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
-    return _ctx
+  _ctx = OpenAPI.Clients.Ctx(
+    _api.client,
+    "GET",
+    _returntypes_get_var_grid_VariableInformationApi,
+    "/get_var_grid/{name}",
+    [],
+  )
+  OpenAPI.Clients.set_param(_ctx.path, "name", name)  # type String
+  OpenAPI.Clients.set_header_accept(_ctx, ["application/json"])
+  OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
+  return _ctx
 end
 
 @doc raw"""Each input and output variable is defined on a grid. This function returns the grid identifier for a given variable. 
@@ -33,29 +39,44 @@ Params:
 
 Return: Int64, OpenAPI.Clients.ApiResponse
 """
-function get_var_grid(_api::VariableInformationApi, name::String; _mediaType=nothing)
-    _ctx = _oacinternal_get_var_grid(_api, name; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx)
+function get_var_grid(_api::VariableInformationApi, name::String; _mediaType = nothing)
+  _ctx = _oacinternal_get_var_grid(_api, name; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx)
 end
 
-function get_var_grid(_api::VariableInformationApi, response_stream::Channel, name::String; _mediaType=nothing)
-    _ctx = _oacinternal_get_var_grid(_api, name; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx, response_stream)
+function get_var_grid(
+  _api::VariableInformationApi,
+  response_stream::Channel,
+  name::String;
+  _mediaType = nothing,
+)
+  _ctx = _oacinternal_get_var_grid(_api, name; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx, response_stream)
 end
 
-const _returntypes_get_var_itemsize_VariableInformationApi = Dict{Regex,Type}(
-    Regex("^" * replace("200", "x"=>".") * "\$") => Int64,
-    Regex("^" * replace("0", "x"=>".") * "\$") => ProblemDetails,
+const _returntypes_get_var_itemsize_VariableInformationApi = Dict{Regex, Type}(
+  Regex("^" * replace("200", "x" => ".") * "\$") => Int64,
+  Regex("^" * replace("0", "x" => ".") * "\$") => ProblemDetails,
 )
 
-function _oacinternal_get_var_itemsize(_api::VariableInformationApi, name::String; _mediaType=nothing)
-    OpenAPI.validate_param("name", "get_var_itemsize", :minLength, name, 1)
+function _oacinternal_get_var_itemsize(
+  _api::VariableInformationApi,
+  name::String;
+  _mediaType = nothing,
+)
+  OpenAPI.validate_param("name", "get_var_itemsize", :minLength, name, 1)
 
-    _ctx = OpenAPI.Clients.Ctx(_api.client, "GET", _returntypes_get_var_itemsize_VariableInformationApi, "/get_var_itemsize/{name}", [])
-    OpenAPI.Clients.set_param(_ctx.path, "name", name)  # type String
-    OpenAPI.Clients.set_header_accept(_ctx, ["application/json", ])
-    OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
-    return _ctx
+  _ctx = OpenAPI.Clients.Ctx(
+    _api.client,
+    "GET",
+    _returntypes_get_var_itemsize_VariableInformationApi,
+    "/get_var_itemsize/{name}",
+    [],
+  )
+  OpenAPI.Clients.set_param(_ctx.path, "name", name)  # type String
+  OpenAPI.Clients.set_header_accept(_ctx, ["application/json"])
+  OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
+  return _ctx
 end
 
 @doc raw"""Provides the size, in bytes, of a single element of the variable. 
@@ -65,29 +86,44 @@ Params:
 
 Return: Int64, OpenAPI.Clients.ApiResponse
 """
-function get_var_itemsize(_api::VariableInformationApi, name::String; _mediaType=nothing)
-    _ctx = _oacinternal_get_var_itemsize(_api, name; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx)
+function get_var_itemsize(_api::VariableInformationApi, name::String; _mediaType = nothing)
+  _ctx = _oacinternal_get_var_itemsize(_api, name; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx)
 end
 
-function get_var_itemsize(_api::VariableInformationApi, response_stream::Channel, name::String; _mediaType=nothing)
-    _ctx = _oacinternal_get_var_itemsize(_api, name; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx, response_stream)
+function get_var_itemsize(
+  _api::VariableInformationApi,
+  response_stream::Channel,
+  name::String;
+  _mediaType = nothing,
+)
+  _ctx = _oacinternal_get_var_itemsize(_api, name; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx, response_stream)
 end
 
-const _returntypes_get_var_location_VariableInformationApi = Dict{Regex,Type}(
-    Regex("^" * replace("200", "x"=>".") * "\$") => GetVarLocationResponseLocation,
-    Regex("^" * replace("0", "x"=>".") * "\$") => ProblemDetails,
+const _returntypes_get_var_location_VariableInformationApi = Dict{Regex, Type}(
+  Regex("^" * replace("200", "x" => ".") * "\$") => GetVarLocationResponseLocation,
+  Regex("^" * replace("0", "x" => ".") * "\$") => ProblemDetails,
 )
 
-function _oacinternal_get_var_location(_api::VariableInformationApi, name::String; _mediaType=nothing)
-    OpenAPI.validate_param("name", "get_var_location", :minLength, name, 1)
+function _oacinternal_get_var_location(
+  _api::VariableInformationApi,
+  name::String;
+  _mediaType = nothing,
+)
+  OpenAPI.validate_param("name", "get_var_location", :minLength, name, 1)
 
-    _ctx = OpenAPI.Clients.Ctx(_api.client, "GET", _returntypes_get_var_location_VariableInformationApi, "/get_var_location/{name}", [])
-    OpenAPI.Clients.set_param(_ctx.path, "name", name)  # type String
-    OpenAPI.Clients.set_header_accept(_ctx, ["application/json", ])
-    OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
-    return _ctx
+  _ctx = OpenAPI.Clients.Ctx(
+    _api.client,
+    "GET",
+    _returntypes_get_var_location_VariableInformationApi,
+    "/get_var_location/{name}",
+    [],
+  )
+  OpenAPI.Clients.set_param(_ctx.path, "name", name)  # type String
+  OpenAPI.Clients.set_header_accept(_ctx, ["application/json"])
+  OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
+  return _ctx
 end
 
 @doc raw"""Indicates on what grid element the variable is defined.
@@ -97,29 +133,44 @@ Params:
 
 Return: GetVarLocationResponseLocation, OpenAPI.Clients.ApiResponse
 """
-function get_var_location(_api::VariableInformationApi, name::String; _mediaType=nothing)
-    _ctx = _oacinternal_get_var_location(_api, name; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx)
+function get_var_location(_api::VariableInformationApi, name::String; _mediaType = nothing)
+  _ctx = _oacinternal_get_var_location(_api, name; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx)
 end
 
-function get_var_location(_api::VariableInformationApi, response_stream::Channel, name::String; _mediaType=nothing)
-    _ctx = _oacinternal_get_var_location(_api, name; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx, response_stream)
+function get_var_location(
+  _api::VariableInformationApi,
+  response_stream::Channel,
+  name::String;
+  _mediaType = nothing,
+)
+  _ctx = _oacinternal_get_var_location(_api, name; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx, response_stream)
 end
 
-const _returntypes_get_var_nbytes_VariableInformationApi = Dict{Regex,Type}(
-    Regex("^" * replace("200", "x"=>".") * "\$") => Int64,
-    Regex("^" * replace("0", "x"=>".") * "\$") => ProblemDetails,
+const _returntypes_get_var_nbytes_VariableInformationApi = Dict{Regex, Type}(
+  Regex("^" * replace("200", "x" => ".") * "\$") => Int64,
+  Regex("^" * replace("0", "x" => ".") * "\$") => ProblemDetails,
 )
 
-function _oacinternal_get_var_nbytes(_api::VariableInformationApi, name::String; _mediaType=nothing)
-    OpenAPI.validate_param("name", "get_var_nbytes", :minLength, name, 1)
+function _oacinternal_get_var_nbytes(
+  _api::VariableInformationApi,
+  name::String;
+  _mediaType = nothing,
+)
+  OpenAPI.validate_param("name", "get_var_nbytes", :minLength, name, 1)
 
-    _ctx = OpenAPI.Clients.Ctx(_api.client, "GET", _returntypes_get_var_nbytes_VariableInformationApi, "/get_var_nbytes/{name}", [])
-    OpenAPI.Clients.set_param(_ctx.path, "name", name)  # type String
-    OpenAPI.Clients.set_header_accept(_ctx, ["application/json", ])
-    OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
-    return _ctx
+  _ctx = OpenAPI.Clients.Ctx(
+    _api.client,
+    "GET",
+    _returntypes_get_var_nbytes_VariableInformationApi,
+    "/get_var_nbytes/{name}",
+    [],
+  )
+  OpenAPI.Clients.set_param(_ctx.path, "name", name)  # type String
+  OpenAPI.Clients.set_header_accept(_ctx, ["application/json"])
+  OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
+  return _ctx
 end
 
 @doc raw"""Provides the total amount of memory used to store a variable; i.e., the number of items multiplied by the size of each item. 
@@ -129,29 +180,40 @@ Params:
 
 Return: Int64, OpenAPI.Clients.ApiResponse
 """
-function get_var_nbytes(_api::VariableInformationApi, name::String; _mediaType=nothing)
-    _ctx = _oacinternal_get_var_nbytes(_api, name; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx)
+function get_var_nbytes(_api::VariableInformationApi, name::String; _mediaType = nothing)
+  _ctx = _oacinternal_get_var_nbytes(_api, name; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx)
 end
 
-function get_var_nbytes(_api::VariableInformationApi, response_stream::Channel, name::String; _mediaType=nothing)
-    _ctx = _oacinternal_get_var_nbytes(_api, name; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx, response_stream)
+function get_var_nbytes(
+  _api::VariableInformationApi,
+  response_stream::Channel,
+  name::String;
+  _mediaType = nothing,
+)
+  _ctx = _oacinternal_get_var_nbytes(_api, name; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx, response_stream)
 end
 
-const _returntypes_get_var_type_VariableInformationApi = Dict{Regex,Type}(
-    Regex("^" * replace("200", "x"=>".") * "\$") => GetVarTypeResponse,
-    Regex("^" * replace("0", "x"=>".") * "\$") => ProblemDetails,
+const _returntypes_get_var_type_VariableInformationApi = Dict{Regex, Type}(
+  Regex("^" * replace("200", "x" => ".") * "\$") => GetVarTypeResponse,
+  Regex("^" * replace("0", "x" => ".") * "\$") => ProblemDetails,
 )
 
-function _oacinternal_get_var_type(_api::VariableInformationApi, name::String; _mediaType=nothing)
-    OpenAPI.validate_param("name", "get_var_type", :minLength, name, 1)
+function _oacinternal_get_var_type(_api::VariableInformationApi, name::String; _mediaType = nothing)
+  OpenAPI.validate_param("name", "get_var_type", :minLength, name, 1)
 
-    _ctx = OpenAPI.Clients.Ctx(_api.client, "GET", _returntypes_get_var_type_VariableInformationApi, "/get_var_type/{name}", [])
-    OpenAPI.Clients.set_param(_ctx.path, "name", name)  # type String
-    OpenAPI.Clients.set_header_accept(_ctx, ["application/json", ])
-    OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
-    return _ctx
+  _ctx = OpenAPI.Clients.Ctx(
+    _api.client,
+    "GET",
+    _returntypes_get_var_type_VariableInformationApi,
+    "/get_var_type/{name}",
+    [],
+  )
+  OpenAPI.Clients.set_param(_ctx.path, "name", name)  # type String
+  OpenAPI.Clients.set_header_accept(_ctx, ["application/json"])
+  OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
+  return _ctx
 end
 
 @doc raw"""Provides the data type of the variable.
@@ -161,29 +223,44 @@ Params:
 
 Return: GetVarTypeResponse, OpenAPI.Clients.ApiResponse
 """
-function get_var_type(_api::VariableInformationApi, name::String; _mediaType=nothing)
-    _ctx = _oacinternal_get_var_type(_api, name; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx)
+function get_var_type(_api::VariableInformationApi, name::String; _mediaType = nothing)
+  _ctx = _oacinternal_get_var_type(_api, name; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx)
 end
 
-function get_var_type(_api::VariableInformationApi, response_stream::Channel, name::String; _mediaType=nothing)
-    _ctx = _oacinternal_get_var_type(_api, name; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx, response_stream)
+function get_var_type(
+  _api::VariableInformationApi,
+  response_stream::Channel,
+  name::String;
+  _mediaType = nothing,
+)
+  _ctx = _oacinternal_get_var_type(_api, name; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx, response_stream)
 end
 
-const _returntypes_get_var_units_VariableInformationApi = Dict{Regex,Type}(
-    Regex("^" * replace("200", "x"=>".") * "\$") => GetVarUnitsResponse,
-    Regex("^" * replace("0", "x"=>".") * "\$") => ProblemDetails,
+const _returntypes_get_var_units_VariableInformationApi = Dict{Regex, Type}(
+  Regex("^" * replace("200", "x" => ".") * "\$") => GetVarUnitsResponse,
+  Regex("^" * replace("0", "x" => ".") * "\$") => ProblemDetails,
 )
 
-function _oacinternal_get_var_units(_api::VariableInformationApi, name::String; _mediaType=nothing)
-    OpenAPI.validate_param("name", "get_var_units", :minLength, name, 1)
+function _oacinternal_get_var_units(
+  _api::VariableInformationApi,
+  name::String;
+  _mediaType = nothing,
+)
+  OpenAPI.validate_param("name", "get_var_units", :minLength, name, 1)
 
-    _ctx = OpenAPI.Clients.Ctx(_api.client, "GET", _returntypes_get_var_units_VariableInformationApi, "/get_var_units/{name}", [])
-    OpenAPI.Clients.set_param(_ctx.path, "name", name)  # type String
-    OpenAPI.Clients.set_header_accept(_ctx, ["application/json", ])
-    OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
-    return _ctx
+  _ctx = OpenAPI.Clients.Ctx(
+    _api.client,
+    "GET",
+    _returntypes_get_var_units_VariableInformationApi,
+    "/get_var_units/{name}",
+    [],
+  )
+  OpenAPI.Clients.set_param(_ctx.path, "name", name)  # type String
+  OpenAPI.Clients.set_header_accept(_ctx, ["application/json"])
+  OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
+  return _ctx
 end
 
 @doc raw"""Get the units of the given variable.
@@ -193,14 +270,19 @@ Params:
 
 Return: GetVarUnitsResponse, OpenAPI.Clients.ApiResponse
 """
-function get_var_units(_api::VariableInformationApi, name::String; _mediaType=nothing)
-    _ctx = _oacinternal_get_var_units(_api, name; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx)
+function get_var_units(_api::VariableInformationApi, name::String; _mediaType = nothing)
+  _ctx = _oacinternal_get_var_units(_api, name; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx)
 end
 
-function get_var_units(_api::VariableInformationApi, response_stream::Channel, name::String; _mediaType=nothing)
-    _ctx = _oacinternal_get_var_units(_api, name; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx, response_stream)
+function get_var_units(
+  _api::VariableInformationApi,
+  response_stream::Channel,
+  name::String;
+  _mediaType = nothing,
+)
+  _ctx = _oacinternal_get_var_units(_api, name; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx, response_stream)
 end
 
 export get_var_grid

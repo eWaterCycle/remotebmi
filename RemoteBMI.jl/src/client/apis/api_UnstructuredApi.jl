@@ -2,26 +2,32 @@
 # Do not modify this file directly. Modify the OpenAPI specification instead.
 
 struct UnstructuredApi <: OpenAPI.APIClientImpl
-    client::OpenAPI.Clients.Client
+  client::OpenAPI.Clients.Client
 end
 
 """
 The default API base path for APIs in `UnstructuredApi`.
 This can be used to construct the `OpenAPI.Clients.Client` instance.
 """
-basepath(::Type{ UnstructuredApi }) = "http://localhost:50051"
+basepath(::Type{UnstructuredApi}) = "http://localhost:50051"
 
-const _returntypes_get_grid_edge_count_UnstructuredApi = Dict{Regex,Type}(
-    Regex("^" * replace("200", "x"=>".") * "\$") => Int64,
-    Regex("^" * replace("0", "x"=>".") * "\$") => ProblemDetails,
+const _returntypes_get_grid_edge_count_UnstructuredApi = Dict{Regex, Type}(
+  Regex("^" * replace("200", "x" => ".") * "\$") => Int64,
+  Regex("^" * replace("0", "x" => ".") * "\$") => ProblemDetails,
 )
 
-function _oacinternal_get_grid_edge_count(_api::UnstructuredApi, grid::Int64; _mediaType=nothing)
-    _ctx = OpenAPI.Clients.Ctx(_api.client, "GET", _returntypes_get_grid_edge_count_UnstructuredApi, "/get_grid_edge_count/{grid}", [])
-    OpenAPI.Clients.set_param(_ctx.path, "grid", grid)  # type Int64
-    OpenAPI.Clients.set_header_accept(_ctx, ["application/json", ])
-    OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
-    return _ctx
+function _oacinternal_get_grid_edge_count(_api::UnstructuredApi, grid::Int64; _mediaType = nothing)
+  _ctx = OpenAPI.Clients.Ctx(
+    _api.client,
+    "GET",
+    _returntypes_get_grid_edge_count_UnstructuredApi,
+    "/get_grid_edge_count/{grid}",
+    [],
+  )
+  OpenAPI.Clients.set_param(_ctx.path, "grid", grid)  # type Int64
+  OpenAPI.Clients.set_header_accept(_ctx, ["application/json"])
+  OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
+  return _ctx
 end
 
 @doc raw"""Get the number of edges in the grid.
@@ -31,27 +37,38 @@ Params:
 
 Return: Int64, OpenAPI.Clients.ApiResponse
 """
-function get_grid_edge_count(_api::UnstructuredApi, grid::Int64; _mediaType=nothing)
-    _ctx = _oacinternal_get_grid_edge_count(_api, grid; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx)
+function get_grid_edge_count(_api::UnstructuredApi, grid::Int64; _mediaType = nothing)
+  _ctx = _oacinternal_get_grid_edge_count(_api, grid; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx)
 end
 
-function get_grid_edge_count(_api::UnstructuredApi, response_stream::Channel, grid::Int64; _mediaType=nothing)
-    _ctx = _oacinternal_get_grid_edge_count(_api, grid; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx, response_stream)
+function get_grid_edge_count(
+  _api::UnstructuredApi,
+  response_stream::Channel,
+  grid::Int64;
+  _mediaType = nothing,
+)
+  _ctx = _oacinternal_get_grid_edge_count(_api, grid; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx, response_stream)
 end
 
-const _returntypes_get_grid_edge_nodes_UnstructuredApi = Dict{Regex,Type}(
-    Regex("^" * replace("200", "x"=>".") * "\$") => Vector{Int64},
-    Regex("^" * replace("0", "x"=>".") * "\$") => ProblemDetails,
+const _returntypes_get_grid_edge_nodes_UnstructuredApi = Dict{Regex, Type}(
+  Regex("^" * replace("200", "x" => ".") * "\$") => Vector{Int64},
+  Regex("^" * replace("0", "x" => ".") * "\$") => ProblemDetails,
 )
 
-function _oacinternal_get_grid_edge_nodes(_api::UnstructuredApi, grid::Int64; _mediaType=nothing)
-    _ctx = OpenAPI.Clients.Ctx(_api.client, "GET", _returntypes_get_grid_edge_nodes_UnstructuredApi, "/get_grid_edge_nodes/{grid}", [])
-    OpenAPI.Clients.set_param(_ctx.path, "grid", grid)  # type Int64
-    OpenAPI.Clients.set_header_accept(_ctx, ["application/json", ])
-    OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
-    return _ctx
+function _oacinternal_get_grid_edge_nodes(_api::UnstructuredApi, grid::Int64; _mediaType = nothing)
+  _ctx = OpenAPI.Clients.Ctx(
+    _api.client,
+    "GET",
+    _returntypes_get_grid_edge_nodes_UnstructuredApi,
+    "/get_grid_edge_nodes/{grid}",
+    [],
+  )
+  OpenAPI.Clients.set_param(_ctx.path, "grid", grid)  # type Int64
+  OpenAPI.Clients.set_header_accept(_ctx, ["application/json"])
+  OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
+  return _ctx
 end
 
 @doc raw"""Get the edge-node connectivity.
@@ -61,27 +78,38 @@ Params:
 
 Return: Vector{Int64}, OpenAPI.Clients.ApiResponse
 """
-function get_grid_edge_nodes(_api::UnstructuredApi, grid::Int64; _mediaType=nothing)
-    _ctx = _oacinternal_get_grid_edge_nodes(_api, grid; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx)
+function get_grid_edge_nodes(_api::UnstructuredApi, grid::Int64; _mediaType = nothing)
+  _ctx = _oacinternal_get_grid_edge_nodes(_api, grid; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx)
 end
 
-function get_grid_edge_nodes(_api::UnstructuredApi, response_stream::Channel, grid::Int64; _mediaType=nothing)
-    _ctx = _oacinternal_get_grid_edge_nodes(_api, grid; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx, response_stream)
+function get_grid_edge_nodes(
+  _api::UnstructuredApi,
+  response_stream::Channel,
+  grid::Int64;
+  _mediaType = nothing,
+)
+  _ctx = _oacinternal_get_grid_edge_nodes(_api, grid; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx, response_stream)
 end
 
-const _returntypes_get_grid_face_count_UnstructuredApi = Dict{Regex,Type}(
-    Regex("^" * replace("200", "x"=>".") * "\$") => Int64,
-    Regex("^" * replace("0", "x"=>".") * "\$") => ProblemDetails,
+const _returntypes_get_grid_face_count_UnstructuredApi = Dict{Regex, Type}(
+  Regex("^" * replace("200", "x" => ".") * "\$") => Int64,
+  Regex("^" * replace("0", "x" => ".") * "\$") => ProblemDetails,
 )
 
-function _oacinternal_get_grid_face_count(_api::UnstructuredApi, grid::Int64; _mediaType=nothing)
-    _ctx = OpenAPI.Clients.Ctx(_api.client, "GET", _returntypes_get_grid_face_count_UnstructuredApi, "/get_grid_face_count/{grid}", [])
-    OpenAPI.Clients.set_param(_ctx.path, "grid", grid)  # type Int64
-    OpenAPI.Clients.set_header_accept(_ctx, ["application/json", ])
-    OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
-    return _ctx
+function _oacinternal_get_grid_face_count(_api::UnstructuredApi, grid::Int64; _mediaType = nothing)
+  _ctx = OpenAPI.Clients.Ctx(
+    _api.client,
+    "GET",
+    _returntypes_get_grid_face_count_UnstructuredApi,
+    "/get_grid_face_count/{grid}",
+    [],
+  )
+  OpenAPI.Clients.set_param(_ctx.path, "grid", grid)  # type Int64
+  OpenAPI.Clients.set_header_accept(_ctx, ["application/json"])
+  OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
+  return _ctx
 end
 
 @doc raw"""Get the face-node connectivity.
@@ -91,27 +119,38 @@ Params:
 
 Return: Int64, OpenAPI.Clients.ApiResponse
 """
-function get_grid_face_count(_api::UnstructuredApi, grid::Int64; _mediaType=nothing)
-    _ctx = _oacinternal_get_grid_face_count(_api, grid; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx)
+function get_grid_face_count(_api::UnstructuredApi, grid::Int64; _mediaType = nothing)
+  _ctx = _oacinternal_get_grid_face_count(_api, grid; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx)
 end
 
-function get_grid_face_count(_api::UnstructuredApi, response_stream::Channel, grid::Int64; _mediaType=nothing)
-    _ctx = _oacinternal_get_grid_face_count(_api, grid; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx, response_stream)
+function get_grid_face_count(
+  _api::UnstructuredApi,
+  response_stream::Channel,
+  grid::Int64;
+  _mediaType = nothing,
+)
+  _ctx = _oacinternal_get_grid_face_count(_api, grid; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx, response_stream)
 end
 
-const _returntypes_get_grid_face_edges_UnstructuredApi = Dict{Regex,Type}(
-    Regex("^" * replace("200", "x"=>".") * "\$") => Vector{Int64},
-    Regex("^" * replace("0", "x"=>".") * "\$") => ProblemDetails,
+const _returntypes_get_grid_face_edges_UnstructuredApi = Dict{Regex, Type}(
+  Regex("^" * replace("200", "x" => ".") * "\$") => Vector{Int64},
+  Regex("^" * replace("0", "x" => ".") * "\$") => ProblemDetails,
 )
 
-function _oacinternal_get_grid_face_edges(_api::UnstructuredApi, grid::Int64; _mediaType=nothing)
-    _ctx = OpenAPI.Clients.Ctx(_api.client, "GET", _returntypes_get_grid_face_edges_UnstructuredApi, "/get_grid_face_edges/{grid}", [])
-    OpenAPI.Clients.set_param(_ctx.path, "grid", grid)  # type Int64
-    OpenAPI.Clients.set_header_accept(_ctx, ["application/json", ])
-    OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
-    return _ctx
+function _oacinternal_get_grid_face_edges(_api::UnstructuredApi, grid::Int64; _mediaType = nothing)
+  _ctx = OpenAPI.Clients.Ctx(
+    _api.client,
+    "GET",
+    _returntypes_get_grid_face_edges_UnstructuredApi,
+    "/get_grid_face_edges/{grid}",
+    [],
+  )
+  OpenAPI.Clients.set_param(_ctx.path, "grid", grid)  # type Int64
+  OpenAPI.Clients.set_header_accept(_ctx, ["application/json"])
+  OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
+  return _ctx
 end
 
 @doc raw"""Get the face-edge connectivity.
@@ -121,27 +160,38 @@ Params:
 
 Return: Vector{Int64}, OpenAPI.Clients.ApiResponse
 """
-function get_grid_face_edges(_api::UnstructuredApi, grid::Int64; _mediaType=nothing)
-    _ctx = _oacinternal_get_grid_face_edges(_api, grid; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx)
+function get_grid_face_edges(_api::UnstructuredApi, grid::Int64; _mediaType = nothing)
+  _ctx = _oacinternal_get_grid_face_edges(_api, grid; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx)
 end
 
-function get_grid_face_edges(_api::UnstructuredApi, response_stream::Channel, grid::Int64; _mediaType=nothing)
-    _ctx = _oacinternal_get_grid_face_edges(_api, grid; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx, response_stream)
+function get_grid_face_edges(
+  _api::UnstructuredApi,
+  response_stream::Channel,
+  grid::Int64;
+  _mediaType = nothing,
+)
+  _ctx = _oacinternal_get_grid_face_edges(_api, grid; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx, response_stream)
 end
 
-const _returntypes_get_grid_face_nodes_UnstructuredApi = Dict{Regex,Type}(
-    Regex("^" * replace("200", "x"=>".") * "\$") => Vector{Int64},
-    Regex("^" * replace("0", "x"=>".") * "\$") => ProblemDetails,
+const _returntypes_get_grid_face_nodes_UnstructuredApi = Dict{Regex, Type}(
+  Regex("^" * replace("200", "x" => ".") * "\$") => Vector{Int64},
+  Regex("^" * replace("0", "x" => ".") * "\$") => ProblemDetails,
 )
 
-function _oacinternal_get_grid_face_nodes(_api::UnstructuredApi, grid::Int64; _mediaType=nothing)
-    _ctx = OpenAPI.Clients.Ctx(_api.client, "GET", _returntypes_get_grid_face_nodes_UnstructuredApi, "/get_grid_face_nodes/{grid}", [])
-    OpenAPI.Clients.set_param(_ctx.path, "grid", grid)  # type Int64
-    OpenAPI.Clients.set_header_accept(_ctx, ["application/json", ])
-    OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
-    return _ctx
+function _oacinternal_get_grid_face_nodes(_api::UnstructuredApi, grid::Int64; _mediaType = nothing)
+  _ctx = OpenAPI.Clients.Ctx(
+    _api.client,
+    "GET",
+    _returntypes_get_grid_face_nodes_UnstructuredApi,
+    "/get_grid_face_nodes/{grid}",
+    [],
+  )
+  OpenAPI.Clients.set_param(_ctx.path, "grid", grid)  # type Int64
+  OpenAPI.Clients.set_header_accept(_ctx, ["application/json"])
+  OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
+  return _ctx
 end
 
 @doc raw"""Get the face-node connectivity.
@@ -151,27 +201,38 @@ Params:
 
 Return: Vector{Int64}, OpenAPI.Clients.ApiResponse
 """
-function get_grid_face_nodes(_api::UnstructuredApi, grid::Int64; _mediaType=nothing)
-    _ctx = _oacinternal_get_grid_face_nodes(_api, grid; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx)
+function get_grid_face_nodes(_api::UnstructuredApi, grid::Int64; _mediaType = nothing)
+  _ctx = _oacinternal_get_grid_face_nodes(_api, grid; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx)
 end
 
-function get_grid_face_nodes(_api::UnstructuredApi, response_stream::Channel, grid::Int64; _mediaType=nothing)
-    _ctx = _oacinternal_get_grid_face_nodes(_api, grid; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx, response_stream)
+function get_grid_face_nodes(
+  _api::UnstructuredApi,
+  response_stream::Channel,
+  grid::Int64;
+  _mediaType = nothing,
+)
+  _ctx = _oacinternal_get_grid_face_nodes(_api, grid; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx, response_stream)
 end
 
-const _returntypes_get_grid_node_count_UnstructuredApi = Dict{Regex,Type}(
-    Regex("^" * replace("200", "x"=>".") * "\$") => Int64,
-    Regex("^" * replace("0", "x"=>".") * "\$") => ProblemDetails,
+const _returntypes_get_grid_node_count_UnstructuredApi = Dict{Regex, Type}(
+  Regex("^" * replace("200", "x" => ".") * "\$") => Int64,
+  Regex("^" * replace("0", "x" => ".") * "\$") => ProblemDetails,
 )
 
-function _oacinternal_get_grid_node_count(_api::UnstructuredApi, grid::Int64; _mediaType=nothing)
-    _ctx = OpenAPI.Clients.Ctx(_api.client, "GET", _returntypes_get_grid_node_count_UnstructuredApi, "/get_grid_node_count/{grid}", [])
-    OpenAPI.Clients.set_param(_ctx.path, "grid", grid)  # type Int64
-    OpenAPI.Clients.set_header_accept(_ctx, ["application/json", ])
-    OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
-    return _ctx
+function _oacinternal_get_grid_node_count(_api::UnstructuredApi, grid::Int64; _mediaType = nothing)
+  _ctx = OpenAPI.Clients.Ctx(
+    _api.client,
+    "GET",
+    _returntypes_get_grid_node_count_UnstructuredApi,
+    "/get_grid_node_count/{grid}",
+    [],
+  )
+  OpenAPI.Clients.set_param(_ctx.path, "grid", grid)  # type Int64
+  OpenAPI.Clients.set_header_accept(_ctx, ["application/json"])
+  OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
+  return _ctx
 end
 
 @doc raw"""Get the number of nodes in the grid.
@@ -181,27 +242,42 @@ Params:
 
 Return: Int64, OpenAPI.Clients.ApiResponse
 """
-function get_grid_node_count(_api::UnstructuredApi, grid::Int64; _mediaType=nothing)
-    _ctx = _oacinternal_get_grid_node_count(_api, grid; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx)
+function get_grid_node_count(_api::UnstructuredApi, grid::Int64; _mediaType = nothing)
+  _ctx = _oacinternal_get_grid_node_count(_api, grid; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx)
 end
 
-function get_grid_node_count(_api::UnstructuredApi, response_stream::Channel, grid::Int64; _mediaType=nothing)
-    _ctx = _oacinternal_get_grid_node_count(_api, grid; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx, response_stream)
+function get_grid_node_count(
+  _api::UnstructuredApi,
+  response_stream::Channel,
+  grid::Int64;
+  _mediaType = nothing,
+)
+  _ctx = _oacinternal_get_grid_node_count(_api, grid; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx, response_stream)
 end
 
-const _returntypes_get_grid_nodes_per_face_UnstructuredApi = Dict{Regex,Type}(
-    Regex("^" * replace("200", "x"=>".") * "\$") => Vector{Int64},
-    Regex("^" * replace("0", "x"=>".") * "\$") => ProblemDetails,
+const _returntypes_get_grid_nodes_per_face_UnstructuredApi = Dict{Regex, Type}(
+  Regex("^" * replace("200", "x" => ".") * "\$") => Vector{Int64},
+  Regex("^" * replace("0", "x" => ".") * "\$") => ProblemDetails,
 )
 
-function _oacinternal_get_grid_nodes_per_face(_api::UnstructuredApi, grid::Int64; _mediaType=nothing)
-    _ctx = OpenAPI.Clients.Ctx(_api.client, "GET", _returntypes_get_grid_nodes_per_face_UnstructuredApi, "/get_grid_nodes_per_face/{grid}", [])
-    OpenAPI.Clients.set_param(_ctx.path, "grid", grid)  # type Int64
-    OpenAPI.Clients.set_header_accept(_ctx, ["application/json", ])
-    OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
-    return _ctx
+function _oacinternal_get_grid_nodes_per_face(
+  _api::UnstructuredApi,
+  grid::Int64;
+  _mediaType = nothing,
+)
+  _ctx = OpenAPI.Clients.Ctx(
+    _api.client,
+    "GET",
+    _returntypes_get_grid_nodes_per_face_UnstructuredApi,
+    "/get_grid_nodes_per_face/{grid}",
+    [],
+  )
+  OpenAPI.Clients.set_param(_ctx.path, "grid", grid)  # type Int64
+  OpenAPI.Clients.set_header_accept(_ctx, ["application/json"])
+  OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
+  return _ctx
 end
 
 @doc raw"""Get the number of nodes for each face.
@@ -211,14 +287,19 @@ Params:
 
 Return: Vector{Int64}, OpenAPI.Clients.ApiResponse
 """
-function get_grid_nodes_per_face(_api::UnstructuredApi, grid::Int64; _mediaType=nothing)
-    _ctx = _oacinternal_get_grid_nodes_per_face(_api, grid; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx)
+function get_grid_nodes_per_face(_api::UnstructuredApi, grid::Int64; _mediaType = nothing)
+  _ctx = _oacinternal_get_grid_nodes_per_face(_api, grid; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx)
 end
 
-function get_grid_nodes_per_face(_api::UnstructuredApi, response_stream::Channel, grid::Int64; _mediaType=nothing)
-    _ctx = _oacinternal_get_grid_nodes_per_face(_api, grid; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx, response_stream)
+function get_grid_nodes_per_face(
+  _api::UnstructuredApi,
+  response_stream::Channel,
+  grid::Int64;
+  _mediaType = nothing,
+)
+  _ctx = _oacinternal_get_grid_nodes_per_face(_api, grid; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx, response_stream)
 end
 
 export get_grid_edge_count

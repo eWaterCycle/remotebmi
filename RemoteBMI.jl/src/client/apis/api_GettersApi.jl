@@ -2,28 +2,34 @@
 # Do not modify this file directly. Modify the OpenAPI specification instead.
 
 struct GettersApi <: OpenAPI.APIClientImpl
-    client::OpenAPI.Clients.Client
+  client::OpenAPI.Clients.Client
 end
 
 """
 The default API base path for APIs in `GettersApi`.
 This can be used to construct the `OpenAPI.Clients.Client` instance.
 """
-basepath(::Type{ GettersApi }) = "http://localhost:50051"
+basepath(::Type{GettersApi}) = "http://localhost:50051"
 
-const _returntypes_get_value_GettersApi = Dict{Regex,Type}(
-    Regex("^" * replace("200", "x"=>".") * "\$") => Vector{Float64},
-    Regex("^" * replace("0", "x"=>".") * "\$") => ProblemDetails,
+const _returntypes_get_value_GettersApi = Dict{Regex, Type}(
+  Regex("^" * replace("200", "x" => ".") * "\$") => Vector{Float64},
+  Regex("^" * replace("0", "x" => ".") * "\$") => ProblemDetails,
 )
 
-function _oacinternal_get_value(_api::GettersApi, name::String; _mediaType=nothing)
-    OpenAPI.validate_param("name", "get_value", :minLength, name, 1)
+function _oacinternal_get_value(_api::GettersApi, name::String; _mediaType = nothing)
+  OpenAPI.validate_param("name", "get_value", :minLength, name, 1)
 
-    _ctx = OpenAPI.Clients.Ctx(_api.client, "GET", _returntypes_get_value_GettersApi, "/get_value/{name}", [])
-    OpenAPI.Clients.set_param(_ctx.path, "name", name)  # type String
-    OpenAPI.Clients.set_header_accept(_ctx, ["application/json", ])
-    OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
-    return _ctx
+  _ctx = OpenAPI.Clients.Ctx(
+    _api.client,
+    "GET",
+    _returntypes_get_value_GettersApi,
+    "/get_value/{name}",
+    [],
+  )
+  OpenAPI.Clients.set_param(_ctx.path, "name", name)  # type String
+  OpenAPI.Clients.set_header_accept(_ctx, ["application/json"])
+  OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? [] : [_mediaType])
+  return _ctx
 end
 
 @doc raw"""Get the value of a variable.
@@ -33,29 +39,44 @@ Params:
 
 Return: Vector{Float64}, OpenAPI.Clients.ApiResponse
 """
-function get_value(_api::GettersApi, name::String; _mediaType=nothing)
-    _ctx = _oacinternal_get_value(_api, name; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx)
+function get_value(_api::GettersApi, name::String; _mediaType = nothing)
+  _ctx = _oacinternal_get_value(_api, name; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx)
 end
 
-function get_value(_api::GettersApi, response_stream::Channel, name::String; _mediaType=nothing)
-    _ctx = _oacinternal_get_value(_api, name; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx, response_stream)
+function get_value(_api::GettersApi, response_stream::Channel, name::String; _mediaType = nothing)
+  _ctx = _oacinternal_get_value(_api, name; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx, response_stream)
 end
 
-const _returntypes_get_value_at_indices_GettersApi = Dict{Regex,Type}(
-    Regex("^" * replace("200", "x"=>".") * "\$") => Vector{Float64},
-    Regex("^" * replace("0", "x"=>".") * "\$") => ProblemDetails,
+const _returntypes_get_value_at_indices_GettersApi = Dict{Regex, Type}(
+  Regex("^" * replace("200", "x" => ".") * "\$") => Vector{Float64},
+  Regex("^" * replace("0", "x" => ".") * "\$") => ProblemDetails,
 )
 
-function _oacinternal_get_value_at_indices(_api::GettersApi, name::String, request_body::Vector{Int64}; _mediaType=nothing)
-    OpenAPI.validate_param("name", "get_value_at_indices", :minLength, name, 1)
+function _oacinternal_get_value_at_indices(
+  _api::GettersApi,
+  name::String,
+  request_body::Vector{Int64};
+  _mediaType = nothing,
+)
+  OpenAPI.validate_param("name", "get_value_at_indices", :minLength, name, 1)
 
-    _ctx = OpenAPI.Clients.Ctx(_api.client, "POST", _returntypes_get_value_at_indices_GettersApi, "/get_value_at_indices/{name}", [], request_body)
-    OpenAPI.Clients.set_param(_ctx.path, "name", name)  # type String
-    OpenAPI.Clients.set_header_accept(_ctx, ["application/json", ])
-    OpenAPI.Clients.set_header_content_type(_ctx, (_mediaType === nothing) ? ["application/json", ] : [_mediaType])
-    return _ctx
+  _ctx = OpenAPI.Clients.Ctx(
+    _api.client,
+    "POST",
+    _returntypes_get_value_at_indices_GettersApi,
+    "/get_value_at_indices/{name}",
+    [],
+    request_body,
+  )
+  OpenAPI.Clients.set_param(_ctx.path, "name", name)  # type String
+  OpenAPI.Clients.set_header_accept(_ctx, ["application/json"])
+  OpenAPI.Clients.set_header_content_type(
+    _ctx,
+    (_mediaType === nothing) ? ["application/json"] : [_mediaType],
+  )
+  return _ctx
 end
 
 @doc raw"""Get the value of a variable at specific indices.
@@ -66,14 +87,25 @@ Params:
 
 Return: Vector{Float64}, OpenAPI.Clients.ApiResponse
 """
-function get_value_at_indices(_api::GettersApi, name::String, request_body::Vector{Int64}; _mediaType=nothing)
-    _ctx = _oacinternal_get_value_at_indices(_api, name, request_body; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx)
+function get_value_at_indices(
+  _api::GettersApi,
+  name::String,
+  request_body::Vector{Int64};
+  _mediaType = nothing,
+)
+  _ctx = _oacinternal_get_value_at_indices(_api, name, request_body; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx)
 end
 
-function get_value_at_indices(_api::GettersApi, response_stream::Channel, name::String, request_body::Vector{Int64}; _mediaType=nothing)
-    _ctx = _oacinternal_get_value_at_indices(_api, name, request_body; _mediaType=_mediaType)
-    return OpenAPI.Clients.exec(_ctx, response_stream)
+function get_value_at_indices(
+  _api::GettersApi,
+  response_stream::Channel,
+  name::String,
+  request_body::Vector{Int64};
+  _mediaType = nothing,
+)
+  _ctx = _oacinternal_get_value_at_indices(_api, name, request_body; _mediaType = _mediaType)
+  return OpenAPI.Clients.exec(_ctx, response_stream)
 end
 
 export get_value
