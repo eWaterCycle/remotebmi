@@ -1,6 +1,7 @@
 using Test
 using Sockets
-import RemoteBMI
+import RemoteBMI.Client: setup
+import RemoteBMI.Server: run
 import BasicModelInterface as BMI
 
 include("fake.jl")
@@ -16,9 +17,9 @@ end
 @testset "RemoteBMI Tests" begin
   # Start server and initialize model
   port = find_unused_port()
-  server_thread = Threads.@spawn RemoteBMI.run(FakeModel.Model, "0.0.0.0", port)
+  server_thread = Threads.@spawn run(FakeModel.Model, "0.0.0.0", port)
   # TODO sleep to wait for server to start?
-  model = RemoteBMI.Client.setup("http://localhost:$port")
+  model = setup("http://localhost:$port")
   model = BMI.initialize(model, "config_file")
 
   @test BMI.get_component_name(model) == "FakeModel"
