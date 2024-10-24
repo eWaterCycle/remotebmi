@@ -40,6 +40,10 @@ pkg> activate .
 pkg> test
 ```
 
+```shell
+julia -e 'using Pkg; Pkg.activate("."); Pkg.test()'
+```
+
 ## Working on a new issue
 
 We try to keep a linear history in this repo, so it is important to keep your branches up-to-date.

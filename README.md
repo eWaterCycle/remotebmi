@@ -100,10 +100,19 @@ Given you have a model class called `MyModel` and a BMI called `BMI` inside the 
 
 ```julia
 using MyPackage
-using RemoteBMI
+import RemoteBMI.Server: run_bmi_server
 
 port = parse(Int, get(ENV, "BMI_PORT", "50051"))
-RemoteBMI.run(MyPackage.Model, "0.0.0.0", port)
+run_bmi_server(MyPackage.Model, "0.0.0.0", port)
+```
+
+### Julia consumer
+
+```julia
+import RemoteBMI.Client: BMIClient
+import BasicModelInterface as BMI
+model = BMIClient("http://localhost:50555")
+BMI.get_component_name(m)
 ```
 
 ### R provider
