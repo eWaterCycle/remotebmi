@@ -40,6 +40,10 @@ pkg> activate .
 pkg> test
 ```
 
+```shell
+julia -e 'using Pkg; Pkg.activate("."); Pkg.test()'
+```
+
 ## Working on a new issue
 
 We try to keep a linear history in this repo, so it is important to keep your branches up-to-date.
@@ -86,7 +90,6 @@ We try to keep a linear history in this repo, so it is important to keep your br
     Try to create "atomic git commits" (recommended reading: [The Utopic Git History](https://blog.esciencecenter.nl/the-utopic-git-history-d44b81c09593)).
 
 - Make sure the tests pass.
-
 - Fetch any `main` updates from upstream and rebase your branch, if necessary:
 
   ```bash
