@@ -23,12 +23,18 @@ end
 
 # Model information functions
 BMI.get_component_name(m::Model) = "FakeModel"
-BMI.get_input_var_names(m::Model) = String[]
+# TODO empty vector gives TypeError
+BMI.get_input_var_names(m::Model) = ["invar1"]
 BMI.get_input_item_count(m::Model) = 0
 BMI.get_output_var_names(m::Model) = ["var1", "var2"]
 BMI.get_output_item_count(m::Model) = 2
 # Variable information functions
-BMI.get_var_grid(m::Model, name) = 1
+function BMI.get_var_grid(m::Model, name)
+  if name == "missing"
+    throw(ArgumentError("Variable not found"))
+  end
+  return 1
+end
 BMI.get_var_type(m::Model, name) = "Float64"
 BMI.get_var_units(m::Model, name) = "unit1"
 BMI.get_var_itemsize(m::Model, name) = 8

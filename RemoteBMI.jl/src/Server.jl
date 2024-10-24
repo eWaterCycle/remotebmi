@@ -155,7 +155,8 @@ function set_value_at_indices(
 )::Nothing
   # OpenAPI request is zero-based, while Julia is one-based
   jindexes = set_value_at_indices_request.indices .+ 1
-  BMI.set_value_at_indices(m, name, jindexes)
+  src = set_value_at_indices_request.values
+  BMI.set_value_at_indices(m, name, src, jindexes)
 end
 
 function get_current_time(req::HTTP.Request;)::Float64
@@ -296,7 +297,7 @@ Expose the specified model as web service.
 - `port`: The port number on to run the service.
 
 """
-function run(model, host, port)
+function run_bmi_server(model, host, port)
   global MyModel = model
   try
     router = HTTP.Router()

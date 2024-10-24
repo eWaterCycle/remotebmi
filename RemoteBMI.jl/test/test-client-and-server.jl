@@ -1,7 +1,7 @@
 using Test
 using Sockets
-import RemoteBMI.Client: setup
-import RemoteBMI.Server: run
+import RemoteBMI.Client: BMIClient
+import RemoteBMI.Server: run_bmi_server
 import BasicModelInterface as BMI
 
 include("fake.jl")
@@ -17,9 +17,9 @@ end
 @testset "RemoteBMI Tests" begin
   # Start server and initialize model
   port = find_unused_port()
-  server_thread = Threads.@spawn run(FakeModel.Model, "0.0.0.0", port)
+  server_thread = Threads.@spawn run_bmi_server(FakeModel.Model, "0.0.0.0", port)
   # TODO sleep to wait for server to start?
-  model = setup("http://localhost:$port")
+  model = BMIClient("http://localhost:$port")
 
   model = BMI.initialize(model, "config_file")
 
@@ -37,7 +37,7 @@ end
 
   @testset "Model information functions" begin
     @test BMI.get_component_name(model) == "FakeModel"
-    @test size(BMI.get_input_var_names(model)) == 0
+    @test BMI.get_input_var_names(model) == ["invar1"]
     @test BMI.get_input_item_count(model) == 0
     @test BMI.get_output_var_names(model) == ["var1", "var2"]
     @test BMI.get_output_item_count(model) == 2
@@ -45,6 +45,10 @@ end
 
   @testset "Variable information functions" begin
     @test BMI.get_var_grid(model, "var1") == 1
+
+    # TODO handle errors using middleware on server
+    # @test_throws ArgumentError("Variable not found") BMI.get_var_grid(model, "missing")
+
     @test BMI.get_var_type(model, "var1") == "Float64"
     @test BMI.get_var_units(model, "var1") == "unit1"
     @test BMI.get_var_itemsize(model, "var1") == 8
@@ -61,7 +65,7 @@ end
   end
 
   @testset "Variable getter and setter functions" begin
-    @test BMI.get_value(model, "var1", zeros(4)) == [1.0, 2.0, 3.0, 4.0]
+    @test BMI.get_value(model, "var1", zeros(Int, 4)) == [1.0, 2.0, 3.0, 4.0]
     function test_get_value_filled()
       x = zeros(4)
       BMI.get_value(model, "var1", x)
@@ -71,8 +75,8 @@ end
     # TODO does index start at 0 or 1?
     @test BMI.get_value_at_indices(model, "var1", zeros(2), [2, 4]) == [2.0, 4.0]
     function test_get_value_at_indices_filled()
-      x = zeros(2)
-      BMI.get_value_at_indices(model, "var1", x, [2, 4])
+      x = zeros(Int, 2)
+      BMI.get_value_at_indices(model, "var1", x, Int[2, 4])
       return x
     end
     @test test_get_value_at_indices_filled() == [2.0, 4.0]
@@ -81,17 +85,17 @@ end
     # Check that set_value filled the array correctly
     @test BMI.get_value(model, "var1", zeros(4)) == [1.2, 2.2, 3.2, 4.2]
 
-    @test BMI.set_value_at_indices(model, "var1", [2, 4], [1.3, 2.3]) === nothing
+    @test BMI.set_value_at_indices(model, "var1", Int[2, 4], [5.3, 6.3]) === nothing
     # Check that set_value_at_indices filled the array correctly
-    @test BMI.get_value(model, "var1", zeros(4)) == [1.2, 1.3, 3.2, 2.3]
+    @test BMI.get_value(model, "var1", zeros(4)) == [1.2, 5.3, 3.2, 6.3]
   end
 
   @testset "Model grid functions" begin
     @test BMI.get_grid_type(model, 1) == "uniform_rectilinear"
     @test BMI.get_grid_size(model, 1) == 4
     @test BMI.get_grid_rank(model, 1) == 3
-    @test BMI.get_grid_shape(model, 1) == [2, 3, 4]
-    @test BMI.get_grid_spacing(model, 1, zeros(3)) == [0.1, 1.1, 2.1]]
+    @test BMI.get_grid_shape(model, 1) == Int[2, 3, 4]
+    @test BMI.get_grid_spacing(model, 1, zeros(3)) == [0.1, 1.1, 2.1]
     @test BMI.get_grid_origin(model, 1, zeros(3)) == [0.1, 0.2, 0.3]
     @test BMI.get_grid_x(model, 1, zeros(4)) == [0.1, 0.2, 0.3, 0.4]
     # Test that given array is filled after get_grid_x call
@@ -106,11 +110,11 @@ end
     @test BMI.get_grid_node_count(model, 1) == 6
     @test BMI.get_grid_edge_count(model, 1) == 8
     @test BMI.get_grid_face_count(model, 1) == 3
-    @test BMI.get_grid_edge_nodes(model, 1, zeros(16)) ==
+    @test BMI.get_grid_edge_nodes(model, 1, zeros(Int, 16)) ==
           Int[0, 1, 1, 2, 2, 3, 3, 0, 1, 4, 4, 5, 5, 2, 5, 3]
-    @test BMI.get_grid_face_edges(model, 1, zeros(12)) == Int[0, 1, 1, 2, 2, 0, 1, 3, 3, 2, 2, 4]
-    @test BMI.get_grid_face_nodes(model, 1, zeros(9)) == Int[0, 1, 2, 3, 1, 4, 5, 2, 2, 5, 3]
-    @test BMI.get_grid_nodes_per_face(model, 1, zeros(3)) == Int[4, 4, 3]
+    @test BMI.get_grid_face_edges(model, 1, zeros(Int, 11)) == Int[0, 1, 2, 3, 4, 5, 6, 1, 6, 7, 2]
+    @test BMI.get_grid_face_nodes(model, 1, zeros(Int, 11)) == Int[0, 1, 2, 3, 1, 4, 5, 2, 2, 5, 3]
+    @test BMI.get_grid_nodes_per_face(model, 1, zeros(Int, 3)) == Int[4, 4, 3]
   end
 
   # TODO Stop server, now gets killed when Julia exits

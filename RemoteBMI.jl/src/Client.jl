@@ -9,13 +9,8 @@ using .BmiClient
 
 import BasicModelInterface as BMI
 
-Base.@kwdef mutable struct ClientModel
+Base.@kwdef mutable struct BMIClient
   base_url::String
-end
-
-# TODO can we get rid of this? Or rename it?
-function setup(base_url::String)
-  return ClientModel(base_url)
 end
 
 # Model control functions
@@ -25,7 +20,7 @@ end
 # the initialize first argument is a class not an instance
 # here we use an instance that has be setup with the base_url
 # TODO is this ok? Could move base_url arg here, but will need other args like timeouts.
-function BMI.initialize(m::ClientModel, config_file::String)
+function BMI.initialize(m::BMIClient, config_file::String)
   # TODO store api instance inside m so we dont recreate it each time
   api = IRFApi(OpenAPI.Clients.Client(m.base_url))
   data, response = initialize(api, InitializeRequest(config_file))
@@ -33,19 +28,19 @@ function BMI.initialize(m::ClientModel, config_file::String)
   return m
 end
 
-function BMI.update(m::ClientModel)
+function BMI.update(m::BMIClient)
   api = IRFApi(OpenAPI.Clients.Client(m.base_url))
   data, response = update(api)
   return nothing
 end
 
-function BMI.update_until(m::ClientModel, time::Float64)
+function BMI.update_until(m::BMIClient, time::Float64)
   api = IRFApi(OpenAPI.Clients.Client(m.base_url))
   data, response = update_until(api, time)
   return nothing
 end
 
-function BMI.finalize(m::ClientModel)
+function BMI.finalize(m::BMIClient)
   api = IRFApi(OpenAPI.Clients.Client(m.base_url))
   data, response = BmiClient.finalize(api)
   return nothing
@@ -53,32 +48,32 @@ end
 
 # Model information functions
 
-function BMI.get_component_name(m::ClientModel)
+function BMI.get_component_name(m::BMIClient)
   api = ExchangeItemsApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_component_name(api)
   response.status == 200 || throw(OpenAPI.Clients.APIError(response))
   return data.name
 end
 
-function BMI.get_input_var_names(m::ClientModel)
+function BMI.get_input_var_names(m::BMIClient)::Vector{String}
   api = ExchangeItemsApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_input_var_names(api)
   return data
 end
 
-function BMI.get_input_item_count(m::ClientModel)
+function BMI.get_input_item_count(m::BMIClient)
   api = ExchangeItemsApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_input_item_count(api)
   return data
 end
 
-function BMI.get_output_var_names(m::ClientModel)
+function BMI.get_output_var_names(m::BMIClient)
   api = ExchangeItemsApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_output_var_names(api)
   return data
 end
 
-function BMI.get_output_item_count(m::ClientModel)
+function BMI.get_output_item_count(m::BMIClient)
   api = ExchangeItemsApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_output_item_count(api)
   return data
@@ -86,13 +81,13 @@ end
 
 # Variable information functions
 
-function BMI.get_var_grid(m::ClientModel, name)
+function BMI.get_var_grid(m::BMIClient, name)
   api = VariableInformationApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_var_grid(api, name)
   return data
 end
 
-function BMI.get_var_type(m::ClientModel, name::String)
+function BMI.get_var_type(m::BMIClient, name::String)
   api = VariableInformationApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_var_type(api, name)
   # Map openapi type to julia type
@@ -101,25 +96,25 @@ function BMI.get_var_type(m::ClientModel, name::String)
   return type_map[data.type]
 end
 
-function BMI.get_var_units(m::ClientModel, name::String)
+function BMI.get_var_units(m::BMIClient, name::String)
   api = VariableInformationApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_var_units(api, name)
   return data.units
 end
 
-function BMI.get_var_itemsize(m::ClientModel, name::String)
+function BMI.get_var_itemsize(m::BMIClient, name::String)
   api = VariableInformationApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_var_itemsize(api, name)
   return data
 end
 
-function BMI.get_var_nbytes(m::ClientModel, name::String)
+function BMI.get_var_nbytes(m::BMIClient, name::String)
   api = VariableInformationApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_var_nbytes(api, name)
   return data
 end
 
-function BMI.get_var_location(m::ClientModel, name::String)
+function BMI.get_var_location(m::BMIClient, name::String)
   api = VariableInformationApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_var_location(api, name)
   return data.location
@@ -127,31 +122,31 @@ end
 
 # Time functions
 
-function BMI.get_current_time(m::ClientModel)
+function BMI.get_current_time(m::BMIClient)
   api = TimeInformationApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_current_time(api)
   return data
 end
 
-function BMI.get_start_time(m::ClientModel)
+function BMI.get_start_time(m::BMIClient)
   api = TimeInformationApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_start_time(api)
   return data
 end
 
-function BMI.get_end_time(m::ClientModel)
+function BMI.get_end_time(m::BMIClient)
   api = TimeInformationApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_end_time(api)
   return data
 end
 
-function BMI.get_time_units(m::ClientModel)
+function BMI.get_time_units(m::BMIClient)
   api = TimeInformationApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_time_units(api)
   return data.units
 end
 
-function BMI.get_time_step(m::ClientModel)
+function BMI.get_time_step(m::BMIClient)
   api = TimeInformationApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_time_step(api)
   return data
@@ -159,7 +154,7 @@ end
 
 # Variable getter and setter functions
 
-function BMI.get_value(m::ClientModel, name::String, dest::AbstractArray{T}) where {T}
+function BMI.get_value(m::BMIClient, name::String, dest::AbstractArray{T}) where {T}
   api = GettersApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_value(api, name)
   copyto!(dest, data)
@@ -167,7 +162,7 @@ function BMI.get_value(m::ClientModel, name::String, dest::AbstractArray{T}) whe
 end
 
 function BMI.get_value_at_indices(
-  m::ClientModel,
+  m::BMIClient,
   name::String,
   dest::AbstractArray{T},
   inds::Vector{Int},
@@ -179,14 +174,14 @@ function BMI.get_value_at_indices(
   return dest
 end
 
-function BMI.set_value(m::ClientModel, name::String, src::AbstractArray{T}) where {T}
+function BMI.set_value(m::BMIClient, name::String, src::AbstractArray{T}) where {T}
   api = SettersApi(OpenAPI.Clients.Client(m.base_url))
   data, response = set_value(api, name, src)
   return nothing
 end
 
 function BMI.set_value_at_indices(
-  m::ClientModel,
+  m::BMIClient,
   name::String,
   inds::Vector{Int},
   src::AbstractArray{T},
@@ -200,105 +195,105 @@ end
 
 # Model grid functions
 
-function BMI.get_grid_type(m::ClientModel, grid)
+function BMI.get_grid_type(m::BMIClient, grid)
   api = GridInformationApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_grid_type(api, grid)
   return data.type
 end
 
-function BMI.get_grid_rank(m::ClientModel, grid)
+function BMI.get_grid_rank(m::BMIClient, grid)
   api = GridInformationApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_grid_rank(api, grid)
   return data
 end
 
-function BMI.get_grid_size(m::ClientModel, grid)
+function BMI.get_grid_size(m::BMIClient, grid)
   api = GridInformationApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_grid_size(api, grid)
   return data
 end
 
-function BMI.get_grid_shape(m::ClientModel, grid)
+function BMI.get_grid_shape(m::BMIClient, grid)
   api = UniformRectilinearApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_grid_shape(api, grid)
   return data
 end
 
-function BMI.get_grid_spacing(m::ClientModel, grid, spacing::Vector{T}) where {T <: AbstractFloat}
+function BMI.get_grid_spacing(m::BMIClient, grid, spacing::Vector{T}) where {T <: AbstractFloat}
   api = UniformRectilinearApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_grid_spacing(api, grid)
   copyto!(spacing, data)
   return spacing
 end
 
-function BMI.get_grid_origin(m::ClientModel, grid, origin::Vector{T}) where {T <: AbstractFloat}
+function BMI.get_grid_origin(m::BMIClient, grid, origin::Vector{T}) where {T <: AbstractFloat}
   api = UniformRectilinearApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_grid_origin(api, grid)
   copyto!(origin, data)
   return origin
 end
 
-function BMI.get_grid_x(m::ClientModel, grid, x::Vector{T}) where {T <: AbstractFloat}
+function BMI.get_grid_x(m::BMIClient, grid, x::Vector{T}) where {T <: AbstractFloat}
   api = NURCApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_grid_x(api, grid)
   copyto!(x, data)
   return x
 end
 
-function BMI.get_grid_y(m::ClientModel, grid, y::Vector{T}) where {T <: AbstractFloat}
+function BMI.get_grid_y(m::BMIClient, grid, y::Vector{T}) where {T <: AbstractFloat}
   api = NURCApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_grid_y(api, grid)
   copyto!(y, data)
   return y
 end
 
-function BMI.get_grid_z(m::ClientModel, grid, z::Vector{T}) where {T <: AbstractFloat}
+function BMI.get_grid_z(m::BMIClient, grid, z::Vector{T}) where {T <: AbstractFloat}
   api = NURCApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_grid_z(api, grid)
   copyto!(z, data)
   return z
 end
 
-function BMI.get_grid_node_count(m::ClientModel, grid)
+function BMI.get_grid_node_count(m::BMIClient, grid)
   api = UnstructuredApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_grid_node_count(api, grid)
   return data
 end
 
-function BMI.get_grid_edge_count(m::ClientModel, grid)
+function BMI.get_grid_edge_count(m::BMIClient, grid)
   api = UnstructuredApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_grid_edge_count(api, grid)
   return data
 end
 
-function BMI.get_grid_face_count(m::ClientModel, grid)
+function BMI.get_grid_face_count(m::BMIClient, grid)
   api = UnstructuredApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_grid_face_count(api, grid)
   return data
 end
 
-function BMI.get_grid_edge_nodes(m::ClientModel, grid, edge_nodes::Vector{Int})
+function BMI.get_grid_edge_nodes(m::BMIClient, grid, edge_nodes::Vector{Int})
   api = UnstructuredApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_grid_edge_nodes(api, grid)
   copyto!(edge_nodes, data)
   return edge_nodes
 end
 
-function BMI.get_grid_face_edges(m::ClientModel, grid, face_edges::Vector{Int})
+function BMI.get_grid_face_edges(m::BMIClient, grid, face_edges::Vector{Int})
   api = UnstructuredApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_grid_face_edges(api, grid)
   copyto!(face_edges, data)
   return face_edges
 end
 
-function BMI.get_grid_face_nodes(m::ClientModel, grid, face_nodes::Vector{Int})
+function BMI.get_grid_face_nodes(m::BMIClient, grid, face_nodes::Vector{Int})
   api = UnstructuredApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_grid_face_nodes(api, grid)
   copyto!(face_nodes, data)
   return face_nodes
 end
 
-function BMI.get_grid_nodes_per_face(m::ClientModel, grid, nodes_per_face::Vector{Int})
+function BMI.get_grid_nodes_per_face(m::BMIClient, grid, nodes_per_face::Vector{Int})
   api = UnstructuredApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_grid_nodes_per_face(api, grid)
   copyto!(nodes_per_face, data)
