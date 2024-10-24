@@ -302,7 +302,7 @@ function run_bmi_server(model, host, port)
   try
     router = HTTP.Router()
     router = BmiServer.register(router, @__MODULE__)
-    server = HTTP.serve!(router, host, port; verbose = true)
+    server = HTTP.serve!(router, host, port)
     wait(server)
   catch ex
     @error("Server error", exception = (ex, catch_backtrace()))
