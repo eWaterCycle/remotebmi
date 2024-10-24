@@ -55,9 +55,9 @@ Interact using the Julia client.
 
 ```julia
 # julia --project=$PWD/..
-import RemoteBMI.Client: setup
+import RemoteBMI.Client: BMIClient
 import BasicModelInterface as BMI
-model = setup("http://localhost:50555")
+model = BMIClient("http://localhost:50555")
 m = BMI.initialize(model, joinpath(pwd(), "heat.toml"))
 BMI.get_component_name(m)
 # "The 2D Heat Equation"
