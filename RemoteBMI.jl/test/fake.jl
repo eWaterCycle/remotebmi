@@ -69,7 +69,7 @@ end
 BMI.get_grid_type(m::Model, grid) = "uniform_rectilinear"
 BMI.get_grid_size(m::Model, grid) = 4
 BMI.get_grid_rank(m::Model, grid) = 3
-BMI.get_grid_shape(m::Model, grid) = [2, 3, 4]
+BMI.get_grid_shape(m::Model, grid) = Int[2, 3, 4]
 function BMI.get_grid_spacing(m::Model, grid, spacing::Vector{T}) where {T <: AbstractFloat}
   copyto!(spacing, [0.1, 1.1, 2.1])
 end
@@ -89,11 +89,11 @@ BMI.get_grid_node_count(m::Model, grid) = 6
 BMI.get_grid_edge_count(m::Model, grid) = 8
 BMI.get_grid_face_count(m::Model, grid) = 3
 BMI.get_grid_edge_nodes(m::Model, grid, edge_nodes::Vector{Int}) =
-  copyto!(edge_nodes, [0, 1, 1, 2, 2, 3, 3, 0, 1, 4, 4, 5, 5, 2, 5, 3])
+  copyto!(edge_nodes, Int[0, 1, 1, 2, 2, 3, 3, 0, 1, 4, 4, 5, 5, 2, 5, 3])
 BMI.get_grid_face_edges(m::Model, grid, face_edges::Vector{Int}) =
-  copyto!(face_edges, [0, 1, 2, 3, 4, 5, 6, 1, 6, 7, 2])
+  copyto!(face_edges, Int[0, 1, 2, 3, 4, 5, 6, 1, 6, 7, 2])
 BMI.get_grid_face_nodes(m::Model, grid, face_nodes::Vector{Int}) =
-  copyto!(face_nodes, [0, 1, 2, 3, 1, 4, 5, 2, 2, 5, 3])
+  copyto!(face_nodes, Int[0, 1, 2, 3, 1, 4, 5, 2, 2, 5, 3])
 BMI.get_grid_nodes_per_face(m::Model, grid, nodes_per_face::Vector{Int}) =
-  copyto!(nodes_per_face, [4, 4, 3])
+  copyto!(nodes_per_face, Int[4, 4, 3])
 end # FakeModel module

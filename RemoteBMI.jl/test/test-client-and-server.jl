@@ -91,8 +91,8 @@ end
     @test BMI.get_grid_size(model, 1) == 4
     @test BMI.get_grid_rank(model, 1) == 3
     @test BMI.get_grid_shape(model, 1) == [2, 3, 4]
-    @test BMI.get_grid_spacing(model, 1, zeros(3)) == [0.1, 0.1, 0.3]
-    @test BMI.get_grid_origin(model, 1, zeros(3)) == [0.1, 1.1, 2.1]
+    @test BMI.get_grid_spacing(model, 1, zeros(3)) == [0.1, 1.1, 2.1]]
+    @test BMI.get_grid_origin(model, 1, zeros(3)) == [0.1, 0.2, 0.3]
     @test BMI.get_grid_x(model, 1, zeros(4)) == [0.1, 0.2, 0.3, 0.4]
     # Test that given array is filled after get_grid_x call
     function test_grid_x_filled()
@@ -107,10 +107,10 @@ end
     @test BMI.get_grid_edge_count(model, 1) == 8
     @test BMI.get_grid_face_count(model, 1) == 3
     @test BMI.get_grid_edge_nodes(model, 1, zeros(16)) ==
-          [0, 1, 1, 2, 2, 3, 3, 0, 1, 4, 4, 5, 5, 2, 5, 3]
-    @test BMI.get_grid_face_edges(model, 1, zeros(12)) == [0, 1, 1, 2, 2, 0, 1, 3, 3, 2, 2, 4]
-    @test BMI.get_grid_face_nodes(model, 1, zeros(9)) == [0, 1, 2, 3, 1, 4, 5, 2, 2, 5, 3]
-    @test BMI.get_grid_nodes_per_face(model, 1, zeros(3)) == [4, 4, 3]
+          Int[0, 1, 1, 2, 2, 3, 3, 0, 1, 4, 4, 5, 5, 2, 5, 3]
+    @test BMI.get_grid_face_edges(model, 1, zeros(12)) == Int[0, 1, 1, 2, 2, 0, 1, 3, 3, 2, 2, 4]
+    @test BMI.get_grid_face_nodes(model, 1, zeros(9)) == Int[0, 1, 2, 3, 1, 4, 5, 2, 2, 5, 3]
+    @test BMI.get_grid_nodes_per_face(model, 1, zeros(3)) == Int[4, 4, 3]
   end
 
   # TODO Stop server, now gets killed when Julia exits
