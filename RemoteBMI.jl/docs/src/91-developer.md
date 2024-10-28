@@ -112,6 +112,15 @@ Here is how you do it:
 1. Run `julia> using LiveServer`
 1. Run `julia> servedocs()`
 
+Or
+
+```shell
+# Once
+julia --project=docs -e ' using Pkg;Pkg.develop(PackageSpec(path=pwd()));Pkg.instantiate()'
+# Every time
+julia --project=docs -e ' using LiveServer; servedocs()'
+```
+
 ## Making a new release
 
 To create a new release, you can follow these simple steps:
