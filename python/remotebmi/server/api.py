@@ -62,7 +62,7 @@ def get_var_grid(name: str):
 
 
 def get_var_type(name: str):
-    return {"type": model().get_var_type(name) }
+    return {"type": model().get_var_type(name)}
 
 
 def get_var_units(name: str):
@@ -85,7 +85,9 @@ def get_value(name: str):
     items = reserve_values(model(), name)
     return model().get_value(name, items)
 
+
 # TODO correct typings
+
 
 def get_value_at_indices(name: str, indices: list):
     items = reserve_values_at_indices(model(), name, indices)

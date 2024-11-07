@@ -37,9 +37,7 @@ class BmiClientApptainer(RemoteBmiClient):
         self.work_dir = abspath(work_dir)
         if self.work_dir in {abspath(d) for d in input_dirs}:
             msg = "Found work_dir equal to one of the input directories. Please drop that input dir."
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
         if not os.path.isdir(self.work_dir):  # noqa: PTH112
             raise NotADirectoryError(self.work_dir)
         args += ["--bind", f"{self.work_dir}:{self.work_dir}:rw"]
@@ -48,7 +46,7 @@ class BmiClientApptainer(RemoteBmiClient):
         args.append(image)
         logging.info(f"Running {image} apptainer container on port {port}")
         if capture_logs:
-            self.logfile = SpooledTemporaryFile(
+            self.logfile = SpooledTemporaryFile(  # noqa: SIM115 - file is closed in __del__
                 max_size=2**16,  # keep until 65Kb in memory if bigger write to disk
                 prefix="grpc4bmi-apptainer-log",
                 mode="w+t",
@@ -58,12 +56,17 @@ class BmiClientApptainer(RemoteBmiClient):
         else:
             stdout = subprocess.DEVNULL
         self.container = subprocess.Popen(  # noqa: S603
-            args, preexec_fn=os.setsid, stderr=subprocess.STDOUT, stdout=stdout  # noqa: PLW1509 if absent leaves zombie processes behind
+            args,
+            preexec_fn=os.setsid,
+            stderr=subprocess.STDOUT,
+            stdout=stdout,  # noqa: PLW1509 if absent leaves zombie processes behind
         )
         time.sleep(delay)
         returncode = self.container.poll()
         if returncode is not None:
-            msg = f"apptainer container {image} prematurely exited with code {returncode}"
+            msg = (
+                f"apptainer container {image} prematurely exited with code {returncode}"
+            )
             raise DeadContainerError(
                 msg,
                 returncode,

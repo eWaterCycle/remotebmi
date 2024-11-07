@@ -18,6 +18,12 @@ dependencies = [
     "docker",
 ]
 
+[project.optional-dependencies]
+dev = [
+    "ruff",
+    "pytest"
+]
+
 [project.scripts]
 run-bmi-server='remotebmi.server:main'
 

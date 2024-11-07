@@ -40,9 +40,7 @@ class BmiClientDocker(RemoteBmiClient):
         self.work_dir = abspath(work_dir)
         if self.work_dir in volumes:
             msg = "Found work_dir equal to one of the input directories. Please drop that input dir."
-            raise ValueError(
-                msg
-            )
+            raise ValueError(msg)
         if not os.path.isdir(self.work_dir):  # noqa: PTH112
             raise NotADirectoryError(self.work_dir)
         volumes[self.work_dir] = {"bind": self.work_dir, "mode": "rw"}
