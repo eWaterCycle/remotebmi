@@ -1,9 +1,10 @@
-import json
+from urllib.parse import urlparse
 
 import numpy as np
 from bmipy import Bmi
 from httpx import Client
 from numpy import ndarray
+
 
 class RemoteBmiClient(Bmi):
     def __init__(self, base_url, timeout=60 * 60 * 24):
@@ -13,7 +14,14 @@ class RemoteBmiClient(Bmi):
             base_url: Where the remote BMI server is running.
             timeout: How long a response can take.
                 Defaults to 1 day. Set to None to disable timeout.
+
+        Raises:
+            ValueError: If the base_url is invalid.
         """
+        parsed_url = urlparse(base_url)
+        if not all([parsed_url.scheme, parsed_url.netloc, parsed_url.scheme in ["http", "https"]]):
+            msg = f"Invalid base_url: {base_url}"
+            raise ValueError(msg)
         self.client = Client(base_url=base_url, timeout=timeout)
 
     def __del__(self):
