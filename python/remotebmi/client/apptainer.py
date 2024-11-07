@@ -57,9 +57,9 @@ class BmiClientApptainer(RemoteBmiClient):
             stdout = subprocess.DEVNULL
         self.container = subprocess.Popen(  # noqa: S603
             args,
-            preexec_fn=os.setsid,
+            preexec_fn=os.setsid,  # noqa: PLW1509
             stderr=subprocess.STDOUT,
-            stdout=stdout,  # noqa: PLW1509 if absent leaves zombie processes behind
+            stdout=stdout,
         )
         time.sleep(delay)
         returncode = self.container.poll()
