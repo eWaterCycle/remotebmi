@@ -1,5 +1,6 @@
 # Remote BMI
 
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 [![Codecov test coverage](https://codecov.io/gh/eWaterCycle/remotebmi/graph/badge.svg)](https://app.codecov.io/gh/eWaterCycle/remotebmi)
 
 The [Basic Model Interface (BMI)](https://bmi.readthedocs.io/en/stable/) is a standard interface for models. 
@@ -20,6 +21,12 @@ The [REST API specification](openapi.yaml) is in the [OpenAPI](https://swagger.i
 ## Usage
 
 [OpenAPI reference documentation](https://redocly.github.io/redoc/?url=https://github.com/eWaterCycle/remotebmi/raw/main/openapi.yaml)
+
+## Structure
+
+This repository is a monorepo containing packages for different languages.
+1. Python client and server, in [./python/](./python) directory
+2. Julia server, in [./RemoteBMI.jl/](./RemoteBMI.jl/) directory
 
 ### Python consumer
 
@@ -94,10 +101,19 @@ Given you have a model class called `MyModel` and a BMI called `BMI` inside the 
 
 ```julia
 using MyPackage
-using RemoteBMI
+import RemoteBMI.Server: run_bmi_server
 
 port = parse(Int, get(ENV, "BMI_PORT", "50051"))
-RemoteBMI.run(MyPackage.Model, "0.0.0.0", port)
+run_bmi_server(MyPackage.Model, "0.0.0.0", port)
+```
+
+### Julia consumer
+
+```julia
+import RemoteBMI.Client: BMIClient
+import BasicModelInterface as BMI
+model = BMIClient("http://localhost:50555")
+BMI.get_component_name(m)
 ```
 
 ### R provider

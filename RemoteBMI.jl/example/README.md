@@ -44,10 +44,30 @@ client.get_var_grid('plate_surface__temperature')
 0
 client.get_grid_type(0)
 'uniform_rectilinear'
+client.get_grid_shape(0)
 dest = reserve_values(client, 'plate_surface__temperature')
 r = client.get_value('plate_surface__temperature', dest)
 r
 client.finalize()
+```
+
+Interact using the Julia client.
+
+```julia
+# julia --project=$PWD/..
+import RemoteBMI.Client: BMIClient
+import BasicModelInterface as BMI
+model = BMIClient("http://localhost:50555")
+m = BMI.initialize(model, joinpath(pwd(), "heat.toml"))
+BMI.get_component_name(m)
+# "The 2D Heat Equation"
+BMI.get_grid_type(m, 0)
+# "uniform_rectilinear"
+BMI.get_grid_shape(m, 0)
+# {}
+BMI.get_grid_rank(m, 0)
+# 2
+BMI.get_grid_x(m, 0, [0.0, 0.0])
 ```
 
 # Run Wflow.jl
@@ -81,9 +101,9 @@ download(toml_url, toml_path)
 
 # Run server
 using Wflow
-import RemoteBMI
+import RemoteBMI.Server: run_bmi_server
 port = parse(Int, get(ENV, "BMI_PORT", "50051"))
-RemoteBMI.run(Wflow.Model, "0.0.0.0", port)
+run_bmi_server(Wflow.Model, "0.0.0.0", port)
 ```
 
 Interact with it using the Python client.
