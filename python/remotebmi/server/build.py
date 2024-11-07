@@ -29,9 +29,7 @@ def from_env() -> Bmi:
             "Missing module name: module could not be derived from environment "
             f"variable {ENV_BMI_MODULE}"
         )
-        raise ValueError(
-            msg
-        )
+        raise ValueError(msg)
 
     class_name = os.environ.get(ENV_BMI_CLASS, "")
     if not class_name:
@@ -39,9 +37,7 @@ def from_env() -> Bmi:
             "Missing bmi implementation: class could not be derived from environment"
             f"variable {ENV_BMI_CLASS}"
         )
-        raise ValueError(
-            msg
-        )
+        raise ValueError(msg)
 
     return build(module_name, class_name, path)
 
