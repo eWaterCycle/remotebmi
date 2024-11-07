@@ -1,5 +1,11 @@
 # Contributing
 
+## AI Assistance
+
+The documentation/software code in this repository can and has been partly generated and/or refined using
+GitHub CoPilot. All AI-output has been verified for correctness,
+accuracy and completeness, adapted where needed, and approved by the author.
+
 ## Add another language
 
 A directory of the name of the language should be created in the root of the repository.

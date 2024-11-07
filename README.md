@@ -1,5 +1,6 @@
 # Remote BMI
 
+[![Codecov test coverage](https://codecov.io/gh/eWaterCycle/remotebmi/graph/badge.svg)](https://app.codecov.io/gh/eWaterCycle/remotebmi)
 
 The [Basic Model Interface (BMI)](https://bmi.readthedocs.io/en/stable/) is a standard interface for models. 
 The interface is available in different languages and a [language agnosting version in SIDL](https://github.com/csdms/bmi/blob/stable/bmi.sidl).
@@ -108,8 +109,7 @@ library(remotebmi)
 library(MyModel)
 
 port = as.integer(Sys.getenv("BMI_PORT", 50051))
-server <- RemoteBmiServer(MyModel$ModelBmi, port=port, host="localhost")
-server$run()
+serve(MyModel::ModelBmi$new(), port=port, host="localhost")
 ``` 
 
 ### Other languages
