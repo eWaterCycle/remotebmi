@@ -1,10 +1,9 @@
 # RemoteBMI
 
-<!-- [![Stable Documentation](https://img.shields.io/badge/docs-stable-blue.svg)](https://eWaterCycle.github.io/RemoteBMI.jl/stable) -->
-<!-- [![In development documentation](https://img.shields.io/badge/docs-dev-blue.svg)](https://eWaterCycle.github.io/RemoteBMI.jl/dev) -->
-[![Build Status](https://github.com/eWaterCycle/RemoteBMI.jl/workflows/Julia%20test/badge.svg)](https://github.com/eWaterCycle/RemoteBMI/actions)
-[![Test workflow status](https://github.com/eWaterCycle/RemoteBMI/actions/workflows/julia-test.yml/badge.svg?branch=main)](https://github.com/eWaterCycle/RemoteBMI/actions/workflows/julia-test.yml?query=branch%3Amain)
-<!-- [![Docs workflow Status](https://github.com/eWaterCycle/RemoteBMI.jl/actions/workflows/Docs.yml/badge.svg?branch=main)](https://github.com/eWaterCycle/RemoteBMI.jl/actions/workflows/Docs.yml?query=branch%3Amain) -->
+[![Julia test](https://github.com/eWaterCycle/remotebmi/actions/workflows/julia-test.yml/badge.svg)](https://github.com/eWaterCycle/remotebmi/actions/workflows/julia-test.yml)
+[![Julia docs](https://github.com/eWaterCycle/remotebmi/actions/workflows/julia-docs.yml/badge.svg)](https://github.com/eWaterCycle/remotebmi/actions/workflows/julia-docs.yml)
+
+[![][docs-stable-img]][docs-stable-url] [![][docs-dev-img]][docs-dev-url]
 
 <!-- TODO filter on Julia component
 [![Coverage](https://codecov.io/gh/eWaterCycle/RemoteBMI/branch/main/graph/badge.svg)](https://codecov.io/gh/eWaterCycle/RemoteBMI)
@@ -52,3 +51,9 @@ touch RemoteBMI.jl/docs/src/client/docs/Float64.md
 touch RemoteBMI.jl/docs/src/server/docs/Int64.md
 touch RemoteBMI.jl/docs/src/server/docs/Float64.md
 ```
+
+[docs-dev-img]: https://img.shields.io/badge/docs-dev-blue.svg
+[docs-dev-url]: https://www.ewatercycle.org/remotebmi/RemoteBMI.jl/dev
+
+[docs-stable-img]: https://img.shields.io/badge/docs-stable-blue.svg
+[docs-stable-url]: https://www.ewatercycle.org/remotebmi/RemoteBMI.jl/stable
