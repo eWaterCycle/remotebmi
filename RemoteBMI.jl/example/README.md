@@ -101,9 +101,9 @@ download(toml_url, toml_path)
 
 # Run server
 using Wflow
-import RemoteBMI
+import RemoteBMI.Server: run_bmi_server
 port = parse(Int, get(ENV, "BMI_PORT", "50051"))
-RemoteBMI.run(Wflow.Model, "0.0.0.0", port)
+run_bmi_server(Wflow.Model, "0.0.0.0", port)
 ```
 
 Interact with it using the Python client.
