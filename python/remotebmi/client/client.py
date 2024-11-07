@@ -1,8 +1,26 @@
+import json
+
 import numpy as np
 from bmipy import Bmi
-from httpx import Client
+from httpx import Client, HTTPStatusError, Response
 from numpy import ndarray
 
+def raise_for_status(response: Response):
+    try:
+        response.raise_for_status()
+    except HTTPStatusError as e:
+        # Create a response with problem details body
+        body = {
+            "title": str(e),
+            "detail": e.response.text,
+            "status": e.response.status_code,
+        }
+        response = Response(
+            status_code=e.response.status_code,
+            content=json.dumps(body),
+            headers=e.response.headers,
+        )
+        raise response from e
 
 class RemoteBmiClient(Bmi):
     def __init__(self, base_url, timeout=60 * 60 * 24):

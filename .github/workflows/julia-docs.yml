@@ -1,21 +1,21 @@
-name: Docs
+name: Julia docs
 
 on:
   push:
     branches:
       - main
     paths:
-      - "docs/**"
-      - "src/**"
-      - "*.toml"
+      - "RemoteBMI.jl/docs/**"
+      - "RemoteBMI.jl/src/**"
+      - "RemoteBMI.jl/*.toml"
     tags: ["*"]
   pull_request:
     branches:
       - main
     paths:
-      - "docs/**"
-      - "src/**"
-      - "*.toml"
+      - "RemoteBMI.jl/docs/**"
+      - "RemoteBMI.jl/src/**"
+      - "RemoteBMI.jl/*.toml"
     types: [opened, synchronize, reopened]
 
 concurrency:
@@ -33,6 +33,7 @@ jobs:
       - uses: julia-actions/setup-julia@v2
         with:
           version: "1"
+          project: './RemoteBMI.jl'
       - name: Use Julia cache
         uses: julia-actions/cache@v2
       - name: Instantiate environment with development version of the package
@@ -41,6 +42,7 @@ jobs:
             using Pkg
             Pkg.develop(PackageSpec(path=pwd()))
             Pkg.instantiate()'
+        working-directory: RemoteBMI.jl
       - name: Run doctest
         run: |
           julia --project=docs -e '
@@ -48,10 +50,11 @@ jobs:
             using RemoteBMI
             DocMeta.setdocmeta!(RemoteBMI, :DocTestSetup, :(using RemoteBMI); recursive=true)
             doctest(RemoteBMI)'
+        working-directory: RemoteBMI.jl
       - name: Generate and deploy documentation
         run: julia --project=docs docs/make.jl
+        working-directory: RemoteBMI.jl
         env:
           JULIA_PKG_SERVER: ""
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DOCUMENTER_KEY: ${{ secrets.DOCUMENTER_KEY }}
           GKSwstype: "100" # https://discourse.julialang.org/t/generation-of-documentation-fails-qt-qpa-xcb-could-not-connect-to-display/60988
