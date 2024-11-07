@@ -65,8 +65,8 @@ end
 function BMI.set_value_at_indices(
   m::Model,
   name::String,
-  src::Vector{T},
   indices::Vector{Int},
+  src::Vector{T},
 ) where {T <: AbstractFloat}
   m.values[indices] .= src
   return nothing

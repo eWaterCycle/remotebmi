@@ -156,7 +156,7 @@ function set_value_at_indices(
   # OpenAPI request is zero-based, while Julia is one-based
   jindexes = set_value_at_indices_request.indices .+ 1
   src = set_value_at_indices_request.values
-  BMI.set_value_at_indices(m, name, src, jindexes)
+  BMI.set_value_at_indices(m, name, jindexes, src)
 end
 
 function get_current_time(req::HTTP.Request;)::Float64
