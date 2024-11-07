@@ -37,5 +37,18 @@ The openapi server stubs where generated using the following command:
 wget https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/7.9.0/openapi-generator-cli-7.9.0.jar -O openapi-generator-cli.jar
 java -jar ./openapi-generator-cli.jar  generate -i ./openapi.yaml  -g julia-server -o julia-server --additional-properties=packageName=BmiServer --additional-properties=exportModels=true
 java -jar ./openapi-generator-cli.jar  generate -i ./openapi.yaml  -g julia-client -o julia-client --additional-properties=packageName=BmiClient --additional-properties=exportModels=true
-# Copy the generated files to RemoteBMI.jl/src/
+# Copy the generated src
+cp -r julia-client/src/* RemoteBMI.jl/src/client/
+cp -r julia-server/src/* RemoteBMI.jl/src/server/
+# Copy the generated docs
+mkdir -p RemoteBMI.jl/docs/src/client/ RemoteBMI.jl/docs/src/server/
+cp -r julia-client/docs RemoteBMI.jl/docs/src/client/docs
+cp -r julia-server/docs RemoteBMI.jl/docs/src/server/
+cp julia-client/README.md RemoteBMI.jl/docs/src/client/
+cp julia-server/README.md RemoteBMI.jl/docs/src/server/
+# Correct links
+touch RemoteBMI.jl/docs/src/client/docs/Int64.md
+touch RemoteBMI.jl/docs/src/client/docs/Float64.md
+touch RemoteBMI.jl/docs/src/server/docs/Int64.md
+touch RemoteBMI.jl/docs/src/server/docs/Float64.md
 ```

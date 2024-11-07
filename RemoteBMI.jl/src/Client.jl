@@ -9,6 +9,8 @@ using .BmiClient
 
 import BasicModelInterface as BMI
 
+# TODO document BMIClient in doc site
+
 Base.@kwdef mutable struct BMIClient
   base_url::String
 end

@@ -12,6 +12,26 @@ Pages = ["95-reference.md"]
 Pages = ["95-reference.md"]
 ```
 
+## Server
+
 ```@autodocs
-Modules = [RemoteBMI]
+Modules = [RemoteBMI.Server]
+```
+
+## Server generated code
+
+```@autodocs
+Modules = [RemoteBMI.Server.BmiServer]
+```
+
+## Client
+
+```@autodocs
+Modules = [RemoteBMI.Client]
+```
+
+## Client generated code
+
+```@autodocs
+Modules = [RemoteBMI.Client.BmiClient]
 ```

@@ -1,3 +1,5 @@
+from urllib.parse import urlparse
+
 import numpy as np
 from bmipy import Bmi
 from httpx import Client, Limits
@@ -13,7 +15,20 @@ class RemoteBmiClient(Bmi):
             timeout: How long a response can take.
                 Defaults to 1 day. Set to None to disable timeout.
             max_keepalive_connections: How many connections to keep alive.
+
+        Raises:
+            ValueError: If the base_url is invalid.
         """
+        parsed_url = urlparse(base_url)
+        if not all(
+            [
+                parsed_url.scheme,
+                parsed_url.netloc,
+                parsed_url.scheme in ["http", "https"],
+            ]
+        ):
+            msg = f"Invalid base_url: {base_url}"
+            raise ValueError(msg)
         # In some Python environments the reusing connection causes `illegal status line: bytesarray(b'14')` error
         # So we need to disable keepalive connections to be more reliable, but less efficient
         limits = Limits(max_keepalive_connections=max_keepalive_connections)

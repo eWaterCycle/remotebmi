@@ -12,10 +12,10 @@ const numbered_pages = [
 makedocs(;
   modules = [RemoteBMI],
   authors = "",
-  repo = "https://github.com/eWaterCycle/RemoteBMI.jl/blob/{commit}{path}#{line}",
+  repo = "https://github.com/eWaterCycle/remotebmi/blob/{commit}{path}#{line}",
   sitename = "RemoteBMI.jl",
-  format = Documenter.HTML(; canonical = "https://eWaterCycle.github.io/RemoteBMI.jl"),
+  format = Documenter.HTML(; canonical = "https://eWaterCycle.github.io/remotebmi/RemoteBMI.jl"),
   pages = ["index.md"; numbered_pages],
 )
 
-deploydocs(; repo = "github.com/eWaterCycle/RemoteBMI.jl")
+deploydocs(; repo = "github.com/eWaterCycle/remotebmi", dirname="RemoteBMI.jl")
