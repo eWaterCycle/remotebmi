@@ -10,6 +10,7 @@ on:
       - "RemoteBMI.jl/docs/**"
       - "RemoteBMI.jl/src/**"
       - "RemoteBMI.jl/*.toml"
+      - .github/workflows/julia-docs.yml
     tags: ["*"]
   pull_request:
     branches:
@@ -18,6 +19,7 @@ on:
       - "RemoteBMI.jl/docs/**"
       - "RemoteBMI.jl/src/**"
       - "RemoteBMI.jl/*.toml"
+      - .github/workflows/julia-docs.yml
     types: [opened, synchronize, reopened]
 
 concurrency:
