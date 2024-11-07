@@ -1,0 +1,21 @@
+Package: remotebmi
+Title: BMI over http
+Version: 0.0.0.9000
+Authors@R: 
+    person("Stefan", "Verhoeven", , "s.verhoeven@esciencecenter.nl", role = c("aut", "cre"),
+           comment = c(ORCID = "https://orcid.org/0000-0002-5821-2060"))
+Description: Runs a BMI model as a http json web service.
+URL: https://github.com/eWaterCycle/remotebmi
+License: Apache License (>= 2)
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Imports: 
+    fiery,
+    reqres,
+    routr
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Remotes:
+    eWaterCycle/bmi-r
