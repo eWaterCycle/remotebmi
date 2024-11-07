@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-      # TODO remove once PR is merged
-      - julia-docs
     paths:
       - "RemoteBMI.jl/docs/**"
       - "RemoteBMI.jl/src/**"
