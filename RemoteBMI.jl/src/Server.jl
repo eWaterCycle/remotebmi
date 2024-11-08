@@ -158,7 +158,7 @@ function set_value_at_indices(
   jindexes = set_value_at_indices_request.indices .+ 1
   src = set_value_at_indices_request.values
   BMI.set_value_at_indices(m, name, jindexes, src)
-  return Nothing
+  return nothing
 end
 
 function get_current_time(req::HTTP.Request;)::Float64
