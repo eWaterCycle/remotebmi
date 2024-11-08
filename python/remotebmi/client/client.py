@@ -35,7 +35,8 @@ class RemoteBmiClient(Bmi):
         self.client = Client(base_url=base_url, timeout=timeout, limits=limits)
 
     def __del__(self):
-        self.client.close()
+        if hasattr(self, "client"):
+            self.client.close()
 
     def initialize(self, config_file):
         response = self.client.post("/initialize", json={"config_file": config_file})
