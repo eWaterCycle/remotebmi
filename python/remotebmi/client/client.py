@@ -1,9 +1,9 @@
-from urllib.parse import urlparse
-
 import numpy as np
 from bmipy import Bmi
 from httpx import Client, Limits
 from numpy import ndarray
+
+from .utils import validate_url
 
 
 class RemoteBmiClient(Bmi):
@@ -19,16 +19,7 @@ class RemoteBmiClient(Bmi):
         Raises:
             ValueError: If the base_url is invalid.
         """
-        parsed_url = urlparse(base_url)
-        if not all(
-            [
-                parsed_url.scheme,
-                parsed_url.netloc,
-                parsed_url.scheme in ["http", "https"],
-            ]
-        ):
-            msg = f"Invalid base_url: {base_url}"
-            raise ValueError(msg)
+        validate_url(base_url)
         # In some Python environments the reusing connection causes `illegal status line: bytesarray(b'14')` error
         # So we need to disable keepalive connections to be more reliable, but less efficient
         limits = Limits(max_keepalive_connections=max_keepalive_connections)

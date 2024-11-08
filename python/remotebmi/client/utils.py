@@ -1,5 +1,6 @@
 import socket
 from contextlib import closing
+from urllib.parse import urlparse
 
 
 def get_unique_port(host=None):
@@ -24,3 +25,27 @@ class DeadContainerError(ChildProcessError):
         self.exitcode = exitcode
         #: Stdout and stderr of container
         self.logs = logs
+
+
+def validate_url(url: str):
+    """
+    Validates a given URL to ensure it has a valid scheme, network location,
+    and that the scheme is either 'http' or 'https'.
+
+    Args:
+        url (str): The URL to validate.
+
+    Raises:
+        ValueError: If the URL is invalid, i.e., it does not have a scheme,
+                    network location, or the scheme is not 'http' or 'https'.
+
+    Example:
+        validate_url("http://example.com")
+    """
+    parsed_url = urlparse(url)
+    has_scheme = parsed_url.scheme != ""
+    has_netloc = parsed_url.netloc != ""
+    is_valid_scheme = parsed_url.scheme in ["http", "https"]
+    if not (has_scheme and has_netloc and is_valid_scheme):
+        msg = f"Invalid: {url}, should be http(s)://host[:port][/path]"
+        raise ValueError(msg)
