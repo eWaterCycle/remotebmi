@@ -1,0 +1,26 @@
+# YAML 1.2
+---
+authors:
+  -
+    affiliation: "Netherlands eScience Center"
+    family-names: Verhoeven
+    given-names: Stefan
+    orcid: "https://orcid.org/0000-0002-5821-2060"
+  -
+    affiliation: "Netherlands eScience Center"
+    family-names: Schilperoort
+    given-names: Bart
+    orcid: "https://orcid.org/0000-0003-4487-9822"
+
+cff-version: "1.2.0"
+keywords:
+  - bmi
+license: "Apache-2.0"
+message: "If you use this software, please cite it using these metadata."
+repository-code: "https://github.com/eWaterCycle/remotebmi"
+title: remotebmi Python/Julia/R packages
+identifiers:
+  - description: Latest version of software
+    type: doi
+    value: "TODO fill with concept DOI after fisrt release"
+...
