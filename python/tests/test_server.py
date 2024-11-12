@@ -22,9 +22,11 @@ def fake_client(fake_app):
     with fake_app.test_client() as httpclient:
         yield RemoteBmiClient(base_url="http://testserver", client=httpclient)
 
+
 def test_initialize(fake_client):
     fake_client.initialize("test.cfg")
     # TODO model func is a noop, use smarter model to test this better
+
 
 def test_get_output_var_names(fake_client):
     names = fake_client.get_output_var_names()
@@ -94,5 +96,6 @@ def test_get_grid_z(fake_client):
     expected = np.array([2.1, 2.2])
     assert_array_equal(result, expected)
     assert_array_equal(out, expected)
+
 
 # TODO test all BMI functions
