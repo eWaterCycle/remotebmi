@@ -3,11 +3,11 @@ name: R
 on:
   push:
     paths:
-      - "R/remotebmi/**"
+      - "R/**"
       - .github/workflows/r.yml
   pull_request_target:
     paths:
-      - "R/remotebmi/**"
+      - "R/**"
       - .github/workflows/r.yml
 
 concurrency:
@@ -46,7 +46,7 @@ jobs:
       - uses: codecov/codecov-action@v4
         with:
           fail_ci_if_error: ${{ github.event_name != 'pull_request' && true || false }}
-          file: ./R/remotebmi/cobertura.xml
+          file: ./R/cobertura.xml
           plugin: noop
           disable_search: true
           use_oidc: true
@@ -54,7 +54,7 @@ jobs:
         if: always()
         run: |
             ## --------------------------------------------------------------------
-            find '${{ runner.temp }}/R/remotebmi/package' -name 'testthat.Rout*' -exec cat '{}' \; || true
+            find '${{ runner.temp }}/R/package' -name 'testthat.Rout*' -exec cat '{}' \; || true
         shell: bash
   
       - name: Upload test results
@@ -62,4 +62,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
             name: coverage-test-failures
-            path: ${{ runner.temp }}/R/remotebmi/package
+            path: ${{ runner.temp }}/R/package

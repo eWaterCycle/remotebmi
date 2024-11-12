@@ -14,7 +14,7 @@ component_management:
         - python/**
     - component_id: Julia
       paths:
-        - RemoteBMI.jl/**
+        - julia/**
     - component_id: R
       paths:
-        - R/remotebmi/**
+        - R/**

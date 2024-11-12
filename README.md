@@ -26,7 +26,8 @@ The [REST API specification](openapi.yaml) is in the [OpenAPI](https://swagger.i
 
 This repository is a monorepo containing packages for different languages.
 1. Python client and server, in [./python/](./python) directory
-2. Julia server, in [./RemoteBMI.jl/](./RemoteBMI.jl/) directory
+2. Julia client and server, in [./julia/](./julia/) directory
+3. R server, in [./R/](./R/) directory
 
 ### Python consumer
 

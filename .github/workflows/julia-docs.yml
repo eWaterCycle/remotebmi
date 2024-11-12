@@ -5,18 +5,18 @@ on:
     branches:
       - main
     paths:
-      - "RemoteBMI.jl/docs/**"
-      - "RemoteBMI.jl/src/**"
-      - "RemoteBMI.jl/*.toml"
+      - "julia/docs/**"
+      - "julia/src/**"
+      - "julia/*.toml"
       - .github/workflows/julia-docs.yml
     tags: ["*"]
   pull_request:
     branches:
       - main
     paths:
-      - "RemoteBMI.jl/docs/**"
-      - "RemoteBMI.jl/src/**"
-      - "RemoteBMI.jl/*.toml"
+      - "julia/docs/**"
+      - "julia/src/**"
+      - "julia/*.toml"
       - .github/workflows/julia-docs.yml
     types: [opened, synchronize, reopened]
 

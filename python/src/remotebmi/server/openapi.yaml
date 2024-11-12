@@ -1,0 +1,1313 @@
+---
+openapi: 3.0.3  # do not use 3.1 as tooling is not ready yet
+info:
+  title: BMI
+  description: >
+    OpenAPI specification for the Basic Modeling Interface (BMI).
+    All functions are described on the
+    [BMI homepage](https://bmi.readthedocs.io/).
+  version: "2.0"
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  contact:
+    name: eWaterCycle
+    url: https://www.ewatercycle.org/contact/
+servers:
+  - url: http://localhost:50051
+    description: Default URL for a BMI service
+tags:
+  - name: IRF
+    description: Initialize, run, finalize
+  - name: Exchange items
+    description: >
+      Supply the model name and the model’s exchange items –
+      the variables that the model can use from and provide
+      to other models that have a BMI.
+  - name: Getters
+    description: Access the variables that a model exposes
+  - name: Setters
+    description: Modify the variables that a model exposes
+  - name: Time information
+    description: Provide information on model time.
+  - name: Variable information
+    description: >
+      These BMI functions provide information about a particular input
+      or output variable.
+  - name: Grid information
+    description: >
+      These BMI functions provide information about the grid on which
+      a variable is defined.
+  - name: NURC
+    description: >
+      Used for describing rectilinear, structured quadrilateral,
+      and all unstructured grids.
+  - name: Uniform rectilinear
+    description: Uniform rectilinear grid
+  - name: Unstructured
+    description: Unstructured grid
+paths:
+  /initialize:
+    post:
+      operationId: initialize
+      description: >
+        Performs all tasks that are to take place before entering
+        the model’s time loop.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#initialize
+      responses:
+        "201":
+          description: A successful response.
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      requestBody:
+        required: true
+        content:
+          # Content type for ProblemDetails is application/json
+          # instead of application/problem+json
+          # to make it easier to use in implementations
+          # This is for every default response in any path.
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InitializeRequest"
+      tags:
+        - IRF
+  /update:
+    post:
+      operationId: update
+      description: Advances the model by a single time step.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#update
+      responses:
+        "204":
+          description: A successful response.
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      tags:
+        - IRF
+  /update_until:
+    post:
+      operationId: update_until
+      description: Updates the model to a particular time
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#update-until
+      responses:
+        "204":
+          description: A successful response.
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GetTimeResponse"
+      tags:
+        - IRF
+  /finalize:
+    delete:
+      operationId: finalize
+      description: >
+        Performs all tasks that take place after exiting the model’s time loop.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#finalize
+      responses:
+        "204":
+          description: A successful response.
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      tags:
+        - IRF
+  /get_component_name:
+    get:
+      operationId: get_component_name
+      description: Get the name of the model component.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#get-component-name
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetComponentNameResponse"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      tags:
+        - Exchange items
+  /get_input_item_count:
+    get:
+      operationId: get_input_item_count
+      description: >
+        The number of variables the model can use from other models
+        implementing a BMI.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#get-input-item-count
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Count"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      tags:
+        - Exchange items
+  /get_input_var_names:
+    get:
+      operationId: get_input_var_names
+      description: >
+        Gets an array of names for the variables the model can use
+        from other models implementing a BMI.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#get-input-var-names
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetVarNamesResponse"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      tags:
+        - Exchange items
+  /get_output_item_count:
+    get:
+      operationId: get_output_item_count
+      description: >
+        The number of variables the model can provide other models
+        implementing a BMI.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#get-output-item-count
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Count"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      tags:
+        - Exchange items
+  /get_output_var_names:
+    get:
+      operationId: get_output_var_names
+      description: >
+        Gets an array of names for the variables the model can provide to
+        other models implementing a BMI.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#get-output-var-names
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetVarNamesResponse"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      tags:
+        - Exchange items
+
+  /get_var_grid/{name}:
+    get:
+      operationId: get_var_grid
+      description: >
+        Each input and output variable is defined on a grid.
+        This function returns the grid identifier for a given variable.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#get-var-grid
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetVarGridResponse"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/VarName"
+      tags:
+        - Variable information
+  /get_var_itemsize/{name}:
+    get:
+      operationId: get_var_itemsize
+      description: >
+        Provides the size, in bytes, of a single element of
+        the variable.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#get-var-itemsize
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetVarItemSizeResponse"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/VarName"
+      tags:
+        - Variable information
+  /get_var_location/{name}:
+    get:
+      operationId: get_var_location
+      description: Indicates on what grid element the variable is defined.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#get-var-location
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetVarLocationResponseLocation"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/VarName"
+      tags:
+        - Variable information
+  /get_var_nbytes/{name}:
+    get:
+      operationId: get_var_nbytes
+      description: >
+        Provides the total amount of memory used to store
+        a variable; i.e., the number of items multiplied by
+        the size of each item.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#get-var-nbytes
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetVarNBytesResponse"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/VarName"
+      tags:
+        - Variable information
+  /get_var_type/{name}:
+    get:
+      operationId: get_var_type
+      description: Provides the data type of the variable.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#get-var-type
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetVarTypeResponse"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/VarName"
+      tags:
+        - Variable information
+  /get_var_units/{name}:
+    get:
+      operationId: get_var_units
+      description: Get the units of the given variable.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#get-var-units
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetVarUnitsResponse"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/VarName"
+      tags:
+        - Variable information
+
+  /get_current_time:
+    get:
+      operationId: get_current_time
+      description: The current model time.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#get-current-time
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetTimeResponse"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      tags:
+        - Time information
+  /get_end_time:
+    get:
+      operationId: get_end_time
+      description: The end time of the model.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#get-end-time
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetTimeResponse"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      tags:
+        - Time information
+
+  /get_start_time:
+    get:
+      operationId: get_start_time
+      description: The start time of the model.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#get-start-time
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetTimeResponse"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      tags:
+        - Time information
+  /get_time_step:
+    get:
+      operationId: get_time_step
+      description: Get the time step used in the model.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#get-time-step
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetTimeStepResponse"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      tags:
+        - Time information
+  /get_time_units:
+    get:
+      operationId: get_time_units
+      description: >
+        Get the units of time as reported by the model’s BMI.
+
+        If model has absolute start time, you can use `since` format, see
+        [cfconventions](https://cfconventions.org/cf-conventions/cf-conventions#time-coordinate).
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#get-time-units
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetTimeUnitsResponse"
+              examples:
+                hourly:
+                  value:
+                    units: h
+                dayssince:
+                  value:
+                    units: days since 2000-01-01
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      tags:
+        - Time information
+
+  /get_value/{name}:
+    get:
+      operationId: get_value
+      description: Get the value of a variable.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#get-value
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetValueResponse"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/VarName"
+      tags:
+        - Getters
+  /get_value_at_indices/{name}:
+    post:
+      operationId: get_value_at_indices
+      description: Get the value of a variable at specific indices.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#get-value-at-indices
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetValueAtIndicesResponse"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/VarName"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Indices"
+      tags:
+        - Getters
+
+  /set_value/{name}:
+    post:
+      operationId: set_value
+      description: Set the value of a variable.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#set-value
+      responses:
+        "204":
+          description: A successful response.
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/VarName"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SetValueRequest"
+      tags:
+        - Setters
+  /set_value_at_indices/{name}:
+    post:
+      operationId: set_value_at_indices
+      description: Set the value of a variable at specific indices.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#set-value-at-indices
+      responses:
+        "204":
+          description: A successful response.
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/VarName"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SetValueAtIndicesRequest"
+      tags:
+        - Setters
+
+  /get_grid_rank/{grid}:
+    get:
+      operationId: get_grid_rank
+      description: >
+        Given a grid identifier, get the rank
+        (the number of dimensions) of that grid as an integer.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#get-grid-rank
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetGridRankResponse"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      parameters:
+        - name: grid
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/Grid"
+      tags:
+        - Grid information
+
+  /get_grid_type/{grid}:
+    get:
+      operationId: get_grid_type
+      description: >
+        Given a grid identifier, get the type of that grid as a string.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#get-grid-type
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetGridTypeResponse"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      parameters:
+        - name: grid
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/Grid"
+      tags:
+        - Grid information
+  /get_grid_size/{grid}:
+    get:
+      operationId: get_grid_size
+      description: >
+        Given a grid identifier, get the total number of elements
+        (or nodes) of that grid as an integer.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#get-grid-size
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetGridSizeResponse"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      parameters:
+        - name: grid
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/Grid"
+      tags:
+        - Grid information
+
+  /get_grid_origin/{grid}:
+    get:
+      operationId: get_grid_origin
+      description: >
+        Get the coordinates of the lower-left corner of the model grid.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#get-grid-origin
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Doubles"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      parameters:
+        - name: grid
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/Grid"
+      tags:
+        - Uniform rectilinear
+
+  /get_grid_shape/{grid}:
+    get:
+      operationId: get_grid_shape
+      description: Get the dimensions of the model grid.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#get-grid-shape
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Indices"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      parameters:
+        - name: grid
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/Grid"
+      tags:
+        - Uniform rectilinear
+
+  /get_grid_spacing/{grid}:
+    get:
+      operationId: get_grid_spacing
+      description: Get the distance between the nodes of the model grid.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#get-grid-spacing
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Doubles"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      parameters:
+        - name: grid
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/Grid"
+      tags:
+        - Uniform rectilinear
+
+  /get_grid_x/{grid}:
+    get:
+      operationId: get_grid_x
+      description: >
+        Get the locations of the grid nodes in the first coordinate direction.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#get-grid-x
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Doubles"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      parameters:
+        - name: grid
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/Grid"
+      tags:
+        - NURC
+  /get_grid_y/{grid}:
+    get:
+      operationId: get_grid_y
+      description: >
+        Get the locations of the grid nodes in the second coordinate direction.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#get-grid-y
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Doubles"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      parameters:
+        - name: grid
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/Grid"
+      tags:
+        - NURC
+  /get_grid_z/{grid}:
+    get:
+      operationId: get_grid_z
+      description: >
+        Get the locations of the grid nodes in the third coordinate direction.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#get-grid-z
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Doubles"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      parameters:
+        - name: grid
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/Grid"
+      tags:
+        - NURC
+
+  /get_grid_edge_count/{grid}:
+    get:
+      operationId: get_grid_edge_count
+      description: Get the number of edges in the grid.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#get-grid-edge-count
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Count"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      parameters:
+        - name: grid
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/Grid"
+      tags:
+        - Unstructured
+  /get_grid_edge_nodes/{grid}:
+    get:
+      operationId: get_grid_edge_nodes
+      description: Get the edge-node connectivity.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#get-grid-edge-nodes
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Indices"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      parameters:
+        - name: grid
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/Grid"
+      tags:
+        - Unstructured
+  /get_grid_face_count/{grid}:
+    get:
+      operationId: get_grid_face_count
+      description: Get the face-node connectivity.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#get-grid-face-count
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Count"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      parameters:
+        - name: grid
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/Grid"
+      tags:
+        - Unstructured
+  /get_grid_face_edges/{grid}:
+    get:
+      operationId: get_grid_face_edges
+      description: Get the face-edge connectivity.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#get-grid-face-edges
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Indices"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      parameters:
+        - name: grid
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/Grid"
+      tags:
+        - Unstructured
+  /get_grid_face_nodes/{grid}:
+    get:
+      operationId: get_grid_face_nodes
+      description: Get the face-node connectivity.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#get-grid-face-nodes
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Indices"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      parameters:
+        - name: grid
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/Grid"
+      tags:
+        - Unstructured
+  /get_grid_node_count/{grid}:
+    get:
+      operationId: get_grid_node_count
+      description: Get the number of nodes in the grid.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#get-grid-node-count
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Count"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      parameters:
+        - name: grid
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/Grid"
+      tags:
+        - Unstructured
+  /get_grid_nodes_per_face/{grid}:
+    get:
+      operationId: get_grid_nodes_per_face
+      description: Get the number of nodes for each face.
+      externalDocs:
+        url: https://bmi.readthedocs.io/en/stable/#get-grid-nodes-per-face
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Indices"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      parameters:
+        - name: grid
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/Grid"
+      tags:
+        - Unstructured
+components:
+  schemas:
+    GetVarLocationResponseLocation:
+      type: object
+      properties:
+        location:
+          type: string
+          enum:
+            - node
+            - edge
+            - face
+          default: node
+      additionalProperties: false
+      required:
+        - location
+    GetComponentNameResponse:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+      required:
+        - name
+      additionalProperties: false
+    Count:
+      type: integer
+      format: int32
+      minimum: 0
+    Indices:
+      type: array
+      items:
+        type: integer
+        format: int64
+        description: Values of variable are indexed 0-based.
+        minimum: 0
+      minItems: 1
+    Doubles:
+      type: array
+      items:
+        type: number
+        format: double
+      minItems: 1
+    GetGridRankResponse:
+      type: integer
+      format: int32
+    GetGridSizeResponse:
+      type: integer
+      format: int64
+    GetGridTypeResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - scalar
+            - points
+            - vector
+            - unstructured
+            - structured_quadrilateral
+            - rectilinear
+            - uniform_rectilinear
+      required:
+        - type
+      additionalProperties: false
+    GetTimeResponse:
+      type: number
+      format: double
+      example: 0.0
+    GetTimeStepResponse:
+      type: number
+      format: double
+      example: 1.0
+    GetTimeUnitsResponse:
+      type: object
+      properties:
+        units:
+          type: string
+          minLength: 1
+      required:
+        - units
+      additionalProperties: false
+    GetValueAtIndicesResponse:
+      type: array
+      items:
+        type: number
+      minItems: 1
+    GetValueResponse:
+      type: array
+      items:
+        type: number
+      minItems: 1
+    GetVarGridResponse:
+      type: integer
+      format: int32
+    GetVarItemSizeResponse:
+      type: integer
+      format: int64
+    GetVarNBytesResponse:
+      type: integer
+      format: int64
+    GetVarNamesResponse:
+      type: array
+      minItems: 0
+      items:
+        type: string
+        minLength: 1
+    GetVarTypeResponse:
+      type: object
+      properties:
+        type:
+          type: string
+          externalDocs:
+            url: https://swagger.io/docs/specification/data-models/data-types/#numbers  # yamllint disable-line rule:line-length
+          enum:
+            - float
+            - double
+            - int32
+            - int64
+      required:
+        - type
+      additionalProperties: false
+    GetVarUnitsResponse:
+      type: object
+      properties:
+        units:
+          type: string
+          minLength: 1
+      required:
+        - units
+      additionalProperties: false
+    InitializeRequest:
+      type: object
+      properties:
+        config_file:
+          type: string
+          description: >
+            Path to the configuration file. Should resolvable by web service.
+          minLength: 0
+      required:
+        - config_file
+      additionalProperties: false
+    SetValueAtIndicesRequest:
+      type: object
+      properties:
+        indices:
+          type: array
+          items:
+            type: integer
+            description: Values of variable are indexed 0-based.
+            format: int64
+            minimum: 0
+          minItems: 1
+        values:
+          type: array
+          items:
+            type: number
+          minItems: 1
+      required:
+        - indices
+        - values
+      additionalProperties: false
+    SetValueRequest:
+      type: array
+      items:
+        type: number
+      minItems: 1
+    Grid:
+      type: integer
+      format: int32
+    VarName:
+      type: string
+      description: Name of the variable
+      minLength: 1
+    # Copy of https://json.schemastore.org/problem-object-rfc9457.json
+    ProblemDetails:
+      type: object
+      title: An RFC 9457 problem object
+      description: >-
+        Definition from
+        https://datatracker.ietf.org/doc/html/rfc9457#name-json-schema-for-http-proble
+      properties:
+        type:
+          type: string
+          format: uri-reference
+          description: A URI reference that identifies the problem type.
+        title:
+          type: string
+          description: "A short, human-readable summary of the problem type."
+        status:
+          type: integer
+          description: >-
+            The HTTP status code generated by the origin server for
+            this occurrence of the problem.
+          minimum: 100
+          maximum: 599
+        detail:
+          type: string
+          description: >
+            A human-readable explanation specific to this occurrence
+            of the problem.
+        instance:
+          type: string
+          format: uri-reference
+          description: >-
+            A URI reference that identifies the specific occurrence
+            of the problem.
+            It may or may not yield further information if dereferenced.
+      additionalProperties: true

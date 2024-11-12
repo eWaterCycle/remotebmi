@@ -12,7 +12,7 @@ function find_unused_port()
   return port
 end
 
-# TODO move client to RemoteBMI.jl/src/Client.jl and export as RemoteBMI.Client
+# TODO move client to julia/src/Client.jl and export as RemoteBMI.Client
 
 @testset "RemoteBMI Tests" begin
   # Start server and initialize model

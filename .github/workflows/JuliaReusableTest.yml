@@ -51,7 +51,7 @@ jobs:
       - uses: julia-actions/julia-processcoverage@v1
         if: ${{ inputs.run_codecov }}      
         with:
-          directories: "RemoteBMI.jl/src"
+          directories: "julia/src"
       - uses: codecov/codecov-action@v4
         if: ${{ inputs.run_codecov }}
         with:
