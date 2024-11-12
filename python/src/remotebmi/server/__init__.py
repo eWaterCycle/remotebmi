@@ -1,5 +1,4 @@
 import contextlib
-import os
 from collections.abc import AsyncIterator
 from os import environ
 from pathlib import Path

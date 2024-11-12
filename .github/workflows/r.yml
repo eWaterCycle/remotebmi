@@ -29,12 +29,12 @@ jobs:
         with:
           extra-packages: any::rcmdcheck, any::covr, any::xml2
           needs: check, coverage
-          working-directory: R/remotebmi
+          working-directory: R
       - uses: r-lib/actions/check-r-package@v2
         with:
-          working-directory: R/remotebmi
+          working-directory: R
       - name: Test coverage
-        working-directory: R/remotebmi
+        working-directory: R
         run: |
           cov <- covr::package_coverage(
             quiet = FALSE,

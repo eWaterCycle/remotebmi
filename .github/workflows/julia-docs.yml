@@ -35,7 +35,7 @@ jobs:
       - uses: julia-actions/setup-julia@v2
         with:
           version: "1"
-          project: './RemoteBMI.jl'
+          project: './julia'
       - name: Use Julia cache
         uses: julia-actions/cache@v2
       - name: Instantiate environment with development version of the package
@@ -44,7 +44,7 @@ jobs:
             using Pkg
             Pkg.develop(PackageSpec(path=pwd()))
             Pkg.instantiate()'
-        working-directory: RemoteBMI.jl
+        working-directory: julia
       - name: Run doctest
         run: |
           julia --project=docs -e '
@@ -52,10 +52,10 @@ jobs:
             using RemoteBMI
             DocMeta.setdocmeta!(RemoteBMI, :DocTestSetup, :(using RemoteBMI); recursive=true)
             doctest(RemoteBMI)'
-        working-directory: RemoteBMI.jl
+        working-directory: julia
       - name: Generate and deploy documentation
         run: julia --project=docs docs/make.jl
-        working-directory: RemoteBMI.jl
+        working-directory: julia
         env:
           JULIA_PKG_SERVER: ""
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

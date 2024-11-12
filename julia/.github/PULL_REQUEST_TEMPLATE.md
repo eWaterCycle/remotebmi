@@ -1,5 +1,5 @@
 <!--
-Thanks for making a pull request to RemoteBMI.jl.
+Thanks for making a pull request to julia.
 We have added this PR template to help you help us.
 Make sure to read the contributing guidelines and abide by the code of conduct.
 See the comments below, fill the required fields, and check the items.

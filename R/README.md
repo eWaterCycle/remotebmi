@@ -12,7 +12,7 @@ You can install the development version of remotebmi from [GitHub](https://githu
 
 ``` r
 # install.packages("pak")
-pak::pak("github::eWaterCycle/remotebmi/R/remotebmi")
+pak::pak("github::eWaterCycle/remotebmi/R")
 ```
 
 ## Example
