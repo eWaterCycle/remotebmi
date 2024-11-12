@@ -6,7 +6,7 @@ on:
       - main
     tags: ["*"]
     paths:
-        - "RemoteBMI.jl/**"
+        - "julia/**"
         - .github/workflows/julia-test.yml
   workflow_dispatch:
 

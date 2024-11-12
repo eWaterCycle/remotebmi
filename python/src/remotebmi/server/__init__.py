@@ -1,6 +1,7 @@
 import contextlib
 from collections.abc import AsyncIterator
 from os import environ
+from pathlib import Path
 from traceback import format_exception
 
 import uvicorn
@@ -33,7 +34,8 @@ def make_app(model: Bmi):
         lifespan=lifespan_handler,
     )
 
-    app.add_api("openapi.yaml", resolver=RelativeResolver("remotebmi.server.api"))
+    openapi_path = Path(__file__).parent / "openapi.yaml"
+    app.add_api(openapi_path, resolver=RelativeResolver("remotebmi.server.api"))
     app.add_error_handler(Exception, handle_model_error)
     return app
 

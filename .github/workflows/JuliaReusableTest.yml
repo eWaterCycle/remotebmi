@@ -39,19 +39,19 @@ jobs:
         with:
           version: ${{ inputs.version }}
           arch: ${{ inputs.arch }}
-          project: './RemoteBMI.jl'
+          project: './julia'
       - name: Use Julia cache
         uses: julia-actions/cache@v2
       - uses: julia-actions/julia-buildpkg@v1
         with:
-          project: './RemoteBMI.jl'
+          project: './julia'
       - uses: julia-actions/julia-runtest@v1
         with:
-          project: './RemoteBMI.jl'
+          project: './julia'
       - uses: julia-actions/julia-processcoverage@v1
         if: ${{ inputs.run_codecov }}      
         with:
-          directories: "RemoteBMI.jl/src"
+          directories: "julia/src"
       - uses: codecov/codecov-action@v4
         if: ${{ inputs.run_codecov }}
         with:

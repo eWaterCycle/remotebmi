@@ -5,9 +5,9 @@ on:
     # branches:
     #   - main
     paths:
-      - "RemoteBMI.jl/src/**"
-      - "RemoteBMI.jl/test/**"
-      - "RemoteBMI.jl/*.toml"
+      - "julia/src/**"
+      - "julia/test/**"
+      - "julia/*.toml"
       - .github/workflows/julia-test-on-prs.yml
     types: [opened, synchronize, reopened]
 

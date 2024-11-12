@@ -18,4 +18,4 @@ makedocs(;
   pages = ["index.md"; numbered_pages],
 )
 
-deploydocs(; repo = "github.com/eWaterCycle/remotebmi", dirname="RemoteBMI.jl")
+deploydocs(; repo = "github.com/eWaterCycle/remotebmi", dirname="julia")

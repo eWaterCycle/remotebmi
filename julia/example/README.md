@@ -116,7 +116,7 @@ import os
 
 client = RemoteBmiClient('http://localhost:50051')
 # Change to location of sbm_config.toml
-os.chdir('../RemoteBMI.jl/example')
+os.chdir('../julia/example')
 %time client.initialize(os.getcwd() + '/sbm_config.toml')
 CPU times: user 3.08 ms, sys: 8 μs, total: 3.09 ms
 Wall time: 18.7 s
