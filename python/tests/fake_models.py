@@ -151,6 +151,9 @@ class GridModel(FailingModel):
     def get_output_var_names(self) -> tuple[str]:
         return ("plate_surface__temperature",)
 
+    def get_output_item_count(self) -> int:
+        return len(self.get_output_var_names())
+
     def get_var_grid(self, name):
         return 0
 

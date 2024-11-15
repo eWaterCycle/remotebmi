@@ -46,7 +46,8 @@ def get_input_var_names():
 
 
 def get_output_var_names():
-    return model().get_output_var_names()
+    n = model().get_output_var_names()
+    return list(n)
 
 
 def get_input_item_count():
@@ -83,15 +84,14 @@ def get_var_itemsize(name: str):
 
 def get_value(name: str):
     items = reserve_values(model(), name)
-    return model().get_value(name, items)
-
-
-# TODO correct typings
+    return model().get_value(name, items).tolist()
 
 
 def get_value_at_indices(name: str, indices: list):
     items = reserve_values_at_indices(model(), name, indices)
-    return model().get_value_at_indices(name, indices, items)
+    return (
+        model().get_value_at_indices(name, np.array(indices, dtype=int), items).tolist()
+    )
 
 
 def set_value(name: str, src: list):
@@ -101,49 +101,49 @@ def set_value(name: str, src: list):
 
 def set_value_at_indices(name: str, indices: list, values: list):
     items = np.array(values)
-    model().set_value_at_indices(name, indices, items)
+    model().set_value_at_indices(name, np.array(indices, dtype=int), items)
 
 
-def get_grid_rank(name: str):
-    return model().get_grid_rank(name)
+def get_grid_rank(grid: int):
+    return model().get_grid_rank(grid)
 
 
-def get_grid_type(name: str):
-    return {"type": model().get_grid_type(name)}
+def get_grid_type(grid: int):
+    return {"type": model().get_grid_type(grid)}
 
 
-def get_grid_shape(name: str):
-    shape = reserve_grid_shape(model(), name)
-    return model().get_grid_shape(name, shape)
+def get_grid_shape(grid: int):
+    shape = reserve_grid_shape(model(), grid)
+    return model().get_grid_shape(grid, shape).tolist()
 
 
-def get_grid_size(name: str):
-    return model().get_grid_size(name)
+def get_grid_size(grid: int):
+    return model().get_grid_size(grid)
 
 
-def get_grid_spacing(name: str):
-    spacing = reserve_grid_padding(model(), name)
-    return model().get_grid_spacing(name, spacing)
+def get_grid_spacing(grid: int):
+    spacing = reserve_grid_padding(model(), grid)
+    return model().get_grid_spacing(grid, spacing).tolist()
 
 
-def get_grid_origin(name: str):
-    origin = reserve_grid_padding(model(), name)
-    return model().get_grid_origin(name, origin)
+def get_grid_origin(grid: int):
+    origin = reserve_grid_padding(model(), grid)
+    return model().get_grid_origin(grid, origin).tolist()
 
 
-def get_grid_x(name: str):
-    items = reserve_grid_nodes(model(), name, 0)
-    return model().get_grid_x(name, items)
+def get_grid_x(grid: int):
+    items = reserve_grid_nodes(model(), grid, 0)
+    return model().get_grid_x(grid, items).tolist()
 
 
-def get_grid_y(name: str):
-    items = reserve_grid_nodes(model(), name, 1)
-    return model().get_grid_y(name, items)
+def get_grid_y(grid: int):
+    items = reserve_grid_nodes(model(), grid, 1)
+    return model().get_grid_y(grid, items).tolist()
 
 
-def get_grid_z(name: str):
-    items = reserve_grid_nodes(model(), name, 2)
-    return model().get_grid_z(name, items)
+def get_grid_z(grid: int):
+    items = reserve_grid_nodes(model(), grid, 2)
+    return model().get_grid_z(grid, items).tolist()
 
 
 def get_start_time():
@@ -166,32 +166,32 @@ def get_time_units():
     return {"units": model().get_time_units()}
 
 
-def get_grid_edge_count(name: str):
-    return model().get_grid_edge_count(name)
+def get_grid_edge_count(grid: int):
+    return model().get_grid_edge_count(grid)
 
 
-def get_grid_face_count(name: str):
-    return model().get_grid_face_count(name)
+def get_grid_face_count(grid: int):
+    return model().get_grid_face_count(grid)
 
 
-def get_grid_edge_nodes(name: str):
-    items = reserve_grid_edge_nodes(model(), name)
-    return model().get_grid_edge_nodes(name, items)
+def get_grid_edge_nodes(grid: int):
+    items = reserve_grid_edge_nodes(model(), grid)
+    return model().get_grid_edge_nodes(grid, items).tolist()
 
 
-def get_grid_face_edges(name: str):
-    items = reserve_grid_face_(model(), name)
-    return model().get_grid_face_edges(name, items)
+def get_grid_face_edges(grid: int):
+    items = reserve_grid_face_(model(), grid)
+    return model().get_grid_face_edges(grid, items).tolist
 
 
-def get_grid_face_nodes(name: str):
-    items = reserve_grid_face_(model(), name)
-    return model().get_grid_face_nodes(name, items)
+def get_grid_face_nodes(grid: int):
+    items = reserve_grid_face_(model(), grid)
+    return model().get_grid_face_nodes(grid, items).tolist()
 
 
-def get_grid_nodes_per_face(name: str):
-    items = reserve_grid_nodes_per_face(model(), name)
-    return model().get_grid_nodes_per_face(name, items)
+def get_grid_nodes_per_face(grid: int):
+    items = reserve_grid_nodes_per_face(model(), grid)
+    return model().get_grid_nodes_per_face(grid, items).tolist
 
 
 def get_grid_node_count(grid: int):

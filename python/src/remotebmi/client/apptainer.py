@@ -52,7 +52,7 @@ class BmiClientApptainer(RemoteBmiClient):
                 mode="w+t",
                 encoding="utf8",
             )
-            stdout = self.logfile
+            stdout: SpooledTemporaryFile[str] | int = self.logfile
         else:
             stdout = subprocess.DEVNULL
         self.container = subprocess.Popen(  # noqa: S603

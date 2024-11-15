@@ -7,14 +7,23 @@ from .utils import validate_url
 
 
 class RemoteBmiClient(Bmi):
-    def __init__(self, base_url, timeout=60 * 60 * 24, max_keepalive_connections=0):
+    def __init__(
+        self,
+        base_url,
+        timeout=60 * 60 * 24,
+        max_keepalive_connections=0,
+        client: Client | None = None,
+    ):
         """RemoteBmiClient constructor
 
         Args:
             base_url: Where the remote BMI server is running.
             timeout: How long a response can take.
                 Defaults to 1 day. Set to None to disable timeout.
-            max_keepalive_connections: How many connections to keep alive.
+            max_keepalive_connections: How many connections to keep alive. "keepalive
+                connections" allow reusing of connections which is more efficient.
+                However, the R server implementation can break when they are used.
+            client: An optional httpx.Client instance to use. Mainly used for testing.
 
         Raises:
             ValueError: If the base_url is invalid.
@@ -23,7 +32,10 @@ class RemoteBmiClient(Bmi):
         # In some Python environments the reusing connection causes `illegal status line: bytesarray(b'14')` error
         # So we need to disable keepalive connections to be more reliable, but less efficient
         limits = Limits(max_keepalive_connections=max_keepalive_connections)
-        self.client = Client(base_url=base_url, timeout=timeout, limits=limits)
+        if client is None:
+            self.client = Client(base_url=base_url, timeout=timeout, limits=limits)
+        else:
+            self.client = client
 
     def __del__(self):
         if hasattr(self, "client"):
@@ -48,17 +60,19 @@ class RemoteBmiClient(Bmi):
     def get_component_name(self):
         response = self.client.get("/get_component_name")
         response.raise_for_status()
+        # TODO validate response, with pydantic or similar, should be done for all responses
+        # see github.com/eWaterCycle/remotebmi/issues/33
         return response.json()["name"]
 
     def get_input_var_names(self):
         response = self.client.get("/get_input_var_names")
         response.raise_for_status()
-        return response.json()
+        return tuple(response.json())
 
     def get_output_var_names(self):
         response = self.client.get("/get_output_var_names")
         response.raise_for_status()
-        return response.json()
+        return tuple(response.json())
 
     def get_input_item_count(self):
         response = self.client.get("/get_input_item_count")
