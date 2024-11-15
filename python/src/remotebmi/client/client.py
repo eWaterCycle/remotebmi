@@ -20,7 +20,9 @@ class RemoteBmiClient(Bmi):
             base_url: Where the remote BMI server is running.
             timeout: How long a response can take.
                 Defaults to 1 day. Set to None to disable timeout.
-            max_keepalive_connections: How many connections to keep alive.
+            max_keepalive_connections: How many connections to keep alive. "keepalive
+                connections" allow reusing of connections which is more efficient.
+                However, the R server implementation can break when they are used.
             client: An optional httpx.Client instance to use. Mainly used for testing.
 
         Raises:
