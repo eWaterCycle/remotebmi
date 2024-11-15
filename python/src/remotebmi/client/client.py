@@ -61,6 +61,7 @@ class RemoteBmiClient(Bmi):
         response = self.client.get("/get_component_name")
         response.raise_for_status()
         # TODO validate response, with pydantic or similar, should be done for all responses
+        # see github.com/eWaterCycle/remotebmi/issues/33
         return response.json()["name"]
 
     def get_input_var_names(self):
