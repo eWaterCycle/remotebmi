@@ -6,12 +6,14 @@ on:
       - "openapi.yaml"
       - "python/remotebmi/**"
       - "python/tests/**"
+      - "python/pyproject.toml"
       - .github/workflows/python.yml
   pull_request:
     paths:
       - "openapi.yaml"
       - "python/remotebmi/**"
       - "python/tests/**"
+      - "python/pyproject.toml"
       - .github/workflows/python.yml
     types: [opened, reopened]
 
