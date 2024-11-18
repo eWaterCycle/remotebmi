@@ -2,6 +2,7 @@
 
 Copied from https://github.com/eWaterCycle/grpc4bmi/blob/main/test/fake_models.py
 """
+# mypy: disable-error-code="no-untyped-def"
 
 import numpy as np
 from bmipy import Bmi
@@ -15,19 +16,19 @@ class FailingModel(Bmi):
     def __init__(self, exc):
         self.exc = exc
 
-    def initialize(self, filename):
+    def initialize(self, filename) -> None:
         raise self.exc
 
-    def update(self):
+    def update(self) -> None:
         raise self.exc
 
     def update_until(self, time: float) -> None:
         raise self.exc
 
-    def finalize(self):
+    def finalize(self) -> None:
         raise self.exc
 
-    def get_component_name(self):
+    def get_component_name(self) -> str:
         raise self.exc
 
     def get_input_item_count(self) -> int:
@@ -36,25 +37,25 @@ class FailingModel(Bmi):
     def get_output_item_count(self) -> int:
         raise self.exc
 
-    def get_input_var_names(self):
+    def get_input_var_names(self) -> tuple[str]:
         raise self.exc
 
-    def get_output_var_names(self):
+    def get_output_var_names(self) -> tuple[str]:
         raise self.exc
 
-    def get_start_time(self):
+    def get_start_time(self) -> float:
         raise self.exc
 
-    def get_current_time(self):
+    def get_current_time(self) -> float:
         raise self.exc
 
-    def get_end_time(self):
+    def get_end_time(self) -> float:
         raise self.exc
 
-    def get_time_step(self):
+    def get_time_step(self) -> float:
         raise self.exc
 
-    def get_time_units(self):
+    def get_time_units(self) -> str:
         raise self.exc
 
     def get_var_type(self, name):
@@ -397,14 +398,14 @@ class Float32Model(DTypeModel):
 class Int32Model(DTypeModel):
     def __init__(self):
         super().__init__()
-        self.dtype = np.dtype("int32")
+        self.dtype = np.dtype("int32")  # type: ignore[assignment]
         self.value = np.array((12, 24, 36), dtype=self.dtype)
 
 
 class BooleanModel(DTypeModel):
     def __init__(self):
         super().__init__()
-        self.dtype = np.dtype("bool")
+        self.dtype = np.dtype("bool")  # type: ignore[assignment]
         self.value = np.array((True, False, True), dtype=self.dtype)
 
 
@@ -420,7 +421,7 @@ class HugeModel(DTypeModel):
 
     def __init__(self):
         super().__init__()
-        self.dtype = np.dtype("float64")
+        self.dtype = np.dtype("float64")  # type: ignore[assignment]
         # Create value which is bigger than 4Mb
         dimension = (3 * 4_000_000) // self.dtype.itemsize + 1000
         self.value = np.ones((dimension,), dtype=self.dtype)

@@ -1,3 +1,5 @@
+# mypy: disable-error-code="no-untyped-def"
+
 import pytest
 
 from remotebmi.client.client import RemoteBmiClient

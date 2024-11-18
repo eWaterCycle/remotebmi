@@ -1,3 +1,5 @@
+# mypy: disable-error-code="no-untyped-def"
+
 import numpy as np
 
 from remotebmi.reserve import reserve_values

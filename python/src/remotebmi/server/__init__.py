@@ -1,3 +1,7 @@
+# Ignore untyped imports: connexion has no type stubs yet;
+#   https://github.com/spec-first/connexion/pull/1947
+# mypy: disable-error-code="import-untyped,no-any-unimported"
+
 import contextlib
 from collections.abc import AsyncIterator
 from os import environ
@@ -22,7 +26,7 @@ def handle_model_error(request: ConnexionRequest, exc: Exception) -> ConnexionRe
     )
 
 
-def make_app(model: Bmi):
+def make_app(model: Bmi) -> AsyncApp:
     @contextlib.asynccontextmanager
     async def lifespan_handler(app: ConnexionMiddleware) -> AsyncIterator:  # noqa: ARG001
         yield {"model": model}
@@ -40,7 +44,7 @@ def make_app(model: Bmi):
     return app
 
 
-def main(**kwargs):
+def main(**kwargs):  # type: ignore[no-untyped-def]
     model = from_env()
     app = make_app(model)
     port = int(environ.get("BMI_PORT", 50051))

@@ -1,9 +1,10 @@
 import socket
 from contextlib import closing
+from typing import Any
 from urllib.parse import urlparse
 
 
-def get_unique_port(host=None):
+def get_unique_port(host: str | None = None) -> int:
     with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as s:
         s.bind(("" if host is None else host, 0))
         return int(s.getsockname()[1])
@@ -19,7 +20,7 @@ class DeadContainerError(ChildProcessError):
 
     """
 
-    def __init__(self, message, exitcode, logs, *args):
+    def __init__(self, message: str, exitcode: int, logs: str, *args: Any):
         super().__init__(message, *args)
         #: Exit code of container
         self.exitcode = exitcode
@@ -27,7 +28,7 @@ class DeadContainerError(ChildProcessError):
         self.logs = logs
 
 
-def validate_url(url: str):
+def validate_url(url: str) -> None:
     """
     Validates a given URL to ensure it has a valid scheme, network location,
     and that the scheme is either 'http' or 'https'.

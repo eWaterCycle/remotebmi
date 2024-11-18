@@ -16,8 +16,8 @@ class BmiClientApptainer(RemoteBmiClient):
         image: str,
         work_dir: str,
         input_dirs: Iterable[str] = (),
-        delay=0,
-        capture_logs=True,
+        delay: int = 0,
+        capture_logs: bool = True,
     ):
         if isinstance(input_dirs, str):
             msg = (
@@ -75,7 +75,7 @@ class BmiClientApptainer(RemoteBmiClient):
         url = f"http://{host}:{port}"
         super().__init__(url)
 
-    def __del__(self):
+    def __del__(self) -> None:
         if hasattr(self, "container"):
             self.container.terminate()
             self.container.wait()
