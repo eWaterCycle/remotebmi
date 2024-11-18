@@ -2,6 +2,7 @@
 
 Copied from https://github.com/eWaterCycle/grpc4bmi/blob/main/test/fake_models.py
 """
+# mypy: disable-error-code="no-untyped-def"
 
 import numpy as np
 from bmipy import Bmi
@@ -15,19 +16,19 @@ class FailingModel(Bmi):
     def __init__(self, exc):
         self.exc = exc
 
-    def initialize(self, filename):
+    def initialize(self, filename) -> None:
         raise self.exc
 
-    def update(self):
+    def update(self) -> None:
         raise self.exc
 
     def update_until(self, time: float) -> None:
         raise self.exc
 
-    def finalize(self):
+    def finalize(self) -> None:
         raise self.exc
 
-    def get_component_name(self):
+    def get_component_name(self) -> str:
         raise self.exc
 
     def get_input_item_count(self) -> int:
@@ -36,25 +37,25 @@ class FailingModel(Bmi):
     def get_output_item_count(self) -> int:
         raise self.exc
 
-    def get_input_var_names(self):
+    def get_input_var_names(self) -> tuple[str]:
         raise self.exc
 
-    def get_output_var_names(self):
+    def get_output_var_names(self) -> tuple[str]:
         raise self.exc
 
-    def get_start_time(self):
+    def get_start_time(self) -> float:
         raise self.exc
 
-    def get_current_time(self):
+    def get_current_time(self) -> float:
         raise self.exc
 
-    def get_end_time(self):
+    def get_end_time(self) -> float:
         raise self.exc
 
-    def get_time_step(self):
+    def get_time_step(self) -> float:
         raise self.exc
 
-    def get_time_units(self):
+    def get_time_units(self) -> str:
         raise self.exc
 
     def get_var_type(self, name):
