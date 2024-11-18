@@ -33,6 +33,9 @@ defaults:
 jobs:
   setup-python:
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
   lint-format:
     name: formatting and type checking 🔍️
     runs-on: ubuntu-latest
