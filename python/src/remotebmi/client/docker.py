@@ -18,7 +18,7 @@ class BmiClientDocker(RemoteBmiClient):
         image_port: int = 50051,
         host: str | None = None,
         input_dirs: Iterable[str] = (),
-        user: int = os.getuid(),  # noqa: B008
+        user: int = os.getuid(),
         remove: bool = False,
         delay: int = 5,
     ):
