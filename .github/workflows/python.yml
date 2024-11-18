@@ -2,6 +2,7 @@ name: Python 🐍
 
 on:
   push:
+    branches: [main]
     paths:
       - "openapi.yaml"
       - "python/remotebmi/**"
@@ -15,7 +16,7 @@ on:
       - "python/tests/**"
       - "python/pyproject.toml"
       - .github/workflows/python.yml
-    types: [opened, reopened]
+    types: [opened, synchronize, reopened]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
