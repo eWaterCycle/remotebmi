@@ -37,10 +37,7 @@ dependencies = [
     # docker
     "docker",
 ]
-dynamic = ["version"]
-
-[tool.hatch.version]
-path = "src/remotebmi/__init__.py"
+version = "0.1.0"
 
 [project.optional-dependencies]
 dev = [
