@@ -47,7 +47,8 @@ dev = [
     "ruff",
     "pytest",
     "pytest-cov",
-    "mypy"
+    "mypy",
+    "types-docker",
 ]
 
 [project.scripts]

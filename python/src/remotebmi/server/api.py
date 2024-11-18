@@ -87,7 +87,7 @@ def get_value(name: str) -> list[int | float]:
     return model().get_value(name, items).tolist()  # type: ignore[no-any-return]
 
 
-def get_value_at_indices(name: str, indices: list) -> list[int | float]:
+def get_value_at_indices(name: str, indices: np.ndarray) -> list[int | float]:
     items = reserve_values_at_indices(model(), name, indices)
     return (  # type: ignore[no-any-return]
         model().get_value_at_indices(name, np.array(indices, dtype=int), items).tolist()

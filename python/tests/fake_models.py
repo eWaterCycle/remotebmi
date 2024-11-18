@@ -398,14 +398,14 @@ class Float32Model(DTypeModel):
 class Int32Model(DTypeModel):
     def __init__(self):
         super().__init__()
-        self.dtype = np.dtype("int32")
+        self.dtype = np.dtype("int32")  # type: ignore[assignment]
         self.value = np.array((12, 24, 36), dtype=self.dtype)
 
 
 class BooleanModel(DTypeModel):
     def __init__(self):
         super().__init__()
-        self.dtype = np.dtype("bool")
+        self.dtype = np.dtype("bool")  # type: ignore[assignment]
         self.value = np.array((True, False, True), dtype=self.dtype)
 
 
@@ -421,7 +421,7 @@ class HugeModel(DTypeModel):
 
     def __init__(self):
         super().__init__()
-        self.dtype = np.dtype("float64")
+        self.dtype = np.dtype("float64")  # type: ignore[assignment]
         # Create value which is bigger than 4Mb
         dimension = (3 * 4_000_000) // self.dtype.itemsize + 1000
         self.value = np.ones((dimension,), dtype=self.dtype)

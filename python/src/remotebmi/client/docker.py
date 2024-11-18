@@ -15,12 +15,12 @@ class BmiClientDocker(RemoteBmiClient):
         self,
         image: str,
         work_dir: str,
-        image_port=50051,
-        host=None,
+        image_port: int = 50051,
+        host: str | None = None,
         input_dirs: Iterable[str] = (),
-        user=os.getuid(),  # noqa: B008
-        remove=False,
-        delay=5,
+        user: int = os.getuid(),  # noqa: B008
+        remove: bool = False,
+        delay: int = 5,
     ):
         if isinstance(input_dirs, str):
             msg = (
@@ -66,7 +66,7 @@ class BmiClientDocker(RemoteBmiClient):
         url = f"http://{host}:{port}"
         super().__init__(url)
 
-    def __del__(self):
+    def __del__(self) -> None:
         if hasattr(self, "container"):
             self.container.stop()
 

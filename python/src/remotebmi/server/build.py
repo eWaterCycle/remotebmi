@@ -42,7 +42,7 @@ def from_env() -> Bmi:
     return build(module_name, class_name, path)
 
 
-def build(module_name: str, class_name: str, path=None) -> Bmi:
+def build(module_name: str, class_name: str, path: str | None = None) -> Bmi:
     """Build and return an instance of a BMI implementation based on the provided module and class names.
 
     Args:
@@ -56,4 +56,4 @@ def build(module_name: str, class_name: str, path=None) -> Bmi:
     if path is not None:
         sys.path.append(path)
     class_ = getattr(importlib.import_module(module_name), class_name)
-    return class_()
+    return class_()  # type: ignore[no-any-return]
