@@ -31,15 +31,9 @@ defaults:
     working-directory: python
 
 jobs:
-  python-jobs:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
   lint-format:
     name: formatting and type checking 🔍️
     runs-on: ubuntu-latest
-    needs: python-jobs
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -56,7 +50,6 @@ jobs:
         run: ruff format --check
   typing:
     runs-on: ubuntu-latest
-    needs: python-jobs
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -74,7 +67,6 @@ jobs:
   test:
     name: run test suite 🐛
     runs-on: ${{ matrix.os }}
-    needs: python-jobs
     strategy:
       fail-fast: true
       matrix:
@@ -95,7 +87,6 @@ jobs:
   cov:
     name: compute and upload coverage
     runs-on: ubuntu-latest
-    needs: python-jobs
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -116,7 +107,6 @@ jobs:
   build:
     name: build the package 🛠️
     runs-on: ubuntu-latest
-    needs: python-jobs
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -132,7 +122,6 @@ jobs:
   docs:
     name: build docs 📖
     runs-on: ubuntu-latest
-    needs: python-jobs
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -145,3 +134,9 @@ jobs:
         run: pip install -r docs/requirements.txt
       - name: Build docs
         run: make -C docs/ html
+      - name: Deploy docs
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: docs/build_/html
+          destination_dir: python/${{ github.head_ref || github.ref_name }}
