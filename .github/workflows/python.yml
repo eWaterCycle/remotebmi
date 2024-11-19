@@ -140,5 +140,5 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/build_/html
-          destination_dir: ./python/${{ github.head_ref || github.ref_name }}
+          publish_dir: docs/build_/html
+          destination_dir: python/${{ github.head_ref || github.ref_name }}
