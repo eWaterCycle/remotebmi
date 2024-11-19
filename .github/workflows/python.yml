@@ -136,9 +136,13 @@ jobs:
         run: pip install -r docs/requirements.txt
       - name: Build docs
         run: make -C docs/ html
+      - name: List files
+        run: ls docs/_build/html
       - name: Deploy docs
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: docs/_build/html
           destination_dir: python/${{ github.head_ref || github.ref_name }}
+      - name: Display CI docs URL
+        run: echo https://www.ewatercycle.org/remotebmi/python/${{ github.head_ref || github.ref_name }}
