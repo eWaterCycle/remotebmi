@@ -86,3 +86,8 @@ and the client can connect to it with the following code.
 > client.get_component_name()
 leakybucket
 ```
+
+## Documentation
+
+In a Python environment, go to the docs directory, do `pip install -r requirements.txt`
+and then `make html`.

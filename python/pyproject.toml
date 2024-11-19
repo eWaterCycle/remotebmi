@@ -37,10 +37,7 @@ dependencies = [
     # docker
     "docker",
 ]
-dynamic = ["version"]
-
-[tool.hatch.version]
-path = "src/remotebmi/__init__.py"
+version = "0.1.0"
 
 [project.optional-dependencies]
 dev = [
@@ -146,6 +143,7 @@ known-first-party = ["remotebmi"]
 
 [tool.mypy]
 python_version = "3.10"
+exclude = ['docs/']
 plugins = "numpy.typing.mypy_plugin"
 disallow_untyped_defs = true
 disallow_any_unimported = true

@@ -17,6 +17,7 @@ on:
       - "python/pyproject.toml"
       - .github/workflows/python.yml
     types: [opened, synchronize, reopened]
+  workflow_call:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -33,7 +34,6 @@ jobs:
   lint-format:
     name: formatting and type checking 🔍️
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -119,3 +119,33 @@ jobs:
         run: pip install build
       - name: Build package
         run: python3 -m build
+  docs:
+    name: build docs 📖
+    runs-on: ubuntu-latest
+    env: 
+      BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: "pip"
+      - name: Install docs requirements
+        run: pip install -r docs/requirements.txt
+      - name: Build docs
+        run: make -C docs/ html
+      - name: Move files
+        run: mv docs/_build/html pydocs
+      - name: Deploy docs
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: python/pydocs
+          destination_dir:
+            ${{ env.BRANCH_NAME == 'main' && 'python/' || format('python/branch/{0}', env.BRANCH_NAME) }}
+      - name: Display CI docs URL
+        run: echo https://www.ewatercycle.org/remotebmi/${{ env.BRANCH_NAME == 'main' && 'python/' || format('python/branch/{0}', env.BRANCH_NAME) }}
