@@ -134,9 +134,9 @@ jobs:
         run: pip install -r docs/requirements.txt
       - name: Build docs
         run: make -C docs/ html
-      - name: Deploy docs
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: docs/build_/html
-          destination_dir: python/${{ github.head_ref || github.ref_name }}
+      # - name: Deploy docs
+      #   uses: peaceiris/actions-gh-pages@v4
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: docs/build_/html
+      #     destination_dir: python/${{ github.head_ref || github.ref_name }}
