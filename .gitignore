@@ -27,6 +27,7 @@ __pycache__
 /venv
 python/.venv/
 python/heat.toml
+python/docs/_build
 julia/example/Project.toml
 julia/example/heat.toml
 openapi-generator-cli.jar
