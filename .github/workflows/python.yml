@@ -148,4 +148,4 @@ jobs:
           destination_dir:
             ${{ env.BRANCH_NAME == 'main' && 'python/' || format('python/branch/{0}', env.BRANCH_NAME) }}
       - name: Display CI docs URL
-        run: echo https://www.ewatercycle.org/remotebmi/python/${{ github.head_ref || github.ref_name }}
+        run: echo https://www.ewatercycle.org/remotebmi/${{ env.BRANCH_NAME == 'main' && 'python/' || format('python/branch/{0}', env.BRANCH_NAME) }}
