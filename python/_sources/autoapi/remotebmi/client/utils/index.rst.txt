@@ -1,0 +1,61 @@
+remotebmi.client.utils
+======================
+
+.. py:module:: remotebmi.client.utils
+
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:function:: get_unique_port(host: str | None = None) -> int
+
+.. py:exception:: DeadContainerError(message: str, exitcode: int, logs: str, *args: Any)
+
+   Bases: :py:obj:`ChildProcessError`
+
+
+   Exception for when a container has died.
+
+   :param message: Human readable error message
+   :type message: str
+   :param exitcode: The non-zero exit code of the container
+   :type exitcode: int
+   :param logs: Logs the container produced
+   :type logs: str
+
+   Initialize self.  See help(type(self)) for accurate signature.
+
+
+   .. py:attribute:: exitcode
+
+
+   .. py:attribute:: logs
+
+
+.. py:function:: validate_url(url: str) -> None
+
+   Validates a given URL to ensure it has a valid scheme, network location,
+   and that the scheme is either 'http' or 'https'.
+
+   :param url: The URL to validate.
+   :type url: str
+
+   :raises ValueError: If the URL is invalid, i.e., it does not have a scheme,
+       network location, or the scheme is not 'http' or 'https'.
+
+   .. rubric:: Example
+
+   validate_url("http://example.com")
+
+
+.. py:function:: getuser() -> int | str
+
+   Windows-safe getuid implementation.
+
+   Will return user ID on unix/macOS. Will return username on Windows.
+
+

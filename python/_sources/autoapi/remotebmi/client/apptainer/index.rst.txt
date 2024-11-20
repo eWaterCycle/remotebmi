@@ -1,0 +1,44 @@
+remotebmi.client.apptainer
+==========================
+
+.. py:module:: remotebmi.client.apptainer
+
+
+
+
+Module Contents
+---------------
+
+.. py:class:: BmiClientApptainer(image: str, work_dir: str, input_dirs: collections.abc.Iterable[str] = (), delay: int = 0, capture_logs: bool = True)
+
+   Bases: :py:obj:`remotebmi.client.client.RemoteBmiClient`
+
+
+   
+   RemoteBmiClient constructor
+
+   :param base_url: Where the remote BMI server is running.
+   :param timeout: How long a response can take.
+                   Defaults to 1 day. Set to None to disable timeout.
+   :param max_keepalive_connections: How many connections to keep alive. "keepalive
+                                     connections" allow reusing of connections which is more efficient.
+                                     However, the R server implementation can break when they are used.
+   :param client: An optional httpx.Client instance to use. Mainly used for testing.
+
+   :raises ValueError: If the base_url is invalid.
+
+
+   .. py:attribute:: work_dir
+
+
+   .. py:attribute:: container
+
+
+   .. py:method:: logs() -> str
+
+      Returns complete combined stdout and stderr written by the Apptainer container.
+
+      When object was created with `log_enable=False` argument then always returns empty string.
+
+
+

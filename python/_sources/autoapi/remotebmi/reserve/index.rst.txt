@@ -1,0 +1,58 @@
+remotebmi.reserve
+=================
+
+.. py:module:: remotebmi.reserve
+
+.. autoapi-nested-parse::
+
+   Helpers to reserve numpy arrays for use in some of the Bmi methods as output argument
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:function:: reserve_values(model: bmipy.Bmi, name: str) -> numpy.ndarray
+
+   Reserve dest for :func:`bmipy.Bmi.get_value`
+
+
+.. py:function:: reserve_grid_shape(model: bmipy.Bmi, grid_id: int) -> numpy.ndarray
+
+   Reserve shape for :func:`bmipy.Bmi.get_grid_shape`
+
+
+.. py:function:: reserve_grid_padding(model: bmipy.Bmi, grid_id: int) -> numpy.ndarray
+
+   Reserve dest for :func:`bmipy.Bmi.get_grid_spacing` and :func:`bmipy.Bmi.get_grid_origin`
+
+
+.. py:function:: reserve_grid_nodes(model: bmipy.Bmi, grid_id: int, dim_index: int = 0) -> numpy.ndarray
+
+   Reserve dest for :func:`bmipy.Bmi.get_grid_x`, :func:`bmipy.Bmi.get_grid_y` and :func:`bmipy.Bmi.get_grid_z`
+
+   The dim_index goes x,y,z and model.get_grid_shape goes z,y,x or y,x so index is inverted
+
+
+.. py:function:: reserve_values_at_indices(model: bmipy.Bmi, name: str, indices: numpy.ndarray) -> numpy.ndarray
+
+   Reserve dest for :func:`bmipy.Bmi.get_value_at_indices`
+
+
+.. py:function:: reserve_grid_edge_nodes(model: bmipy.Bmi, grid_id: int) -> numpy.ndarray
+
+   Reserve edge_nodes for :func:`bmipy.Bmi.get_grid_edge_nodes`
+
+
+.. py:function:: reserve_grid_nodes_per_face(model: bmipy.Bmi, grid_id: int) -> numpy.ndarray
+
+   Reserve nodes_per_face for :func:`bmipy.Bmi.get_grid_nodes_per_face`
+
+
+.. py:function:: reserve_grid_face_(model: bmipy.Bmi, grid_id: int) -> numpy.ndarray
+
+   Reserve face_edges or face_node in respectivly :func:`bmipy.Bmi.get_grid_face_edges` or :func:`bmipy.Bmi.get_grid_face_nodes`
+
+

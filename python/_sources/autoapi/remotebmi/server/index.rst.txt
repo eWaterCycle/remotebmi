@@ -1,0 +1,42 @@
+remotebmi.server
+================
+
+.. py:module:: remotebmi.server
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/remotebmi/server/api/index
+   /autoapi/remotebmi/server/build/index
+
+
+
+
+Package Contents
+----------------
+
+.. py:function:: from_env() -> bmipy.Bmi
+
+   Build and return an instance of a BMI implementation based on the environment variables.
+
+   The following environment variables are used:
+   - BMI_PATH: The path to the BMI implementation module. If provided, the path will be added to the system path.
+   - BMI_MODULE: The name of the BMI implementation module.
+   - BMI_CLASS: The name of the BMI implementation class.
+
+   :returns: An instance of a BMI implementation.
+   :rtype: object
+
+   :raises ValueError: If the BMI implementation class or module name is missing.
+
+
+.. py:function:: handle_model_error(request: connexion.lifecycle.ConnexionRequest, exc: Exception) -> connexion.lifecycle.ConnexionResponse
+
+.. py:function:: make_app(model: bmipy.Bmi) -> connexion.AsyncApp
+
+.. py:function:: main(**kwargs)
+

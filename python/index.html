@@ -1,0 +1,193 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>remotebmi Python &mdash; remotebmi 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+      <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=01f34227"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="_static/copybutton.js?v=35a8b989"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API Reference" href="autoapi/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            remotebmi
+              <img src="_static/logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">remotebmi Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">remotebmi</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">remotebmi Python</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="remotebmi-python">
+<h1>remotebmi Python<a class="headerlink" href="#remotebmi-python" title="Link to this heading"></a></h1>
+<p>Welcome to <code class="docutils literal notranslate"><span class="pre">remotebmi</span></code>’s python documentation!</p>
+<p>The <a class="reference external" href="https://bmi.readthedocs.io/en/stable/">Basic Model Interface (BMI)</a>
+is a standard interface for models.
+The interface is available in different languages and a
+<a class="reference external" href="https://github.com/csdms/bmi/blob/stable/bmi.sidl">language agnostic version in SIDL.</a></p>
+<p>To have a consumer of the model and the provider of the model seperated you
+can use <a class="reference external" href="https://grpc4bmi.readthedocs.io/">grpc4bmi</a>, but this only works on
+languages that have a grpc implementation.
+This repo replaced the gRPC protocol with an REST API.
+The <a class="reference external" href="https://github.com/eWaterCycle/remotebmi/blob/main/openapi.yaml">REST API specification</a>
+is in the <a class="reference external" href="https://swagger.io/specification/">OpenAPI</a> format.</p>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>remotebmi
+</pre></div>
+</div>
+</section>
+<section id="how-to-use">
+<h2>How to use<a class="headerlink" href="#how-to-use" title="Link to this heading"></a></h2>
+<p>There are two parts to remotebmi: the server (which hosts the model) and the
+consumer (who wants to interact with the model).</p>
+<p>The server is available for different languages (Julia, R, and Python). Any client
+can connect with any server.</p>
+<section id="python-consumer">
+<h3>Python consumer<a class="headerlink" href="#python-consumer" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">remotebmi</span> <span class="kn">import</span> <span class="n">RemoteBmiClient</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">RemoteBmiClient</span><span class="p">(</span><span class="s1">&#39;http://localhost:50051&#39;</span><span class="p">)</span>
+<span class="c1"># Now you can use the BMI methods on model</span>
+<span class="c1"># for example</span>
+<span class="n">model</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="s1">&#39;config.file&#39;</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+<span class="n">model</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="s1">&#39;var_name&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>A client can also start a <a class="reference external" href="https://apptainer.org/">Apptainer</a> container
+containing the model and the server:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">remotebmi</span> <span class="kn">import</span> <span class="n">BmiClientApptainer</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">BmiClientApptainer</span><span class="p">(</span><span class="s1">&#39;my_model.sif&#39;</span><span class="p">,</span> <span class="n">work_dir</span><span class="o">=</span><span class="s1">&#39;/tmp&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The client picks a random port and expects the container to run the BMI web server
+on that port. The port is passed to the container using the <code class="docutils literal notranslate"><span class="pre">BMI_PORT</span></code> environment
+variable.
+A client can also start a <a class="reference external" href="https://docs.docker.com/engine/">Docker</a> container
+containing the model and the server.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">remotebmi</span> <span class="kn">import</span> <span class="n">BmiClientDocker</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">BmiClientDocker</span><span class="p">(</span><span class="s1">&#39;ewatercycle/wflowjl:0.7.3&#39;</span><span class="p">,</span> <span class="n">work_dir</span><span class="o">=</span><span class="s1">&#39;/tmp&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The BMI web server inside the Docker container should be running on port 50051.
+If the port is different, you can pass the port as the <code class="docutils literal notranslate"><span class="pre">image_port</span></code> argument
+to the <code class="docutils literal notranslate"><span class="pre">BmiClientDocker</span></code> constructor.</p>
+</section>
+<section id="python-server">
+<h3>Python server<a class="headerlink" href="#python-server" title="Link to this heading"></a></h3>
+<p>Given you have a model class called <code class="docutils literal notranslate"><span class="pre">MyModel</span></code> in a package <code class="docutils literal notranslate"><span class="pre">mypackage</span></code>
+then the web service can be started with the following command.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">BMI_MODULE</span><span class="o">=</span>mypackage<span class="w"> </span><span class="nv">BMI_CLASS</span><span class="o">=</span>MyModel<span class="w"> </span>run-bmi-server
+</pre></div>
+</div>
+<p>For example <a class="reference external" href="https://github.com/eWaterCycle/leakybucket-bmi">leakybucket</a>:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>leakybucket
+<span class="nv">BMI_MODULE</span><span class="o">=</span>leakybucket.leakybucket_bmi<span class="w"> </span><span class="nv">BMI_CLASS</span><span class="o">=</span>LeakyBucketBmi<span class="w"> </span>run-bmi-server
+</pre></div>
+</div>
+<p>and the Python client can connect to it with the following code.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">remotebmi</span> <span class="kn">import</span> <span class="n">RemoteBmiClient</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">client</span> <span class="o">=</span> <span class="n">RemoteBmiClient</span><span class="p">(</span><span class="s1">&#39;http://localhost:50051&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">client</span><span class="o">.</span><span class="n">get_component_name</span><span class="p">()</span>
+
+<span class="go">leakybucket</span>
+</pre></div>
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="autoapi/index.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Netherlands eScience Center.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

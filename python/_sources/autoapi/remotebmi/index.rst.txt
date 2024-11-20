@@ -1,0 +1,217 @@
+remotebmi
+=========
+
+.. py:module:: remotebmi
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/remotebmi/client/index
+   /autoapi/remotebmi/reserve/index
+   /autoapi/remotebmi/server/index
+
+
+
+
+Package Contents
+----------------
+
+.. py:class:: BmiClientApptainer(image: str, work_dir: str, input_dirs: collections.abc.Iterable[str] = (), delay: int = 0, capture_logs: bool = True)
+
+   Bases: :py:obj:`remotebmi.client.client.RemoteBmiClient`
+
+
+   
+   RemoteBmiClient constructor
+
+   :param base_url: Where the remote BMI server is running.
+   :param timeout: How long a response can take.
+                   Defaults to 1 day. Set to None to disable timeout.
+   :param max_keepalive_connections: How many connections to keep alive. "keepalive
+                                     connections" allow reusing of connections which is more efficient.
+                                     However, the R server implementation can break when they are used.
+   :param client: An optional httpx.Client instance to use. Mainly used for testing.
+
+   :raises ValueError: If the base_url is invalid.
+
+
+   .. py:attribute:: work_dir
+
+
+   .. py:attribute:: container
+
+
+   .. py:method:: logs() -> str
+
+      Returns complete combined stdout and stderr written by the Apptainer container.
+
+      When object was created with `log_enable=False` argument then always returns empty string.
+
+
+
+.. py:class:: RemoteBmiClient(base_url: str, timeout: int = 60 * 60 * 24, max_keepalive_connections: int = 0, client: httpx.Client | None = None)
+
+   Bases: :py:obj:`bmipy.Bmi`
+
+
+   
+   RemoteBmiClient constructor
+
+   :param base_url: Where the remote BMI server is running.
+   :param timeout: How long a response can take.
+                   Defaults to 1 day. Set to None to disable timeout.
+   :param max_keepalive_connections: How many connections to keep alive. "keepalive
+                                     connections" allow reusing of connections which is more efficient.
+                                     However, the R server implementation can break when they are used.
+   :param client: An optional httpx.Client instance to use. Mainly used for testing.
+
+   :raises ValueError: If the base_url is invalid.
+
+
+   .. py:method:: initialize(config_file: str) -> None
+
+
+   .. py:method:: update() -> None
+
+
+   .. py:method:: update_until(until: float) -> None
+
+
+   .. py:method:: finalize() -> None
+
+
+   .. py:method:: get_component_name() -> str
+
+
+   .. py:method:: get_input_var_names() -> tuple[str, Ellipsis]
+
+
+   .. py:method:: get_output_var_names() -> tuple[str, Ellipsis]
+
+
+   .. py:method:: get_input_item_count() -> int
+
+
+   .. py:method:: get_output_item_count() -> int
+
+
+   .. py:method:: get_var_grid(name: str) -> int
+
+
+   .. py:method:: get_var_type(name: str) -> str
+
+
+   .. py:method:: get_var_units(name: str) -> str
+
+
+   .. py:method:: get_var_nbytes(name: str) -> int
+
+
+   .. py:method:: get_var_location(name: str) -> str
+
+
+   .. py:method:: get_var_itemsize(name: str) -> int
+
+
+   .. py:method:: get_current_time() -> float
+
+
+   .. py:method:: get_start_time() -> float
+
+
+   .. py:method:: get_end_time() -> float
+
+
+   .. py:method:: get_time_units() -> str
+
+
+   .. py:method:: get_time_step() -> float
+
+
+   .. py:method:: get_value(name: str, dest: numpy.ndarray) -> numpy.ndarray
+
+
+   .. py:method:: get_value_at_indices(name: str, dest: numpy.ndarray, inds: numpy.ndarray) -> numpy.ndarray
+
+
+   .. py:method:: set_value(name: str, src: numpy.ndarray) -> None
+
+
+   .. py:method:: set_value_at_indices(name: str, inds: numpy.ndarray, src: numpy.ndarray) -> None
+
+
+   .. py:method:: get_value_ptr(name: str) -> numpy.ndarray
+      :abstractmethod:
+
+
+
+   .. py:method:: get_grid_rank(grid: int) -> int
+
+
+   .. py:method:: get_grid_size(grid: int) -> int
+
+
+   .. py:method:: get_grid_type(grid: int) -> str
+
+
+   .. py:method:: get_grid_origin(grid: int, origin: numpy.ndarray) -> numpy.ndarray
+
+
+   .. py:method:: get_grid_spacing(grid: int, spacing: numpy.ndarray) -> numpy.ndarray
+
+
+   .. py:method:: get_grid_shape(grid: int, shape: numpy.ndarray) -> numpy.ndarray
+
+
+   .. py:method:: get_grid_x(grid: int, x: numpy.ndarray) -> numpy.ndarray
+
+
+   .. py:method:: get_grid_y(grid: int, y: numpy.ndarray) -> numpy.ndarray
+
+
+   .. py:method:: get_grid_z(grid: int, z: numpy.ndarray) -> numpy.ndarray
+
+
+   .. py:method:: get_grid_node_count(grid: int) -> int
+
+
+   .. py:method:: get_grid_face_nodes(grid: int, face_nodes: numpy.ndarray) -> numpy.ndarray
+
+
+   .. py:method:: get_grid_edge_count(grid: int) -> int
+
+
+   .. py:method:: get_grid_edge_nodes(grid: int, edge_nodes: numpy.ndarray) -> numpy.ndarray
+
+
+   .. py:method:: get_grid_face_count(grid: int) -> int
+
+
+   .. py:method:: get_grid_face_edges(grid: int, face_edges: numpy.ndarray) -> numpy.ndarray
+
+
+   .. py:method:: get_grid_nodes_per_face(grid: int, nodes_per_face: numpy.ndarray) -> numpy.ndarray
+
+
+.. py:class:: BmiClientDocker(image: str, work_dir: str, image_port: int = 50051, host: str | None = None, input_dirs: collections.abc.Iterable[str] = (), user: str | int = getuser(), remove: bool = False, delay: int = 5)
+
+   Bases: :py:obj:`remotebmi.client.client.RemoteBmiClient`
+
+
+   .. py:attribute:: work_dir
+
+
+   .. py:attribute:: container
+      :type:  docker.models.containers.Container
+
+
+   .. py:method:: logs() -> str
+
+      Returns complete combined stdout and stderr written by the Docker container.
+
+
+

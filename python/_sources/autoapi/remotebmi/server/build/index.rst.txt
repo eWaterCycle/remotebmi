@@ -1,0 +1,48 @@
+remotebmi.server.build
+======================
+
+.. py:module:: remotebmi.server.build
+
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:data:: ENV_BMI_MODULE
+   :value: 'BMI_MODULE'
+
+
+.. py:data:: ENV_BMI_CLASS
+   :value: 'BMI_CLASS'
+
+
+.. py:function:: from_env() -> bmipy.Bmi
+
+   Build and return an instance of a BMI implementation based on the environment variables.
+
+   The following environment variables are used:
+   - BMI_PATH: The path to the BMI implementation module. If provided, the path will be added to the system path.
+   - BMI_MODULE: The name of the BMI implementation module.
+   - BMI_CLASS: The name of the BMI implementation class.
+
+   :returns: An instance of a BMI implementation.
+   :rtype: object
+
+   :raises ValueError: If the BMI implementation class or module name is missing.
+
+
+.. py:function:: build(module_name: str, class_name: str, path: str | None = None) -> bmipy.Bmi
+
+   Build and return an instance of a BMI implementation based on the provided module and class names.
+
+   :param module_name: The name of the BMI implementation module.
+   :param class_name: The name of the BMI implementation class.
+   :param path: The path to the BMI implementation module. If provided, the path will be added to the system path.
+
+   :returns: An instance of a BMI implementation.
+   :rtype: object
+
+

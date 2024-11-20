@@ -1,0 +1,29 @@
+remotebmi.client.docker
+=======================
+
+.. py:module:: remotebmi.client.docker
+
+
+
+
+Module Contents
+---------------
+
+.. py:class:: BmiClientDocker(image: str, work_dir: str, image_port: int = 50051, host: str | None = None, input_dirs: collections.abc.Iterable[str] = (), user: str | int = getuser(), remove: bool = False, delay: int = 5)
+
+   Bases: :py:obj:`remotebmi.client.client.RemoteBmiClient`
+
+
+   .. py:attribute:: work_dir
+
+
+   .. py:attribute:: container
+      :type:  docker.models.containers.Container
+
+
+   .. py:method:: logs() -> str
+
+      Returns complete combined stdout and stderr written by the Docker container.
+
+
+

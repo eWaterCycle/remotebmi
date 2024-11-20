@@ -1,0 +1,93 @@
+remotebmi.server.api
+====================
+
+.. py:module:: remotebmi.server.api
+
+
+
+
+Module Contents
+---------------
+
+.. py:function:: model() -> bmipy.Bmi
+
+.. py:function:: initialize(body: dict[Literal['config_file'], str]) -> None
+
+.. py:function:: update() -> None
+
+.. py:function:: update_until(until: float) -> None
+
+.. py:function:: finalize() -> None
+
+.. py:function:: get_component_name() -> dict[str, str]
+
+.. py:function:: get_input_var_names() -> tuple[str, Ellipsis]
+
+.. py:function:: get_output_var_names() -> list[str]
+
+.. py:function:: get_input_item_count() -> int
+
+.. py:function:: get_output_item_count() -> int
+
+.. py:function:: get_var_grid(name: str) -> int
+
+.. py:function:: get_var_type(name: str) -> dict[str, str]
+
+.. py:function:: get_var_units(name: str) -> dict[str, str]
+
+.. py:function:: get_var_nbytes(name: str) -> int
+
+.. py:function:: get_var_location(name: str) -> dict[str, str]
+
+.. py:function:: get_var_itemsize(name: str) -> int
+
+.. py:function:: get_value(name: str) -> list[int | float]
+
+.. py:function:: get_value_at_indices(name: str, indices: numpy.ndarray) -> list[int | float]
+
+.. py:function:: set_value(name: str, src: list) -> None
+
+.. py:function:: set_value_at_indices(name: str, indices: list, values: list) -> None
+
+.. py:function:: get_grid_rank(grid: int) -> int
+
+.. py:function:: get_grid_type(grid: int) -> dict[str, str]
+
+.. py:function:: get_grid_shape(grid: int) -> list[int]
+
+.. py:function:: get_grid_size(grid: int) -> int
+
+.. py:function:: get_grid_spacing(grid: int) -> list[float]
+
+.. py:function:: get_grid_origin(grid: int) -> list[float]
+
+.. py:function:: get_grid_x(grid: int) -> list[float]
+
+.. py:function:: get_grid_y(grid: int) -> list[float]
+
+.. py:function:: get_grid_z(grid: int) -> list[float]
+
+.. py:function:: get_start_time() -> float
+
+.. py:function:: get_end_time() -> float
+
+.. py:function:: get_current_time() -> float
+
+.. py:function:: get_time_step() -> float
+
+.. py:function:: get_time_units() -> dict[str, str]
+
+.. py:function:: get_grid_edge_count(grid: int) -> int
+
+.. py:function:: get_grid_face_count(grid: int) -> int
+
+.. py:function:: get_grid_edge_nodes(grid: int) -> list[int]
+
+.. py:function:: get_grid_face_edges(grid: int) -> list[int]
+
+.. py:function:: get_grid_face_nodes(grid: int) -> list[int]
+
+.. py:function:: get_grid_nodes_per_face(grid: int) -> list[int]
+
+.. py:function:: get_grid_node_count(grid: int) -> int
+
