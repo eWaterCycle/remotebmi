@@ -8,7 +8,7 @@ library(reqres)
 #'
 #' @param model The model instance to be served. Must implement the subclass of [AbstractBmi](https://github.com/eWaterCycle/bmi-r/blob/master/R/abstract-bmi.R)
 #' @param port The port to serve the model on. Default is 50051 or if BMI_PORT environment variable is set, it will be used.
-#' @param host The host to serve the model on. Default is "127.0.0.1".
+#' @param host The host to serve the model on. Default is "127.0.0.1". NOTE: in a container 127.0.0.1 won't be accessible to the outside, use the BMI_HOST environment variable to set the host IP to 0.0.0.0.
 #' @param ignite Whether to ignite the server immediately and block. Default is TRUE.
 #' @return The server application.
 #' @export
@@ -18,6 +18,8 @@ serve <- function(model, port = 50051, host = "127.0.0.1", ignite = TRUE) {
   router$add_route(route, "bmi")
 
   port <- as.integer(Sys.getenv("BMI_PORT", port))
+  host <- Sys.getenv("BMI_HOST", host)
+
   app <- fiery::Fire$new(host = host, port = port)
   app$attach(router)
   if (ignite) {
