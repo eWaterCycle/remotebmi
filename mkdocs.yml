@@ -10,10 +10,12 @@ nav:
   - Python docs: https://www.ewatercycle.org/remotebmi/python
   - Julia docs: https://www.ewatercycle.org/remotebmi/julia
   - R docs : R/index.md
+  - Developer docs: dev_docs.md
 
 theme:
   name: material
   logo: assets/inverted_logo.svg
+  favicon: assets/favicon.png
   highlightjs: true
   hljs_languages:
     - yaml
