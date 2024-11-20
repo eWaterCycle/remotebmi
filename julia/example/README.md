@@ -23,7 +23,7 @@ wget https://github.com/csdms/bmi-example-julia/raw/main/example/heat.toml
 Interact with it using the Python client.
 
 ```python
-from remotebmi.client.client import RemoteBmiClient
+from remotebmi import RemoteBmiClient
 from remotebmi.reserve import reserve_values
 import os
 
@@ -109,7 +109,7 @@ run_bmi_server(Wflow.Model, "0.0.0.0", port)
 Interact with it using the Python client.
 
 ```python
-from remotebmi.client.client import RemoteBmiClient
+from remotebmi import RemoteBmiClient
 from remotebmi.reserve import reserve_values, reserve_grid_nodes, reserve_grid_edge_nodes, reserve_grid_nodes_per_face, reserve_grid_face_
 import numpy as np
 import os

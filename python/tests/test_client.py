@@ -2,7 +2,7 @@
 
 import pytest
 
-from remotebmi.client.client import RemoteBmiClient
+from remotebmi import RemoteBmiClient
 
 
 @pytest.mark.parametrize(

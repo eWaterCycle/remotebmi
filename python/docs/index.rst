@@ -37,7 +37,7 @@ Python consumer
 
 .. code-block:: python
 
-    from remotebmi.client.client import RemoteBmiClient
+    from remotebmi import RemoteBmiClient
 
     model = RemoteBmiClient('http://localhost:50051')
     # Now you can use the BMI methods on model
@@ -51,7 +51,7 @@ containing the model and the server:
 
 .. code-block:: python
 
-    from remotebmi.client.apptainer import BmiClientApptainer
+    from remotebmi import BmiClientApptainer
 
     model = BmiClientApptainer('my_model.sif', work_dir='/tmp')
 
@@ -63,7 +63,7 @@ containing the model and the server.
 
 .. code-block:: python
 
-    from remotebmi.client.docker import BmiClientDocker
+    from remotebmi import BmiClientDocker
 
     model = BmiClientDocker('ewatercycle/wflowjl:0.7.3', work_dir='/tmp')
 
@@ -92,7 +92,7 @@ and the Python client can connect to it with the following code.
 
 .. code-block:: python
 
-    >>> from remotebmi.client.client import RemoteBmiClient
+    >>> from remotebmi import RemoteBmiClient
     >>> client = RemoteBmiClient('http://localhost:50051')
     >>> client.get_component_name()
 
