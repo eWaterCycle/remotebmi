@@ -1,0 +1,59 @@
+site_name: remotebmi
+site_url: https://www.ewatercycle.org/remotebmi
+theme:
+  name: material
+
+nav:
+  - Index: index.md
+  - Basic Model Interface: bmi.md
+  - OpenAPI: openapi.md
+  - Python docs: https://www.ewatercycle.org/remotebmi/python
+  - Julia docs: https://www.ewatercycle.org/remotebmi/julia
+  - R docs : R/index.md
+  - Developer docs: dev_docs.md
+
+theme:
+  name: material
+  logo: assets/inverted_logo.svg
+  favicon: assets/favicon.png
+  highlightjs: true
+  hljs_languages:
+    - yaml
+    - python
+    - bash
+  features:
+  - navigation.instant
+  - navigation.tabs
+  - navigation.tabs.sticky
+  - content.code.copy
+
+  palette:
+    # Palette toggle for light mode
+    - scheme: default
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to dark mode
+      primary: blue
+      accent: cyan
+
+    # Palette toggle for dark mode
+    - scheme: slate
+      toggle:
+        icon: material/weather-night
+        name: Switch to light mode
+      primary: blue grey
+      accent: teal
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+
+extra:
+  generator: false
