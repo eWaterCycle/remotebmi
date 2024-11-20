@@ -59,6 +59,6 @@ def getuser() -> int | str:
 
     Will return user ID on unix/macOS. Will return username on Windows.
     """
-    if os.system == "nt":
+    if os.name == "nt":
         return getpass.getuser()
     return os.getuid()
