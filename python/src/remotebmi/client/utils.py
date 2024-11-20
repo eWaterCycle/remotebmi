@@ -1,3 +1,5 @@
+import getpass
+import os
 import socket
 from contextlib import closing
 from typing import Any
@@ -50,3 +52,13 @@ def validate_url(url: str) -> None:
     if not (has_scheme and has_netloc and is_valid_scheme):
         msg = f"Invalid: {url}, should be http(s)://host[:port][/path]"
         raise ValueError(msg)
+
+
+def getuser() -> int | str:
+    """Windows-safe getuid implementation.
+
+    Will return user ID on unix/macOS. Will return username on Windows.
+    """
+    if os.name == "nt":
+        return getpass.getuser()
+    return os.getuid()

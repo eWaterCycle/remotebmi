@@ -7,7 +7,7 @@ import docker
 from docker.models.containers import Container  # noqa: TCH002
 
 from remotebmi.client.client import RemoteBmiClient
-from remotebmi.client.utils import DeadContainerError, get_unique_port
+from remotebmi.client.utils import DeadContainerError, get_unique_port, getuser
 
 
 class BmiClientDocker(RemoteBmiClient):
@@ -18,7 +18,7 @@ class BmiClientDocker(RemoteBmiClient):
         image_port: int = 50051,
         host: str | None = None,
         input_dirs: Iterable[str] = (),
-        user: int = os.getuid(),
+        user: str | int = getuser(),
         remove: bool = False,
         delay: int = 5,
     ):

@@ -4,7 +4,7 @@ import numpy as np
 import pytest
 from numpy.testing import assert_array_equal
 
-from remotebmi.client.client import RemoteBmiClient
+from remotebmi import RemoteBmiClient
 from remotebmi.reserve import (
     reserve_grid_nodes,
     reserve_grid_shape,

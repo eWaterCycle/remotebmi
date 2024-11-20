@@ -37,7 +37,7 @@ With Python client test the model
 
 ```python
 import os
-from remotebmi.client.client import RemoteBmiClient
+from remotebmi import RemoteBmiClient
 from remotebmi.reserve import reserve_values, reserve_grid_padding, reserve_grid_shape
 import numpy as np
 
