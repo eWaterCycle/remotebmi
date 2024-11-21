@@ -131,7 +131,6 @@ module BmiServer
 
 using HTTP
 using URIs
-using Dates
 using TimeZones
 using OpenAPI
 using OpenAPI.Servers

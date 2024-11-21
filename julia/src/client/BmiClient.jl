@@ -3,7 +3,7 @@
 
 module BmiClient
 
-using Dates, TimeZones
+using TimeZones
 using OpenAPI
 using OpenAPI.Clients
 
