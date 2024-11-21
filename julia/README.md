@@ -3,8 +3,6 @@
 [![Julia test](https://github.com/eWaterCycle/remotebmi/actions/workflows/julia-test.yml/badge.svg)](https://github.com/eWaterCycle/remotebmi/actions/workflows/julia-test.yml)
 [![Julia docs](https://github.com/eWaterCycle/remotebmi/actions/workflows/julia-docs.yml/badge.svg)](https://github.com/eWaterCycle/remotebmi/actions/workflows/julia-docs.yml)
 
-[![][docs-stable-img]][docs-stable-url] [![][docs-dev-img]][docs-dev-url]
-
 <!-- TODO filter on Julia component
 [![Coverage](https://codecov.io/gh/eWaterCycle/RemoteBMI/branch/main/graph/badge.svg)](https://codecov.io/gh/eWaterCycle/RemoteBMI)
 -->
@@ -52,8 +50,3 @@ touch julia/docs/src/server/docs/Int64.md
 touch julia/docs/src/server/docs/Float64.md
 ```
 
-[docs-dev-img]: https://img.shields.io/badge/docs-dev-blue.svg
-[docs-dev-url]: https://www.ewatercycle.org/remotebmi/julia/dev
-
-[docs-stable-img]: https://img.shields.io/badge/docs-stable-blue.svg
-[docs-stable-url]: https://www.ewatercycle.org/remotebmi/julia/stable
