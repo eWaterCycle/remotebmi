@@ -104,5 +104,7 @@ and the Python client can connect to it with the following code.
     :maxdepth: 3
     :hidden:
 
+    remotebmi <http://www.ewatercycle.org/remotebmi/>
+    RemoteBMI.jl <https://www.ewatercycle.org/remotebmi/julia/>
     self
     autoapi/index
