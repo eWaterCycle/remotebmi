@@ -1,0 +1,116 @@
+name: Main docs 📖
+on:
+  push:
+    branches: [main]
+  workflow_call:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build-julia:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: julia
+    steps:
+    - uses: actions/checkout@v4
+    - uses: julia-actions/setup-julia@v2
+      with:
+        version: "1"
+        project: '.'
+    - name: Use Julia cache
+      uses: julia-actions/cache@v2
+    - name: Instantiate environment with development version of the package
+      run: |
+        julia --project=docs -e '
+          using Pkg
+          Pkg.develop(PackageSpec(path=pwd()))
+          Pkg.instantiate()'
+    - name: Generate Julia documentation
+      run: julia --project=docs docs/make.jl
+    - name: Upload build as artifact
+      id: deployment
+      uses: actions/upload-artifact@v4
+      with:
+        name: julia-docs
+        path: julia/docs/build/
+  build-python:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: python
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.13"
+        cache: "pip"
+    - name: Install docs requirements
+      run: pip install -r docs/requirements.txt
+    - name: Build Python docs
+      run: make -C docs/ html
+    - name: Upload build as artifact
+      id: deployment
+      uses: actions/upload-artifact@v4
+      with:
+        name: python-docs
+        path: python/docs/_build/html
+  build-main:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.13"
+        cache: "pip"
+    - name: Install mkdocs
+      run: pip install mkdocs-material
+    - name: Build mkdocs
+      run: mkdocs build -d html
+    - name: Upload build as artifact
+      id: deployment
+      uses: actions/upload-artifact@v4
+      with:
+        name: main-docs
+        path: html
+  merge:
+    runs-on: ubuntu-latest
+    needs:
+      - build-julia
+      - build-python
+      - build-main
+    steps:
+    - name: Download Julia build
+      uses: actions/download-artifact@v4
+      with:
+        name: julia-docs
+        path: julia
+    - name: Download Python build
+      uses: actions/download-artifact@v4
+      with:
+        name: python-docs
+        path: python
+    - name: Download main build
+      uses: actions/download-artifact@v4
+      with:
+        name: main-docs
+        path: .
+    - name: Reupload merged artifacts
+      id: deployment
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: .
+  publish-docs:
+    runs-on: ubuntu-latest
+    needs: merge
+    steps:
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4

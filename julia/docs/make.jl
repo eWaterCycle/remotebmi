@@ -17,5 +17,3 @@ makedocs(;
   format = Documenter.HTML(; canonical = "https://eWaterCycle.github.io/remotebmi/RemoteBMI.jl"),
   pages = ["index.md"; numbered_pages],
 )
-
-deploydocs(; repo = "github.com/eWaterCycle/remotebmi", dirname="julia")

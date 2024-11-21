@@ -120,7 +120,7 @@ jobs:
       - name: Build package
         run: python3 -m build
   docs:
-    name: build docs 📖
+    name: test build docs 📖
     runs-on: ubuntu-latest
     env: 
       BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
@@ -138,14 +138,3 @@ jobs:
         run: pip install -r docs/requirements.txt
       - name: Build docs
         run: make -C docs/ html
-      - name: Move files
-        run: mv docs/_build/html pydocs
-      - name: Deploy docs
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: python/pydocs
-          destination_dir:
-            ${{ env.BRANCH_NAME == 'main' && 'python/' || format('python/branch/{0}', env.BRANCH_NAME) }}
-      - name: Display CI docs URL
-        run: echo https://www.ewatercycle.org/remotebmi/${{ env.BRANCH_NAME == 'main' && 'python/' || format('python/branch/{0}', env.BRANCH_NAME) }}
