@@ -1,4 +1,5 @@
 import subprocess
+from collections.abc import Generator
 from pathlib import Path
 
 import pytest
@@ -39,7 +40,9 @@ def leakybucket_image(leakybucket_def: Path) -> Path:
 
 
 @pytest.fixture
-def leakybucket_client(leakybucket_image: Path, tmp_path: Path):
+def leakybucket_client(
+    leakybucket_image: Path, tmp_path: Path
+) -> Generator[BmiClientApptainer, None, None]:
     client = BmiClientApptainer(
         image=str(leakybucket_image),
         work_dir=str(tmp_path),
@@ -48,11 +51,11 @@ def leakybucket_client(leakybucket_image: Path, tmp_path: Path):
     del client
 
 
-def test_get_component_name(leakybucket_client: BmiClientApptainer):
+def test_get_component_name(leakybucket_client: BmiClientApptainer) -> None:
     assert leakybucket_client.get_component_name() == "leakybucket"
 
 
-def test_image_not_found(tmp_path: Path):
+def test_image_not_found(tmp_path: Path) -> None:
     bad_image = tmp_path / "nonexistent_image.sif"
     with pytest.raises(DeadContainerError):
         BmiClientApptainer(image=str(bad_image), work_dir=str(tmp_path))

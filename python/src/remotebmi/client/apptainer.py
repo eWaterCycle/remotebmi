@@ -12,6 +12,7 @@ from remotebmi.client.utils import DeadContainerError, get_unique_port
 
 logger = logging.getLogger(__name__)
 
+
 class BmiClientApptainer(RemoteBmiClient):
     def __init__(
         self,
