@@ -47,7 +47,7 @@ def make_app(model: Bmi) -> AsyncApp:
 def main(**kwargs):  # type: ignore[no-untyped-def]
     model = from_env()
     app = make_app(model)
-    port = int(environ.get("BMI_PORT", 50051))
+    port = int(environ.get("BMI_PORT", "50051"))
     uvicorn.run(app, port=port, **kwargs)
 
 

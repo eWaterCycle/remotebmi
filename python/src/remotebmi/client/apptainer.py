@@ -10,6 +10,7 @@ from tempfile import SpooledTemporaryFile
 from remotebmi.client.client import RemoteBmiClient
 from remotebmi.client.utils import DeadContainerError, get_unique_port
 
+logger = logging.getLogger(__name__)
 
 class BmiClientApptainer(RemoteBmiClient):
     def __init__(
@@ -20,7 +21,7 @@ class BmiClientApptainer(RemoteBmiClient):
         delay: float = 0,
         capture_logs: bool = True,
         # wait up to 10 minutes for container to start, some models can be slow to start up
-        startup_timeout: float = 600.0,  
+        startup_timeout: float = 600.0,
         startup_poll_interval: float = 0.1,
     ):
         if isinstance(input_dirs, str):
@@ -48,7 +49,7 @@ class BmiClientApptainer(RemoteBmiClient):
         # Change into working directory
         args += ["--pwd", self.work_dir]
         args.append(image)
-        logging.info(f"Running {image} apptainer container on port {port}")
+        logger.info(f"Running {image} apptainer container on port {port}")
         if capture_logs:
             self.logfile = SpooledTemporaryFile(  # noqa: SIM115 - file is closed in __del__
                 max_size=2**16,  # keep until 65Kb in memory if bigger write to disk
@@ -71,6 +72,7 @@ class BmiClientApptainer(RemoteBmiClient):
             msg = (
                 f"apptainer container {image} prematurely exited with code {returncode}"
             )
+            logger.error(msg)
             raise DeadContainerError(
                 msg,
                 returncode,

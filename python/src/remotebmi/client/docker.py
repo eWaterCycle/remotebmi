@@ -4,7 +4,7 @@ from collections.abc import Iterable
 from posixpath import abspath
 
 import docker
-from docker.models.containers import Container  # noqa: TCH002
+from docker.models.containers import Container  # noqa: TC002
 
 from remotebmi.client.client import RemoteBmiClient
 from remotebmi.client.utils import DeadContainerError, get_unique_port, getuser

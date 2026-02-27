@@ -5,6 +5,24 @@ import pytest
 
 from remotebmi.client.apptainer import BmiClientApptainer, DeadContainerError
 
+try:
+    _apptainer_available = (
+        subprocess.run(
+            ["apptainer", "--version"],  # noqa: S607
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=False,
+        ).returncode
+        == 0
+    )
+except OSError:
+    _apptainer_available = False
+
+pytestmark = pytest.mark.skipif(
+    not _apptainer_available,
+    reason="apptainer is unavailable",
+)
+
 
 @pytest.fixture
 def leakybucket_def() -> Path:
@@ -16,7 +34,7 @@ def leakybucket_image(leakybucket_def: Path) -> Path:
     image = leakybucket_def.parent / "leakybucket.sif"
     if image.exists():
         return image
-    subprocess.run(["apptainer", "build", str(image), str(leakybucket_def)], check=True)
+    subprocess.run(["apptainer", "build", str(image), str(leakybucket_def)], check=True)  # noqa: S603, S607
     return image
 
 
@@ -30,7 +48,7 @@ def leakybucket_client(leakybucket_image: Path, tmp_path: Path):
     del client
 
 
-def test_get_component_name(leakybucket_client: BmiClientApptainer, tmp_path: Path):
+def test_get_component_name(leakybucket_client: BmiClientApptainer):
     assert leakybucket_client.get_component_name() == "leakybucket"
 
 
