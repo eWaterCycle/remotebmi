@@ -34,3 +34,4 @@ openapi-generator-cli.jar
 openapitools.json
 PEQ_Hupsel.dat
 walrus.yml
+python/tests/client/fixtures/leakybucket.sif
