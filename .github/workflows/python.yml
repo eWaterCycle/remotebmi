@@ -75,6 +75,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - uses: eWaterCycle/setup-apptainer@v2
+        with:
+          apptainer-version: 1.4.5
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
