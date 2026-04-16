@@ -9,6 +9,8 @@ from tempfile import SpooledTemporaryFile
 from remotebmi.client.client import RemoteBmiClient
 from remotebmi.client.utils import DeadContainerError, get_unique_port
 
+logger = logging.getLogger(__name__)
+
 
 class BmiClientApptainer(RemoteBmiClient):
     def __init__(
@@ -44,7 +46,7 @@ class BmiClientApptainer(RemoteBmiClient):
         # Change into working directory
         args += ["--pwd", self.work_dir]
         args.append(image)
-        logging.info(f"Running {image} apptainer container on port {port}")
+        logger.info(f"Running {image} apptainer container on port {port}")
         if capture_logs:
             self.logfile = SpooledTemporaryFile(  # noqa: SIM115 - file is closed in __del__
                 max_size=2**16,  # keep until 65Kb in memory if bigger write to disk
