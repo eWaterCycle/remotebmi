@@ -41,8 +41,9 @@ def get_component_name() -> dict[str, str]:
     return {"name": model().get_component_name()}
 
 
-def get_input_var_names() -> tuple[str, ...]:
-    return model().get_input_var_names()
+def get_input_var_names() -> list[str]:
+    n = model().get_input_var_names()
+    return list(n)
 
 
 def get_output_var_names() -> list[str]:
