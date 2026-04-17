@@ -29,8 +29,8 @@ def update() -> None:
     model().update()
 
 
-def update_until(until: float) -> None:
-    model().update_until(until)
+def update_until(body: float) -> None:
+    model().update_until(body)
 
 
 def finalize() -> None:
@@ -87,21 +87,22 @@ def get_value(name: str) -> list[int | float]:
     return model().get_value(name, items).tolist()  # type: ignore[no-any-return]
 
 
-def get_value_at_indices(name: str, indices: np.ndarray) -> list[int | float]:
-    items = reserve_values_at_indices(model(), name, indices)
+def get_value_at_indices(name: str, body: list) -> list[int | float]:
+    items = reserve_values_at_indices(model(), name, body)
     return (  # type: ignore[no-any-return]
-        model().get_value_at_indices(name, np.array(indices, dtype=int), items).tolist()
+        model().get_value_at_indices(name, np.array(body, dtype=int), items).tolist()
     )
 
 
-def set_value(name: str, src: list) -> None:
-    items = np.array(src)
+def set_value(name: str, body: list) -> None:
+    items = np.array(body)
     model().set_value(name, items)
 
 
-def set_value_at_indices(name: str, indices: list, values: list) -> None:
-    items = np.array(values)
-    model().set_value_at_indices(name, np.array(indices, dtype=int), items)
+def set_value_at_indices(name: str, body: dict) -> None:
+    indices = np.array(body["indices"], dtype=int)
+    items = np.array(body["values"])
+    model().set_value_at_indices(name, indices, items)
 
 
 def get_grid_rank(grid: int) -> int:
