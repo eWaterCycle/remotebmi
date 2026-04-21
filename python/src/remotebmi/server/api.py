@@ -88,9 +88,10 @@ def get_value(name: str) -> list[int | float]:
 
 
 def get_value_at_indices(name: str, body: list) -> list[int | float]:
-    items = reserve_values_at_indices(model(), name, body)
+    indices = np.array(body, dtype=int)
+    items = reserve_values_at_indices(model(), name, indices)
     return (  # type: ignore[no-any-return]
-        model().get_value_at_indices(name, np.array(body, dtype=int), items).tolist()
+        model().get_value_at_indices(name, items, indices).tolist()
     )
 
 
