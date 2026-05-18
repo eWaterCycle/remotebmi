@@ -25,8 +25,23 @@ last_segment <- function(path) {
 #' }
 #'
 create_route <- function(model) {
+  parse_json_or_problem <- function(request, response) {
+    tryCatch({
+      request$parse(json = reqres::parse_json())
+      return(TRUE)
+    }, error = function(e) {
+      response$status <- if (!is.null(e$status)) as.integer(e$status) else 400L
+      response$type <- "application/json"
+      response$body <- list(title = as.character(e$message))
+      response$format(json = reqres::format_json(auto_unbox = TRUE))
+      return(FALSE)
+    })
+  }
+
   bmi_initialize <- function(request, response, keys, ...) {
-    request$parse(json = reqres::parse_json())
+    if (!parse_json_or_problem(request, response)) {
+      return(FALSE)
+    }
     model$bmi_initialize(request$body$config_file)
     response$status <- 201L
     return(FALSE)
@@ -39,7 +54,9 @@ create_route <- function(model) {
   }
 
   update_until <- function(request, response, keys, ...) {
-    request$parse(json = reqres::parse_json())
+    if (!parse_json_or_problem(request, response)) {
+      return(FALSE)
+    }
     time <- request$body
     model$update_until(time)
     response$status <- 204L
@@ -205,7 +222,9 @@ create_route <- function(model) {
   }
 
   get_value_at_indices <- function(request, response, keys, ...) {
-    request$parse(json = reqres::parse_json())
+    if (!parse_json_or_problem(request, response)) {
+      return(FALSE)
+    }
     response$status <- 200L
     response$type <- "application/json"
     name <- last_segment(request$path)
@@ -233,14 +252,18 @@ create_route <- function(model) {
   }
 
   set_value <- function(request, response, keys, ...) {
-    request$parse(json = reqres::parse_json())
+    if (!parse_json_or_problem(request, response)) {
+      return(FALSE)
+    }
     model$set_value(last_segment(request$path), request$body)
     response$status <- 204L
     return(FALSE)
   }
 
   set_value_at_indices <- function(request, response, keys, ...) {
-    request$parse(json = reqres::parse_json())
+    if (!parse_json_or_problem(request, response)) {
+      return(FALSE)
+    }
     name <- last_segment(request$path)
     model$set_value_at_indices(name, request$body$indices, request$body$values)
     response$status <- 204L

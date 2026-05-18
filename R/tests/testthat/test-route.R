@@ -167,6 +167,22 @@ test_that("/initialize", {
   expect_equal(method_called_with[["bmi_initialize"]], "some_config")
 })
 
+test_that("/initialize, given string", {
+  fake_rook <- fiery::fake_request("/initialize",
+    content = "foobar",
+    method = "post",
+    headers = list("Content_Type" = "application/json")
+  )
+  req <- reqres::Request$new(fake_rook)
+  res <- req$respond()
+  route$dispatch(req)
+  expect_equal(res$status, 400)
+  expected <- list(
+    title = "Error parsing the request body"
+  )
+  expect_equal(res$body, formatter(expected))
+})
+
 test_that("/update", {
   fake_rook <- fiery::fake_request("/update",
     method = "post"
@@ -189,6 +205,22 @@ test_that("/update_until", {
   route$dispatch(req)
   expect_equal(res$status, 204)
   expect_equal(method_called_with[["update_until"]], 113)
+})
+
+test_that("/update_until, given string", {
+  fake_rook <- fiery::fake_request("/update_until",
+    content = "foobar",
+    method = "post",
+    headers = list("Content_Type" = "application/json")
+  )
+  req <- reqres::Request$new(fake_rook)
+  res <- req$respond()
+  route$dispatch(req)
+  expect_equal(res$status, 400)
+  expected <- list(
+    title = "Error parsing the request body"
+  )
+  expect_equal(res$body, formatter(expected))
 })
 
 test_that("/finalize", {
@@ -359,6 +391,22 @@ test_that("/get_value_at_indices", {
   expect_equal(method_called_with[["get_value_at_indices"]], expected)
 })
 
+test_that("/get_value_at_indices, given json string", {
+  fake_rook <- fiery::fake_request("/get_value_at_indices/Q",
+    content = "\"foobar\"",
+    method = "post",
+    headers = list("Content_Type" = "application/json")
+  )
+  req <- reqres::Request$new(fake_rook)
+  res <- req$respond()
+  route$dispatch(req)
+  expect_equal(res$status, 400)
+  expected <- list(
+    title = "Request body must be an array"
+  )
+  expect_equal(res$body, formatter(expected))
+})
+
 test_that("/get_value_at_indices, given string", {
   fake_rook <- fiery::fake_request("/get_value_at_indices/Q",
     content = "foobar",
@@ -370,7 +418,7 @@ test_that("/get_value_at_indices, given string", {
   route$dispatch(req)
   expect_equal(res$status, 400)
   expected <- list(
-    title = "Request body must be an array"
+    title = "Error parsing the request body"
   )
   expect_equal(res$body, formatter(expected))
 })
@@ -421,6 +469,22 @@ test_that("/set_value", {
   expect_equal(method_called_with[["set_value"]], expected)
 })
 
+test_that("/set_value, given string", {
+  fake_rook <- fiery::fake_request("/set_value/Q",
+    content = "foobar",
+    method = "post",
+    headers = list("Content_Type" = "application/json")
+  )
+  req <- reqres::Request$new(fake_rook)
+  res <- req$respond()
+  route$dispatch(req)
+  expect_equal(res$status, 400)
+  expected <- list(
+    title = "Error parsing the request body"
+  )
+  expect_equal(res$body, formatter(expected))
+})
+
 test_that("set_value_at_indices", {
   fake_rook <- fiery::fake_request("/set_value_at_indices/Q",
     content = '{"indices": [1, 2, 3], "values": [1.1, 2.2, 3.3]}',
@@ -433,6 +497,22 @@ test_that("set_value_at_indices", {
   expect_equal(res$status, 204)
   expected <- list(name = "Q", indices = c(1, 2, 3), values = c(1.1, 2.2, 3.3))
   expect_equal(method_called_with[["set_value_at_indices"]], expected)
+})
+
+test_that("/set_value_at_indices, given string", {
+  fake_rook <- fiery::fake_request("/set_value_at_indices/Q",
+    content = "foobar",
+    method = "post",
+    headers = list("Content_Type" = "application/json")
+  )
+  req <- reqres::Request$new(fake_rook)
+  res <- req$respond()
+  route$dispatch(req)
+  expect_equal(res$status, 400)
+  expected <- list(
+    title = "Error parsing the request body"
+  )
+  expect_equal(res$body, formatter(expected))
 })
 
 test_that("/get_grid_rank", {
