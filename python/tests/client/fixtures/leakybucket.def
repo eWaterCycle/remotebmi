@@ -1,0 +1,12 @@
+Bootstrap: docker
+From: python:3.14-slim
+
+%environment
+    export BMI_MODULE=leakybucket.leakybucket_bmi
+    export BMI_CLASS=LeakyBucketBmi
+
+%post
+    python3 -m pip install --no-cache-dir leakybucket remotebmi
+
+%runscript
+    exec run-bmi-server "$@"

@@ -1,5 +1,6 @@
 import logging
 import os
+import socket
 import subprocess
 import time
 from collections.abc import Iterable
@@ -18,8 +19,11 @@ class BmiClientApptainer(RemoteBmiClient):
         image: str,
         work_dir: str,
         input_dirs: Iterable[str] = (),
-        delay: int = 0,
+        delay: float = 0,
         capture_logs: bool = True,
+        # wait up to 10 minutes for container to start, some models can be slow to start up
+        startup_timeout: float = 600.0,
+        startup_poll_interval: float = 0.1,
     ):
         if isinstance(input_dirs, str):
             msg = (
@@ -69,13 +73,63 @@ class BmiClientApptainer(RemoteBmiClient):
             msg = (
                 f"apptainer container {image} prematurely exited with code {returncode}"
             )
+            logger.error(msg)
             raise DeadContainerError(
                 msg,
                 returncode,
                 self.logs(),
             )
         url = f"http://{host}:{port}"
+
+        self._wait_until_connectable(
+            host=host,
+            port=port,
+            url=url,
+            image=image,
+            startup_timeout=startup_timeout,
+            startup_poll_interval=startup_poll_interval,
+        )
+
         super().__init__(url)
+
+    def _wait_until_connectable(
+        self,
+        host: str,
+        port: int,
+        url: str,
+        image: str,
+        startup_timeout: float,
+        startup_poll_interval: float,
+    ) -> None:
+        deadline = time.monotonic() + startup_timeout
+        while time.monotonic() < deadline:
+            returncode = self.container.poll()
+            if returncode is not None:
+                msg = f"apptainer container {image} prematurely exited with code {returncode}"
+                raise DeadContainerError(
+                    msg,
+                    returncode,
+                    self.logs(),
+                )
+
+            try:
+                with socket.create_connection(
+                    (host, port), timeout=startup_poll_interval
+                ):
+                    return
+            except OSError:
+                time.sleep(startup_poll_interval)
+
+        self.container.terminate()
+        self.container.wait()
+        logs = self.logs()
+        msg = (
+            f"Timed out after {startup_timeout} seconds waiting for apptainer "
+            f"container {image} to accept connections on {url}"
+        )
+        if logs:
+            msg += f". Container logs: {logs}"
+        raise TimeoutError(msg)
 
     def __del__(self) -> None:
         if hasattr(self, "container"):
