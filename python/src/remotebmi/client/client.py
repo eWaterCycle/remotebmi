@@ -5,6 +5,9 @@ from numpy import ndarray
 
 from .utils import validate_url
 
+JSON = "application/json"
+OCTET_STREAM = "application/octet-stream"
+
 
 class RemoteBmiClient(Bmi):
     def __init__(
@@ -13,6 +16,7 @@ class RemoteBmiClient(Bmi):
         timeout: int = 60 * 60 * 24,
         max_keepalive_connections: int = 0,
         client: Client | None = None,
+        binary_values: bool = False,
     ):
         """RemoteBmiClient constructor
 
@@ -24,6 +28,11 @@ class RemoteBmiClient(Bmi):
                 connections" allow reusing of connections which is more efficient.
                 However, the R server implementation can break when they are used.
             client: An optional httpx.Client instance to use. Mainly used for testing.
+            binary_values: Transfer values of get_value and set_value as raw bytes
+                (application/octet-stream) instead of JSON. Faster for large arrays,
+                but costs an extra request to fetch the variable type.
+                get_value falls back to JSON if the server does not offer raw bytes,
+                set_value requires a server that accepts raw bytes.
 
         Raises:
             ValueError: If the base_url is invalid.
@@ -36,6 +45,7 @@ class RemoteBmiClient(Bmi):
             self.client = Client(base_url=base_url, timeout=timeout, limits=limits)
         else:
             self.client = client
+        self.binary_values = binary_values
 
     def __del__(self) -> None:
         if hasattr(self, "client"):
@@ -146,10 +156,30 @@ class RemoteBmiClient(Bmi):
         response.raise_for_status()
         return float(response.json())
 
-    def get_value(self, name: str, dest: ndarray) -> ndarray:
-        response = self.client.get(f"/get_value/{name}")
+    def _var_dtype(self, name: str) -> np.dtype:
+        """Little-endian dtype of variable as used in application/octet-stream bodies."""
+        response = self.client.get(f"/get_var_type/{name}")
         response.raise_for_status()
-        items = np.array(response.json())
+        raw_type = response.json()["type"]
+        # float and double as named in openapi spec, other names as numpy names them
+        dtype: np.dtype = np.dtype(
+            {"float": np.float32, "double": np.float64}.get(raw_type, raw_type)
+        )
+        return dtype.newbyteorder("<")
+
+    def get_value(self, name: str, dest: ndarray) -> ndarray:
+        headers = (
+            {"Accept": f"{OCTET_STREAM}, {JSON};q=0.5"} if self.binary_values else {}
+        )
+        response = self.client.get(f"/get_value/{name}", headers=headers)
+        response.raise_for_status()
+        if response.headers.get("content-type", "").startswith(OCTET_STREAM):
+            dtype = self._var_dtype(name)
+            items = np.frombuffer(response.content, dtype=dtype).astype(
+                dtype.newbyteorder("=")
+            )
+        else:
+            items = np.array(response.json())
         np.copyto(dest, items)
         return items
 
@@ -161,7 +191,14 @@ class RemoteBmiClient(Bmi):
         return items
 
     def set_value(self, name: str, src: ndarray) -> None:
-        response = self.client.post(f"/set_value/{name}", json=src.tolist())
+        if self.binary_values:
+            response = self.client.post(
+                f"/set_value/{name}",
+                content=np.asarray(src, dtype=self._var_dtype(name)).tobytes(),
+                headers={"Content-Type": OCTET_STREAM},
+            )
+        else:
+            response = self.client.post(f"/set_value/{name}", json=src.tolist())
         response.raise_for_status()
 
     def set_value_at_indices(self, name: str, inds: ndarray, src: ndarray) -> None:

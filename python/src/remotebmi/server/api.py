@@ -2,7 +2,8 @@ from typing import Literal
 
 import numpy as np
 from bmipy import Bmi
-from connexion import request
+from connexion import problem, request
+from connexion.lifecycle import ConnexionResponse
 
 from remotebmi.reserve import (
     reserve_grid_edge_nodes,
@@ -14,6 +15,9 @@ from remotebmi.reserve import (
     reserve_values,
     reserve_values_at_indices,
 )
+
+JSON = "application/json"
+OCTET_STREAM = "application/octet-stream"
 
 
 def model() -> Bmi:
@@ -83,9 +87,42 @@ def get_var_itemsize(name: str) -> int:
     return model().get_var_itemsize(name)
 
 
-def get_value(name: str) -> list[int | float]:
+def _accept_quality(accept: str, media_type: str) -> float:
+    """Quality the Accept header gives to media_type, the most specific range wins."""
+    main_type = media_type.partition("/")[0]
+    specificities = {media_type: 2, f"{main_type}/*": 1, "*/*": 0}
+    best_specificity, best_quality = -1, 0.0
+    for media_range in accept.split(","):
+        range_type, *params = (p.strip() for p in media_range.split(";"))
+        specificity = specificities.get(range_type.lower(), -1)
+        if specificity < 0 or specificity < best_specificity:
+            continue
+        quality = 1.0
+        for param in params:
+            key, _, value = param.partition("=")
+            if key.strip() == "q":
+                try:
+                    quality = float(value)
+                except ValueError:
+                    quality = 0.0
+        best_specificity, best_quality = specificity, quality
+    return best_quality
+
+
+def _prefers_octet_stream() -> bool:
+    accept = request.headers.get("accept")
+    if not accept:
+        return False
+    octet_quality = _accept_quality(accept, OCTET_STREAM)
+    return octet_quality > 0 and octet_quality > _accept_quality(accept, JSON)
+
+
+def get_value(name: str) -> bytes | tuple[list[int | float], int, dict[str, str]]:
     items = reserve_values(model(), name)
-    return model().get_value(name, items).tolist()  # type: ignore[no-any-return]
+    values = model().get_value(name, items)
+    if _prefers_octet_stream():
+        return values.astype(values.dtype.newbyteorder("<")).tobytes()
+    return values.tolist(), 200, {"Content-Type": JSON}
 
 
 def get_value_at_indices(name: str, indices: np.ndarray) -> list[int | float]:
@@ -95,9 +132,20 @@ def get_value_at_indices(name: str, indices: np.ndarray) -> list[int | float]:
     )
 
 
-def set_value(name: str, src: list) -> None:
-    items = np.array(src)
+def set_value(name: str, body: list | bytes) -> ConnexionResponse | None:  # type: ignore[no-any-unimported]
+    if not body:
+        # connexion passes an empty octet-stream body as empty dict
+        return problem(400, "Bad Request", "Request body must not be empty")
+    if isinstance(body, bytes):
+        dtype = np.dtype(model().get_var_type(name))
+        if len(body) % dtype.itemsize:
+            detail = f"Body length {len(body)} is not a multiple of item size {dtype.itemsize} of {dtype}"
+            return problem(400, "Bad Request", detail)
+        items = np.frombuffer(body, dtype=dtype.newbyteorder("<")).astype(dtype)
+    else:
+        items = np.array(body)
     model().set_value(name, items)
+    return None
 
 
 def set_value_at_indices(name: str, indices: list, values: list) -> None:

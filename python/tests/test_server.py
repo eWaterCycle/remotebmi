@@ -11,7 +11,7 @@ from remotebmi.reserve import (
 )
 from remotebmi.server import make_app
 
-from .fake_models import Rect3DGridModel
+from .fake_models import Float32Model, Int32Model, Rect3DGridModel
 
 
 @pytest.fixture
@@ -98,6 +98,85 @@ def test_get_grid_z(fake_client):
     expected = np.array([2.1, 2.2])
     assert_array_equal(result, expected)
     assert_array_equal(out, expected)
+
+
+@pytest.fixture(params=[Float32Model, Int32Model])
+def dtype_model(request):
+    return request.param()
+
+
+@pytest.fixture
+def dtype_httpclient(dtype_model):
+    with make_app(dtype_model).test_client() as httpclient:
+        yield httpclient
+
+
+@pytest.mark.parametrize("binary_values", [False, True], ids=["json", "binary"])
+def test_get_value(dtype_model, dtype_httpclient, binary_values):
+    client = RemoteBmiClient(
+        base_url="http://testserver",
+        client=dtype_httpclient,
+        binary_values=binary_values,
+    )
+    dest = np.empty(3, dtype=dtype_model.dtype)
+
+    client.get_value("somevar", dest)
+
+    assert_array_equal(dest, dtype_model.value)
+
+
+@pytest.mark.parametrize("binary_values", [False, True], ids=["json", "binary"])
+def test_set_value(dtype_model, dtype_httpclient, binary_values):
+    client = RemoteBmiClient(
+        base_url="http://testserver",
+        client=dtype_httpclient,
+        binary_values=binary_values,
+    )
+    src = np.array([4, 5, 6], dtype=np.float64)
+
+    client.set_value("somevar", src)
+
+    assert_array_equal(dtype_model.value, src)
+    assert dtype_model.value.dtype == dtype_model.dtype
+
+
+@pytest.mark.parametrize(
+    ("accept", "expected"),
+    [
+        (None, "application/json"),
+        ("*/*", "application/json"),
+        ("application/json", "application/json"),
+        ("application/octet-stream", "application/octet-stream"),
+        (
+            "application/octet-stream, application/json;q=0.5",
+            "application/octet-stream",
+        ),
+        ("application/json, application/octet-stream;q=0.5", "application/json"),
+        ("application/octet-stream;q=0", "application/json"),
+    ],
+)
+def test_get_value_content_negotiation(accept, expected):
+    model = Float32Model()
+    headers = {} if accept is None else {"Accept": accept}
+    with make_app(model).test_client() as httpclient:
+        response = httpclient.get("/get_value/somevar", headers=headers)
+
+    assert response.status_code == 200
+    assert response.headers["content-type"] == expected
+    if expected == "application/octet-stream":
+        assert response.content == model.value.astype("<f4").tobytes()
+
+
+@pytest.mark.parametrize("body", [b"", b"12345"], ids=["empty", "partial item"])
+def test_set_value_octet_stream_invalid_length(body):
+    with make_app(Float32Model()).test_client() as httpclient:
+        response = httpclient.post(
+            "/set_value/somevar",
+            content=body,
+            headers={"Content-Type": "application/octet-stream"},
+        )
+
+    assert response.status_code == 400
 
 
 # TODO test all BMI functions

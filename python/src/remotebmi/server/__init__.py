@@ -3,6 +3,7 @@
 # mypy: disable-error-code="import-untyped,no-any-unimported"
 
 import contextlib
+import logging
 from collections.abc import AsyncIterator
 from os import environ
 from pathlib import Path
@@ -16,6 +17,24 @@ from connexion.options import SwaggerUIOptions
 from connexion.resolver import RelativeResolver
 
 from remotebmi.server.build import from_env
+
+
+class _MultipleContentTypesFilter(logging.Filter):
+    """Drop connexion warning logged on each request to set_value.
+
+    The warning is about the operation accepting JSON and octet-stream,
+    but connexion does use the content type of the request.
+    """
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        return not record.getMessage().startswith(
+            "this operation accepts multiple content types"
+        )
+
+
+logging.getLogger("connexion.operations.openapi3").addFilter(
+    _MultipleContentTypesFilter()
+)
 
 
 def handle_model_error(request: ConnexionRequest, exc: Exception) -> ConnexionResponse:  # noqa: ARG001

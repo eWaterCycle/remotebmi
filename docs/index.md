@@ -33,6 +33,13 @@ model.update()
 model.get_value('var_name')
 ```
 
+By default the values of `get_value` and `set_value` are transferred as JSON.
+For large arrays it is faster to transfer them as raw bytes (`application/octet-stream`).
+
+```python
+model = RemoteBmiClient('http://localhost:50051', binary_values=True)
+```
+
 A client can also start a [Apptainer](https://apptainer.org) container containing the model and the server.
 
 ```python
