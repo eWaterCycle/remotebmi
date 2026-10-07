@@ -6,6 +6,10 @@ info:
     OpenAPI specification for the Basic Modeling Interface (BMI).
     All functions are described on the
     [BMI homepage](https://bmi.readthedocs.io/).
+    A server can optionally support the zstd content coding,
+    it then sends an `Accept-Encoding: zstd` response header,
+    compresses responses when the `Accept-Encoding` request header
+    accepts zstd and accepts requests with `Content-Encoding: zstd`.
   version: "2.0"
   license:
     name: Apache 2.0

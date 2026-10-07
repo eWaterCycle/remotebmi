@@ -3,6 +3,7 @@
 import numpy as np
 import pytest
 from numpy.testing import assert_array_equal
+from starlette.testclient import TestClient
 
 from remotebmi import RemoteBmiClient
 from remotebmi.reserve import (
@@ -10,18 +11,24 @@ from remotebmi.reserve import (
     reserve_grid_shape,
 )
 from remotebmi.server import make_app
+from remotebmi.server.lean import make_lean_app
 
 from .fake_models import Float32Model, Int32Model, Rect3DGridModel
 
 
+@pytest.fixture(params=[make_app, make_lean_app], ids=["connexion", "lean"])
+def app_factory(request):
+    return request.param
+
+
 @pytest.fixture
-def fake_app():
-    return make_app(Rect3DGridModel())
+def fake_app(app_factory):
+    return app_factory(Rect3DGridModel())
 
 
 @pytest.fixture
 def fake_client(fake_app):
-    with fake_app.test_client() as httpclient:
+    with TestClient(fake_app) as httpclient:
         yield RemoteBmiClient(base_url="http://testserver", client=httpclient)
 
 
@@ -106,8 +113,8 @@ def dtype_model(request):
 
 
 @pytest.fixture
-def dtype_httpclient(dtype_model):
-    with make_app(dtype_model).test_client() as httpclient:
+def dtype_httpclient(dtype_model, app_factory):
+    with TestClient(app_factory(dtype_model)) as httpclient:
         yield httpclient
 
 
@@ -155,10 +162,10 @@ def test_set_value(dtype_model, dtype_httpclient, binary_values):
         ("application/octet-stream;q=0", "application/json"),
     ],
 )
-def test_get_value_content_negotiation(accept, expected):
+def test_get_value_content_negotiation(accept, expected, app_factory):
     model = Float32Model()
     headers = {} if accept is None else {"Accept": accept}
-    with make_app(model).test_client() as httpclient:
+    with TestClient(app_factory(model)) as httpclient:
         response = httpclient.get("/get_value/somevar", headers=headers)
 
     assert response.status_code == 200
@@ -168,8 +175,8 @@ def test_get_value_content_negotiation(accept, expected):
 
 
 @pytest.mark.parametrize("body", [b"", b"12345"], ids=["empty", "partial item"])
-def test_set_value_octet_stream_invalid_length(body):
-    with make_app(Float32Model()).test_client() as httpclient:
+def test_set_value_octet_stream_invalid_length(body, app_factory):
+    with TestClient(app_factory(Float32Model())) as httpclient:
         response = httpclient.post(
             "/set_value/somevar",
             content=body,
@@ -184,9 +191,9 @@ class UpdateUntilModel(Float32Model):
         self.until = time
 
 
-def test_update_until():
+def test_update_until(app_factory):
     model = UpdateUntilModel()
-    with make_app(model).test_client() as httpclient:
+    with TestClient(app_factory(model)) as httpclient:
         client = RemoteBmiClient(base_url="http://testserver", client=httpclient)
 
         client.update_until(42.5)
@@ -213,8 +220,8 @@ def test_set_value_at_indices(dtype_model, dtype_httpclient):
     assert_array_equal(dtype_model.value, expected)
 
 
-def test_initialize_status():
-    with make_app(Float32Model()).test_client() as httpclient:
+def test_initialize_status(app_factory):
+    with TestClient(app_factory(Float32Model())) as httpclient:
         response = httpclient.post("/initialize", json={"config_file": "test.cfg"})
 
     assert response.status_code == 201

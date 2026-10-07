@@ -1,0 +1,52 @@
+name: Rust 🦀
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "rust/**"
+      - "python/src/**"
+      - "python/tests/**"
+      - .github/workflows/rust.yml
+  pull_request:
+    paths:
+      - "rust/**"
+      - "python/src/**"
+      - "python/tests/**"
+      - .github/workflows/rust.yml
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: lint and test Rust server and transport
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: "pip"
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+      - name: Check formatting
+        working-directory: rust
+        run: cargo fmt --check
+      - name: Run clippy
+        working-directory: rust
+        run: cargo clippy --release -- -D warnings
+      - name: Run Rust tests
+        working-directory: rust
+        run: cargo test --release
+      - name: Install remotebmi and remotebmi-rs
+        run: pip install -e ./python[dev] ./rust
+      - name: Run Python tests, including Rust server and transport
+        working-directory: python
+        run: pytest

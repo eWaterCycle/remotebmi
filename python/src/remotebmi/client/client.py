@@ -3,10 +3,9 @@ from bmipy import Bmi
 from httpx import Client, Limits
 from numpy import ndarray
 
-from .utils import validate_url
+from remotebmi._http import JSON, OCTET_STREAM, wire_dtype
 
-JSON = "application/json"
-OCTET_STREAM = "application/octet-stream"
+from .utils import validate_url
 
 
 class RemoteBmiClient(Bmi):
@@ -160,13 +159,7 @@ class RemoteBmiClient(Bmi):
         """Little-endian dtype of variable as used in application/octet-stream bodies."""
         response = self.client.get(f"/get_var_type/{name}")
         response.raise_for_status()
-        raw_type = response.json()["type"]
-        # float and double as named in openapi spec, other names as numpy names them
-        dtype = np.dtype(
-            {"float": np.float32, "double": np.float64}.get(raw_type, raw_type)
-        )
-        little_endian: np.dtype = dtype.newbyteorder("<")
-        return little_endian
+        return wire_dtype(response.json()["type"])
 
     def get_value(self, name: str, dest: ndarray) -> ndarray:
         headers = (

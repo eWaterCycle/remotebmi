@@ -435,3 +435,55 @@ class WithItemSizeZeroAndVarTypeFloat32Model(Float32Model):
 class WithItemSizeZeroAndUnknownVarType(WithItemSizeZeroAndVarTypeFloat32Model):
     def get_var_type(self, name):
         return "real"
+
+
+class FullModel(Float32Model):
+    """Model where (nearly) every method succeeds."""
+
+    def initialize(self, filename):
+        self.config_file = filename
+
+    def update(self):
+        self.time = self.get_current_time() + 1
+
+    def update_until(self, time):
+        self.time = time
+
+    def finalize(self):
+        pass
+
+    def get_component_name(self):
+        return "full"
+
+    def get_input_var_names(self):
+        return ("somevar",)
+
+    def get_output_var_names(self):
+        return ("somevar", "othervar")
+
+    def get_input_item_count(self):
+        return 1
+
+    def get_output_item_count(self):
+        return 2
+
+    def get_var_units(self, name):
+        return "m"
+
+    def get_var_location(self, name):
+        return "node"
+
+    def get_current_time(self):
+        return getattr(self, "time", 0.0)
+
+    def get_start_time(self):
+        return 0.0
+
+    def get_end_time(self):
+        return 10.0
+
+    def get_time_step(self):
+        return 1.0
+
+    def get_time_units(self):
+        return "d"
