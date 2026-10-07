@@ -25,16 +25,17 @@ def model() -> Bmi:
     return request.state.model  # type: ignore[no-any-return]
 
 
-def initialize(body: dict[Literal["config_file"], str]) -> None:
+def initialize(body: dict[Literal["config_file"], str]) -> tuple[None, int]:
     model().initialize(body["config_file"])
+    return None, 201
 
 
 def update() -> None:
     model().update()
 
 
-def update_until(until: float) -> None:
-    model().update_until(until)
+def update_until(body: float) -> None:
+    model().update_until(body)
 
 
 def finalize() -> None:
@@ -125,11 +126,10 @@ def get_value(name: str) -> bytes | tuple[list[int | float], int, dict[str, str]
     return values.tolist(), 200, {"Content-Type": JSON}
 
 
-def get_value_at_indices(name: str, indices: np.ndarray) -> list[int | float]:
+def get_value_at_indices(name: str, body: list[int]) -> list[int | float]:
+    indices = np.array(body, dtype=np.int64)
     items = reserve_values_at_indices(model(), name, indices)
-    return (  # type: ignore[no-any-return]
-        model().get_value_at_indices(name, np.array(indices, dtype=int), items).tolist()
-    )
+    return model().get_value_at_indices(name, items, indices).tolist()  # type: ignore[no-any-return]
 
 
 def set_value(name: str, body: list | bytes) -> ConnexionResponse | None:  # type: ignore[no-any-unimported]
@@ -148,9 +148,9 @@ def set_value(name: str, body: list | bytes) -> ConnexionResponse | None:  # typ
     return None
 
 
-def set_value_at_indices(name: str, indices: list, values: list) -> None:
-    items = np.array(values)
-    model().set_value_at_indices(name, np.array(indices, dtype=int), items)
+def set_value_at_indices(name: str, body: dict[str, list]) -> None:
+    indices = np.array(body["indices"], dtype=np.int64)
+    model().set_value_at_indices(name, indices, np.array(body["values"]))
 
 
 def get_grid_rank(grid: int) -> int:

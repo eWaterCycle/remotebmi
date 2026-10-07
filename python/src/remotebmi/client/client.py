@@ -60,7 +60,7 @@ class RemoteBmiClient(Bmi):
         response.raise_for_status()
 
     def update_until(self, until: float) -> None:
-        response = self.client.post("/update_until", json={"until": until})
+        response = self.client.post("/update_until", json=until)
         response.raise_for_status()
 
     def finalize(self) -> None:
@@ -162,10 +162,11 @@ class RemoteBmiClient(Bmi):
         response.raise_for_status()
         raw_type = response.json()["type"]
         # float and double as named in openapi spec, other names as numpy names them
-        dtype: np.dtype = np.dtype(
+        dtype = np.dtype(
             {"float": np.float32, "double": np.float64}.get(raw_type, raw_type)
         )
-        return dtype.newbyteorder("<")
+        little_endian: np.dtype = dtype.newbyteorder("<")
+        return little_endian
 
     def get_value(self, name: str, dest: ndarray) -> ndarray:
         headers = (

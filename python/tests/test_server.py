@@ -179,4 +179,45 @@ def test_set_value_octet_stream_invalid_length(body):
     assert response.status_code == 400
 
 
+class UpdateUntilModel(Float32Model):
+    def update_until(self, time):
+        self.until = time
+
+
+def test_update_until():
+    model = UpdateUntilModel()
+    with make_app(model).test_client() as httpclient:
+        client = RemoteBmiClient(base_url="http://testserver", client=httpclient)
+
+        client.update_until(42.5)
+
+    assert model.until == 42.5
+
+
+def test_get_value_at_indices(dtype_model, dtype_httpclient):
+    client = RemoteBmiClient(base_url="http://testserver", client=dtype_httpclient)
+    dest = np.empty(2, dtype=dtype_model.dtype)
+
+    client.get_value_at_indices("somevar", dest, np.array([0, 2]))
+
+    assert_array_equal(dest, dtype_model.value[[0, 2]])
+
+
+def test_set_value_at_indices(dtype_model, dtype_httpclient):
+    client = RemoteBmiClient(base_url="http://testserver", client=dtype_httpclient)
+    expected = dtype_model.value.copy()
+    expected[[0, 2]] = [7, 8]
+
+    client.set_value_at_indices("somevar", np.array([0, 2]), np.array([7.0, 8.0]))
+
+    assert_array_equal(dtype_model.value, expected)
+
+
+def test_initialize_status():
+    with make_app(Float32Model()).test_client() as httpclient:
+        response = httpclient.post("/initialize", json={"config_file": "test.cfg"})
+
+    assert response.status_code == 201
+
+
 # TODO test all BMI functions
