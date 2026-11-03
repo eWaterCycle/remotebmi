@@ -8,6 +8,17 @@ from remotebmi.nonfinite import decode_many
 from .utils import validate_url
 
 
+def _encode_values(src: ndarray) -> list[int | float | str]:
+    """Encode non-finite values using the IEEENumber string representation."""
+    values = src.tolist()
+    for index, value in enumerate(values):
+        if np.isnan(value):
+            values[index] = "NaN"
+        elif np.isinf(value):
+            values[index] = "Infinity" if value > 0 else "-Infinity"
+    return values  # type: ignore[no-any-return]
+
+
 class RemoteBmiClient(Bmi):
     def __init__(
         self,
@@ -164,13 +175,13 @@ class RemoteBmiClient(Bmi):
         return items
 
     def set_value(self, name: str, src: ndarray) -> None:
-        response = self.client.post(f"/set_value/{name}", json=src.tolist())
+        response = self.client.post(f"/set_value/{name}", json=_encode_values(src))
         response.raise_for_status()
 
     def set_value_at_indices(self, name: str, inds: ndarray, src: ndarray) -> None:
         response = self.client.post(
             f"/set_value_at_indices/{name}",
-            json={"indices": inds.tolist(), "values": src.tolist()},
+            json={"indices": inds.tolist(), "values": _encode_values(src)},
         )
         response.raise_for_status()
 

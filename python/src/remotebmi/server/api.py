@@ -97,14 +97,16 @@ def get_value_at_indices(name: str, indices: np.ndarray) -> list[int | float]:
     )
 
 
-def set_value(name: str, src: list) -> None:
-    items = np.array(src)
+def set_value(name: str, body: list) -> None:
+    items = np.array(body, dtype=model().get_var_type(name))
     model().set_value(name, items)
 
 
-def set_value_at_indices(name: str, indices: list, values: list) -> None:
-    items = np.array(values)
-    model().set_value_at_indices(name, np.array(indices, dtype=int), items)
+def set_value_at_indices(
+    name: str, body: dict[Literal["indices", "values"], list]
+) -> None:
+    items = np.array(body["values"], dtype=model().get_var_type(name))
+    model().set_value_at_indices(name, np.array(body["indices"], dtype=int), items)
 
 
 def get_grid_rank(grid: int) -> int:
