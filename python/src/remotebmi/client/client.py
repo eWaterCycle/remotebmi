@@ -3,20 +3,9 @@ from bmipy import Bmi
 from httpx import Client, Limits
 from numpy import ndarray
 
-from remotebmi.nonfinite import decode_many
+from remotebmi.nonfinite import decode_many, encode_many
 
 from .utils import validate_url
-
-
-def _encode_values(src: ndarray) -> list[int | float | str]:
-    """Encode non-finite values using the IEEENumber string representation."""
-    values = src.tolist()
-    for index, value in enumerate(values):
-        if np.isnan(value):
-            values[index] = "NaN"
-        elif np.isinf(value):
-            values[index] = "Infinity" if value > 0 else "-Infinity"
-    return values  # type: ignore[no-any-return]
 
 
 class RemoteBmiClient(Bmi):
@@ -162,26 +151,23 @@ class RemoteBmiClient(Bmi):
     def get_value(self, name: str, dest: ndarray) -> ndarray:
         response = self.client.get(f"/get_value/{name}")
         response.raise_for_status()
-        encoded_items = response.json()
-        items = decode_many(encoded_items)
-        np.copyto(dest, items)
-        return items
+        decode_many(response.json(), dest=dest)
+        return dest
 
     def get_value_at_indices(self, name: str, dest: ndarray, inds: ndarray) -> ndarray:
         response = self.client.post(f"/get_value_at_indices/{name}", json=inds.tolist())
         response.raise_for_status()
-        items = np.array(response.json(), dtype=dest.dtype)
-        np.copyto(dest, items)
-        return items
+        decode_many(response.json(), dest=dest)
+        return dest
 
     def set_value(self, name: str, src: ndarray) -> None:
-        response = self.client.post(f"/set_value/{name}", json=_encode_values(src))
+        response = self.client.post(f"/set_value/{name}", json=encode_many(src))
         response.raise_for_status()
 
     def set_value_at_indices(self, name: str, inds: ndarray, src: ndarray) -> None:
         response = self.client.post(
             f"/set_value_at_indices/{name}",
-            json={"indices": inds.tolist(), "values": _encode_values(src)},
+            json={"indices": inds.tolist(), "values": encode_many(src)},
         )
         response.raise_for_status()
 

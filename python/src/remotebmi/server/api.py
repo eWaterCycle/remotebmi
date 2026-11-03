@@ -4,7 +4,7 @@ import numpy as np
 from bmipy import Bmi
 from connexion import request
 
-from remotebmi.nonfinite import IEEENumber, encode_many
+from remotebmi.nonfinite import IEEENumber, decode_many, encode_many
 from remotebmi.reserve import (
     reserve_grid_edge_nodes,
     reserve_grid_face_,
@@ -90,33 +90,26 @@ def get_value(name: str) -> list[IEEENumber]:
     return encode_many(items)
 
 
-def get_value_at_indices(name: str, body: list[int]) -> list[int | float | str]:
+def get_value_at_indices(name: str, body: list[int]) -> list[IEEENumber]:
     indices = np.array(body, dtype=int)
     items = reserve_values_at_indices(model(), name, indices)
-    values = model().get_value_at_indices(name, items, indices)
-    result: list[int | float | str] = []
-    for value in values.tolist():
-        if np.isnan(value):
-            result.append("NaN")
-        elif np.isposinf(value):
-            result.append("Infinity")
-        elif np.isneginf(value):
-            result.append("-Infinity")
-        else:
-            result.append(value)
-    return result
+    model().get_value_at_indices(name, items, indices)
+    return encode_many(items)
 
 
 def set_value(name: str, body: list) -> None:
-    items = np.array(body, dtype=model().get_var_type(name))
+    items = reserve_values(model(), name)
+    decode_many(body, dest=items)
     model().set_value(name, items)
 
 
 def set_value_at_indices(
     name: str, body: dict[Literal["indices", "values"], list]
 ) -> None:
-    items = np.array(body["values"], dtype=model().get_var_type(name))
-    model().set_value_at_indices(name, np.array(body["indices"], dtype=int), items)
+    indices = np.array(body["indices"], dtype=int)
+    items = reserve_values_at_indices(model(), name, indices)
+    decode_many(body["values"], dest=items)
+    model().set_value_at_indices(name, indices, items)
 
 
 def get_grid_rank(grid: int) -> int:
