@@ -1106,9 +1106,9 @@ paths:
 components:
   schemas:
     IEEENumber:
-      nullable: true
       oneOf:
         - type: number
+          nullable: true
         - type: string
           description: Non-finite IEEE 754 floating-point values.
           enum:
