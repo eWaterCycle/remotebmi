@@ -53,7 +53,7 @@ mock_model <- list(
   },
   get_value = function(name) {
     method_called_with[["get_value"]] <<- list(name = name)
-    return(4.2)
+    return(c(4.2, Inf, -Inf, NaN))
   },
   get_value_at_indices = function(name, indices) {
     args <- list(name = name, indices = indices)
@@ -372,7 +372,7 @@ test_that("/get_value", {
   res <- req$respond()
   route$dispatch(req)
   expect_equal(res$status, 200)
-  expect_equal(res$body, formatter(list(4.2)))
+  expect_equal(res$body, formatter(list(4.2, "Infinity", "-Infinity", "NaN")))
   expect_equal(method_called_with[["get_value"]], list(name = "Q"))
 })
 
