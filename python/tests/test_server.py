@@ -2,7 +2,7 @@
 
 import numpy as np
 import pytest
-from connexion import AsyncApp
+import simplejson
 from numpy.testing import assert_array_equal
 
 from remotebmi import RemoteBmiClient
@@ -12,7 +12,7 @@ from remotebmi.reserve import (
 )
 from remotebmi.server import make_app
 
-from .fake_models import NonFiniteModel, Rect3DGridModel
+from .fake_models import NonFiniteFloat32Model, NonFiniteNoneModel, Rect3DGridModel
 
 
 @pytest.fixture
@@ -101,24 +101,35 @@ def test_get_grid_z(fake_client):
     assert_array_equal(out, expected)
 
 
-class TestNonFiniteModel:
+class TestNonFiniteFloat32Model:
     @pytest.fixture
-    def fake_app(self) -> AsyncApp:
-        return make_app(NonFiniteModel())
+    def fake_app(self):
+        return make_app(NonFiniteFloat32Model())
 
-    @pytest.fixture
-    def fake_client(self, fake_app: AsyncApp):
+    def test_get_value(self, fake_app):
         with fake_app.test_client() as httpclient:
-            yield RemoteBmiClient(base_url="http://testserver", client=httpclient)
+            response = httpclient.get("/get_value/some_var")
 
-    def test_get_value(self, fake_client: RemoteBmiClient):
-        out = np.empty(5, dtype=np.float32)
-        # Client got '[NaN, Infinity, -Infinity, 4.199999809265137, NaN]' which is not according to spec
-        # it should be '["NaN", "Infinity", "-Infinity", 4.199999809265137, "null"]'
-        result = fake_client.get_value("non_finite_var", out)
-        expected = np.array([np.nan, np.inf, -np.inf, 4.2, np.nan], dtype=np.float32)
-        assert_array_equal(result, expected)
-        assert_array_equal(out, expected)
+        # json.loads does not follow
+        # the JSON standard without supporting for NaN and Infinity
+        # use simplejson instead
+        values = simplejson.loads(response.content, allow_nan=False)
+
+        assert values == ["NaN", "Infinity", "-Infinity", 42.0]
+
+
+class TestNonFiniteNoneModel:
+    @pytest.fixture
+    def fake_app(self):
+        return make_app(NonFiniteNoneModel())
+
+    def test_get_value(self, fake_app):
+        with fake_app.test_client() as httpclient:
+            response = httpclient.get("/get_value/some_var")
+
+        values = simplejson.loads(response.content, allow_nan=False)
+
+        assert values == [42.0, None]
 
 
 # TODO test all BMI functions
