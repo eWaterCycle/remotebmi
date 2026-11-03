@@ -4,6 +4,7 @@ import numpy as np
 from bmipy import Bmi
 from connexion import request
 
+from remotebmi.nonfinite import IEEENumber, encode_many
 from remotebmi.reserve import (
     reserve_grid_edge_nodes,
     reserve_grid_face_,
@@ -83,9 +84,10 @@ def get_var_itemsize(name: str) -> int:
     return model().get_var_itemsize(name)
 
 
-def get_value(name: str) -> list[int | float]:
+def get_value(name: str) -> list[IEEENumber]:
     items = reserve_values(model(), name)
-    return model().get_value(name, items).tolist()  # type: ignore[no-any-return]
+    model().get_value(name, items)
+    return encode_many(items)
 
 
 def get_value_at_indices(name: str, indices: np.ndarray) -> list[int | float]:

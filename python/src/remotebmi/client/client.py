@@ -3,6 +3,8 @@ from bmipy import Bmi
 from httpx import Client, Limits
 from numpy import ndarray
 
+from remotebmi.nonfinite import decode_many
+
 from .utils import validate_url
 
 
@@ -149,7 +151,8 @@ class RemoteBmiClient(Bmi):
     def get_value(self, name: str, dest: ndarray) -> ndarray:
         response = self.client.get(f"/get_value/{name}")
         response.raise_for_status()
-        items = np.array(response.json())
+        encoded_items = response.json()
+        items = decode_many(encoded_items)
         np.copyto(dest, items)
         return items
 
