@@ -90,11 +90,21 @@ def get_value(name: str) -> list[IEEENumber]:
     return encode_many(items)
 
 
-def get_value_at_indices(name: str, indices: np.ndarray) -> list[int | float]:
+def get_value_at_indices(name: str, body: list[int]) -> list[int | float | str]:
+    indices = np.array(body, dtype=int)
     items = reserve_values_at_indices(model(), name, indices)
-    return (  # type: ignore[no-any-return]
-        model().get_value_at_indices(name, np.array(indices, dtype=int), items).tolist()
-    )
+    values = model().get_value_at_indices(name, items, indices)
+    result: list[int | float | str] = []
+    for value in values.tolist():
+        if np.isnan(value):
+            result.append("NaN")
+        elif np.isposinf(value):
+            result.append("Infinity")
+        elif np.isneginf(value):
+            result.append("-Infinity")
+        else:
+            result.append(value)
+    return result
 
 
 def set_value(name: str, body: list) -> None:

@@ -170,7 +170,7 @@ class RemoteBmiClient(Bmi):
     def get_value_at_indices(self, name: str, dest: ndarray, inds: ndarray) -> ndarray:
         response = self.client.post(f"/get_value_at_indices/{name}", json=inds.tolist())
         response.raise_for_status()
-        items = np.array(response.json())
+        items = np.array(response.json(), dtype=dest.dtype)
         np.copyto(dest, items)
         return items
 
