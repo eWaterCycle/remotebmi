@@ -16,13 +16,13 @@ jobs:
       run:
         working-directory: julia
     steps:
-    - uses: actions/checkout@v4
-    - uses: julia-actions/setup-julia@v2
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+    - uses: julia-actions/setup-julia@da908477b5db94c10ffce8cfea9f2b3b9d5db687 # v3.0.3
       with:
         version: "1"
         project: '.'
     - name: Use Julia cache
-      uses: julia-actions/cache@v2
+      uses: julia-actions/cache@9353db09a0f2bbbdec6f41791918c75d37391b36 # v3.5.0
     - name: Instantiate environment with development version of the package
       run: |
         julia --project=docs -e '
@@ -33,7 +33,7 @@ jobs:
       run: julia --project=docs docs/make.jl
     - name: Upload build as artifact
       id: deployment
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
       with:
         name: julia-docs
         path: julia/docs/build/
@@ -44,9 +44,9 @@ jobs:
         working-directory: python
     steps:
     - name: Checkout repo
-      uses: actions/checkout@v4
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
     - name: Setup Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
       with:
         python-version: "3.13"
         cache: "pip"
@@ -56,7 +56,7 @@ jobs:
       run: make -C docs/ html
     - name: Upload build as artifact
       id: deployment
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
       with:
         name: python-docs
         path: python/docs/_build/html
@@ -64,9 +64,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repo
-      uses: actions/checkout@v4
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
     - name: Setup Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
       with:
         python-version: "3.13"
         cache: "pip"
@@ -76,7 +76,7 @@ jobs:
       run: mkdocs build -d html
     - name: Upload build as artifact
       id: deployment
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
       with:
         name: main-docs
         path: html
@@ -88,23 +88,23 @@ jobs:
       - build-main
     steps:
     - name: Download Julia build
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
       with:
         name: julia-docs
         path: julia
     - name: Download Python build
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
       with:
         name: python-docs
         path: python
     - name: Download main build
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
       with:
         name: main-docs
         path: .
     - name: Reupload merged artifacts
       id: deployment
-      uses: actions/upload-pages-artifact@v3
+      uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
       with:
         path: .
   publish-docs:
@@ -113,4 +113,4 @@ jobs:
     steps:
     - name: Deploy to GitHub Pages
       id: deployment
-      uses: actions/deploy-pages@v4
+      uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
