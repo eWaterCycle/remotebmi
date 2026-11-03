@@ -435,3 +435,10 @@ class WithItemSizeZeroAndVarTypeFloat32Model(Float32Model):
 class WithItemSizeZeroAndUnknownVarType(WithItemSizeZeroAndVarTypeFloat32Model):
     def get_var_type(self, name):
         return "real"
+
+
+class NonFiniteModel(DTypeModel):
+    def __init__(self):
+        super().__init__()
+        self.dtype = np.dtype("float32")
+        self.value = np.array((np.nan, np.inf, -np.inf, 4.2, None), dtype=self.dtype)
