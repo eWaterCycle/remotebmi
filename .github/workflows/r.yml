@@ -47,6 +47,7 @@ jobs:
         with:
           fail_ci_if_error: ${{ github.event_name != 'pull_request' && true || false }}
           files: ./R/cobertura.xml
+          flags: r
           plugins: noop
           disable_search: true
           use_oidc: true

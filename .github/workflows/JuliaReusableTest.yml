@@ -56,4 +56,5 @@ jobs:
         if: ${{ inputs.run_codecov }}
         with:
           files: lcov.info
+          flags: julia
           use_oidc: true
