@@ -1105,6 +1105,16 @@ paths:
         - Unstructured
 components:
   schemas:
+    IEEENumber:
+      oneOf:
+        - type: number
+          nullable: true
+        - type: string
+          description: Non-finite IEEE 754 floating-point values.
+          enum:
+            - 'NaN'
+            - 'Infinity'
+            - '-Infinity'
     GetVarLocationResponseLocation:
       type: object
       properties:
@@ -1187,12 +1197,12 @@ components:
     GetValueAtIndicesResponse:
       type: array
       items:
-        type: number
+        $ref: '#/components/schemas/IEEENumber'
       minItems: 1
     GetValueResponse:
       type: array
       items:
-        type: number
+        $ref: '#/components/schemas/IEEENumber'
       minItems: 1
     GetVarGridResponse:
       type: integer
@@ -1258,7 +1268,7 @@ components:
         values:
           type: array
           items:
-            type: number
+            $ref: '#/components/schemas/IEEENumber'
           minItems: 1
       required:
         - indices
@@ -1267,7 +1277,7 @@ components:
     SetValueRequest:
       type: array
       items:
-        type: number
+        $ref: '#/components/schemas/IEEENumber'
       minItems: 1
     Grid:
       type: integer
