@@ -9,6 +9,7 @@ on:
       - "julia/test/**"
       - "julia/*.toml"
       - .github/workflows/julia-test-on-prs.yml
+      - .github/workflows/JuliaReusableTest.yml
     types: [opened, synchronize, reopened]
 
 concurrency:

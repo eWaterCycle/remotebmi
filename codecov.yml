@@ -1,6 +1,21 @@
 comment:
   layout: "header, diff, flags, components"  # show component info in the PR comment
 
+# Keep coverage for languages whose path-filtered workflows did not run.
+flags:
+  python:
+    paths:
+      - python/**
+    carryforward: true
+  julia:
+    paths:
+      - julia/**
+    carryforward: true
+  r:
+    paths:
+      - R/**
+    carryforward: true
+
 component_management:
   default_rules:  # default rules that will be inherited by all components
     statuses:
