@@ -7,7 +7,6 @@ server/openapi.yaml. Finite values and None are preserved.
 from math import isnan
 from typing import Literal
 
-import numpy as np
 from numpy import ndarray
 
 NonFiniteSymbols = Literal["NaN", "Infinity", "-Infinity"]
@@ -69,14 +68,15 @@ def decode(value: IEEENumber) -> RawNumber:
     return value
 
 
-def decode_many(values: list[IEEENumber]) -> ndarray:
-    """Decode values from a server response for the client.
+def decode_many(
+    values: list[IEEENumber],
+    *,
+    dest: ndarray,
+) -> None:
+    """Decode values and assign them into dest.
 
     Args:
         values: Values encoded according to the IEEENumber schema.
-
-    Returns:
-        A one-dimensional array of decoded values, in input order, with an
-        inferred dtype. Values containing None use an object dtype.
+        dest: One-dimensional destination array, modified in place.
     """
-    return np.array([decode(v) for v in values])
+    dest[:] = [decode(v) for v in values]
