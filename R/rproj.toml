@@ -1,0 +1,37 @@
+[project]
+name = "remotebmi"
+version = "0.0.0.9000"
+type = "package"
+title = "BMI over http"
+description = "Runs a BMI model as a http json web service."
+license = "Apache License (>= 2)"
+
+[[project.authors]]
+name = "Stefan Verhoeven"
+email = "s.verhoeven@esciencecenter.nl"
+roles = [
+    "aut",
+    "cre",
+]
+orcid = "https://orcid.org/0000-0002-5821-2060"
+
+[project.urls]
+homepage = "https://github.com/eWaterCycle/remotebmi"
+
+[dependencies]
+R = ">= 4.1"
+fiery = "*"
+reqres = "*"
+routr = "*"
+bmi = { git = "https://github.com/eWaterCycle/bmi-r.git", ref = "eWaterCycle/bmi-r" }
+
+[dependency-groups.dev]
+testthat = ">= 3.0.0"
+
+[config.testthat]
+edition = 3
+
+[description]
+Encoding = "UTF-8"
+Roxygen = "list(markdown = TRUE)"
+RoxygenNote = "7.3.2"
