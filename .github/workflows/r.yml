@@ -17,24 +17,43 @@ concurrency:
 permissions:
   id-token: write # This is required for requesting the JWT
 
+defaults:
+  run:
+    working-directory: R
+
 jobs:
   r:
     runs-on: ubuntu-latest
+    container: ghcr.io/r-lib/rig/ubuntu-26.04-release:latest
+    env:
+      RIG_CACHE_DIR: /tmp/rig-cache
+      RIG_DOWNLOAD_DIR: /tmp/rig-downloads
     steps:
+      - name: Install workflow dependencies
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends git curl gpg
+        working-directory: /tmp
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: Setup R
-        uses: r-lib/actions/setup-r@f9a764fea8d5c63df6ef9a5c7795bf7deb5d7e05 # v2.14.0
-      - uses: r-lib/actions/setup-r-dependencies@f9a764fea8d5c63df6ef9a5c7795bf7deb5d7e05 # v2.14.0
+      - name: Cache rig downloads and installed packages
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
-          extra-packages: any::rcmdcheck, any::covr, any::xml2
-          needs: check, coverage
-          working-directory: R
+          path: |
+            /tmp/rig-cache
+            /tmp/rig-downloads
+            R/.rvenv/lib
+          key: rig-ubuntu-26.04-${{ runner.arch }}-v1-${{ hashFiles('R/rproj.toml', 'R/rproj.lock') }}
+          restore-keys: |
+            rig-ubuntu-26.04-${{ runner.arch }}-v1-
+      - name: Sync R project
+        run: |
+          rig proj sync --locked
+          echo "$PWD/.rvenv/bin" >> "$GITHUB_PATH"
       - uses: r-lib/actions/check-r-package@f9a764fea8d5c63df6ef9a5c7795bf7deb5d7e05 # v2.14.0
         with:
           working-directory: R
       - name: Test coverage
-        working-directory: R
         run: |
           cov <- covr::package_coverage(
             quiet = FALSE,
@@ -42,7 +61,7 @@ jobs:
             install_path = file.path(normalizePath(Sys.getenv("RUNNER_TEMP"), winslash = "/"), "package")
           )
           covr::to_cobertura(cov)
-        shell: Rscript {0}
+        shell: rig run --rscript -f {0}
       - uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
         with:
           fail_ci_if_error: ${{ github.event_name != 'pull_request' && true || false }}

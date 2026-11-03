@@ -27,6 +27,9 @@ bmi = { git = "https://github.com/eWaterCycle/bmi-r.git", ref = "eWaterCycle/bmi
 
 [dependency-groups.dev]
 testthat = ">= 3.0.0"
+rcmdcheck = "*"
+covr = "*"
+xml2 = "*"
 
 [config.testthat]
 edition = 3
