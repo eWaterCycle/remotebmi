@@ -2,3 +2,8 @@
 ^renv\.lock$
 ^LICENSE\.md$
 ^Dockerfile
+^\.rvenv$
+^\.rvenvlib$
+^\.Renviron$
+^rproj\.toml$
+^rproj\.lock$
