@@ -9,7 +9,9 @@ Setup environment
 ```shell
 # Install rig see https://rig.r-lib.org/install.html for other options
 curl -LsSf https://r-lib.github.io/rig/install.sh | sh
+# Install latest R release
 rig system user-mode
+rig add release
 # Install usethis as tool
 rig library add tools
 rig pkg install -l tools usethis
