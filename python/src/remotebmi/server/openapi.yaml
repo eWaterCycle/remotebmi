@@ -1105,6 +1105,37 @@ paths:
         - Unstructured
 components:
   schemas:
+    IEEENumber:
+      example: 1.0
+      oneOf:
+        - type: number
+        - type: string
+          description: Non-finite IEEE 754 floating-point values.
+          enum:
+            - 'NaN'
+            - 'Infinity'
+            - '-Infinity'
+    IEEEDouble:
+      example: 1.0
+      oneOf:
+        - type: number
+          format: double
+        - type: string
+          description: Non-finite IEEE 754 double precision floating-point values.
+          enum:
+            - 'NaN'
+            - 'Infinity'
+            - '-Infinity'
+    IEEEDoubleNoNaN:
+      example: 1.0
+      oneOf:
+        - type: number
+          format: double
+        - type: string
+          description: Non-finite IEEE 754 double precision floating-point values, excluding NaN.
+          enum:
+            - 'Infinity'
+            - '-Infinity'
     GetVarLocationResponseLocation:
       type: object
       properties:
@@ -1142,8 +1173,7 @@ components:
     Doubles:
       type: array
       items:
-        type: number
-        format: double
+        $ref: '#/components/schemas/IEEEDouble'
       minItems: 1
     GetGridRankResponse:
       type: integer
@@ -1168,13 +1198,9 @@ components:
         - type
       additionalProperties: false
     GetTimeResponse:
-      type: number
-      format: double
-      example: 0.0
+      $ref: '#/components/schemas/IEEEDoubleNoNaN'
     GetTimeStepResponse:
-      type: number
-      format: double
-      example: 1.0
+      $ref: '#/components/schemas/IEEEDoubleNoNaN'
     GetTimeUnitsResponse:
       type: object
       properties:
@@ -1187,12 +1213,12 @@ components:
     GetValueAtIndicesResponse:
       type: array
       items:
-        type: number
+        $ref: '#/components/schemas/IEEENumber'
       minItems: 1
     GetValueResponse:
       type: array
       items:
-        type: number
+        $ref: '#/components/schemas/IEEENumber'
       minItems: 1
     GetVarGridResponse:
       type: integer
@@ -1258,7 +1284,7 @@ components:
         values:
           type: array
           items:
-            type: number
+            $ref: '#/components/schemas/IEEENumber'
           minItems: 1
       required:
         - indices
@@ -1267,7 +1293,7 @@ components:
     SetValueRequest:
       type: array
       items:
-        type: number
+        $ref: '#/components/schemas/IEEENumber'
       minItems: 1
     Grid:
       type: integer
