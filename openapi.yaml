@@ -1106,13 +1106,34 @@ paths:
 components:
   schemas:
     IEEENumber:
+      example: 1.0
       oneOf:
         - type: number
-          nullable: true
         - type: string
           description: Non-finite IEEE 754 floating-point values.
           enum:
             - 'NaN'
+            - 'Infinity'
+            - '-Infinity'
+    IEEEDouble:
+      example: 1.0
+      oneOf:
+        - type: number
+          format: double
+        - type: string
+          description: Non-finite IEEE 754 double precision floating-point values.
+          enum:
+            - 'NaN'
+            - 'Infinity'
+            - '-Infinity'
+    IEEEDoubleNoNaN:
+      example: 1.0
+      oneOf:
+        - type: number
+          format: double
+        - type: string
+          description: Non-finite IEEE 754 double precision floating-point values, excluding NaN.
+          enum:
             - 'Infinity'
             - '-Infinity'
     GetVarLocationResponseLocation:
@@ -1152,8 +1173,7 @@ components:
     Doubles:
       type: array
       items:
-        type: number
-        format: double
+        $ref: '#/components/schemas/IEEEDouble'
       minItems: 1
     GetGridRankResponse:
       type: integer
@@ -1178,13 +1198,9 @@ components:
         - type
       additionalProperties: false
     GetTimeResponse:
-      type: number
-      format: double
-      example: 0.0
+      $ref: '#/components/schemas/IEEEDoubleNoNaN'
     GetTimeStepResponse:
-      type: number
-      format: double
-      example: 1.0
+      $ref: '#/components/schemas/IEEEDoubleNoNaN'
     GetTimeUnitsResponse:
       type: object
       properties:
