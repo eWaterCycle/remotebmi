@@ -4,6 +4,7 @@ import numpy as np
 from bmipy import Bmi
 from connexion import request
 
+from remotebmi.nonfinite import IEEENumber, decode_many, encode_many
 from remotebmi.reserve import (
     reserve_grid_edge_nodes,
     reserve_grid_face_,
@@ -83,26 +84,32 @@ def get_var_itemsize(name: str) -> int:
     return model().get_var_itemsize(name)
 
 
-def get_value(name: str) -> list[int | float]:
+def get_value(name: str) -> list[IEEENumber]:
     items = reserve_values(model(), name)
-    return model().get_value(name, items).tolist()  # type: ignore[no-any-return]
+    model().get_value(name, items)
+    return encode_many(items)
 
 
-def get_value_at_indices(name: str, indices: np.ndarray) -> list[int | float]:
+def get_value_at_indices(name: str, body: list[int]) -> list[IEEENumber]:
+    indices = np.array(body, dtype=int)
     items = reserve_values_at_indices(model(), name, indices)
-    return (  # type: ignore[no-any-return]
-        model().get_value_at_indices(name, np.array(indices, dtype=int), items).tolist()
-    )
+    model().get_value_at_indices(name, items, indices)
+    return encode_many(items)
 
 
-def set_value(name: str, src: list) -> None:
-    items = np.array(src)
+def set_value(name: str, body: list) -> None:
+    items = reserve_values(model(), name)
+    decode_many(body, dest=items)
     model().set_value(name, items)
 
 
-def set_value_at_indices(name: str, indices: list, values: list) -> None:
-    items = np.array(values)
-    model().set_value_at_indices(name, np.array(indices, dtype=int), items)
+def set_value_at_indices(
+    name: str, body: dict[Literal["indices", "values"], list]
+) -> None:
+    indices = np.array(body["indices"], dtype=int)
+    items = reserve_values_at_indices(model(), name, indices)
+    decode_many(body["values"], dest=items)
+    model().set_value_at_indices(name, indices, items)
 
 
 def get_grid_rank(grid: int) -> int:

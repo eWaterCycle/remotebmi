@@ -2,6 +2,7 @@
 
 import numpy as np
 import pytest
+import simplejson
 from numpy.testing import assert_array_equal
 
 from remotebmi import RemoteBmiClient
@@ -11,7 +12,11 @@ from remotebmi.reserve import (
 )
 from remotebmi.server import make_app
 
-from .fake_models import Rect3DGridModel
+from .fake_models import (
+    NonFiniteFloat32Model,
+    NonFiniteNoneModel,
+    Rect3DGridModel,
+)
 
 
 @pytest.fixture
@@ -100,4 +105,96 @@ def test_get_grid_z(fake_client):
     assert_array_equal(out, expected)
 
 
-# TODO test all BMI functions
+class TestNonFiniteFloat32Model:
+    @pytest.fixture
+    def model(self):
+        return NonFiniteFloat32Model()
+
+    @pytest.fixture
+    def fake_app(self, model):
+        return make_app(model)
+
+    def test_get_value(self, fake_app):
+        with fake_app.test_client() as httpclient:
+            response = httpclient.get("/get_value/some_var")
+
+        values = simplejson.loads(response.content, allow_nan=False)
+
+        assert values == ["NaN", "Infinity", "-Infinity", 42.0]
+
+    def test_get_value_at_indices(self, fake_app):
+        with fake_app.test_client() as httpclient:
+            response = httpclient.post(
+                "/get_value_at_indices/some_var", json=[2, 3, 1, 0]
+            )
+
+        values = simplejson.loads(response.content, allow_nan=False)
+
+        assert values == ["-Infinity", 42.0, "Infinity", "NaN"]
+
+    def test_set_value(self, fake_app, model):
+        model.value[:] = 0.0
+
+        with fake_app.test_client() as httpclient:
+            response = httpclient.post(
+                "/set_value/some_var", json=["NaN", "Infinity", "-Infinity", 42.0]
+            )
+
+        assert response.status_code == 204
+        assert_array_equal(model.value, [np.nan, np.inf, -np.inf, 42.0])
+
+    def test_set_value_at_indices(self, fake_app, model):
+        with fake_app.test_client() as httpclient:
+            response = httpclient.post(
+                "/set_value_at_indices/some_var",
+                json={
+                    "indices": [2, 0, 1, 3],
+                    "values": ["NaN", "Infinity", "-Infinity", 42.0],
+                },
+            )
+
+        assert response.status_code == 204
+        assert_array_equal(model.value, [np.inf, -np.inf, np.nan, 42.0])
+
+
+class TestNonFiniteNoneModel:
+    @pytest.fixture
+    def model(self):
+        return NonFiniteNoneModel()
+
+    @pytest.fixture
+    def fake_app(self, model):
+        return make_app(model)
+
+    def test_get_value(self, fake_app):
+        with fake_app.test_client() as httpclient:
+            response = httpclient.get("/get_value/some_var")
+
+        values = simplejson.loads(response.content, allow_nan=False)
+
+        assert values == [42.0, None]
+
+    def test_get_value_at_indices(self, fake_app):
+        with fake_app.test_client() as httpclient:
+            response = httpclient.post("/get_value_at_indices/some_var", json=[1, 0])
+
+        values = simplejson.loads(response.content, allow_nan=False)
+
+        assert values == [None, 42.0]
+
+    def test_set_value(self, fake_app, model):
+        with fake_app.test_client() as httpclient:
+            response = httpclient.post("/set_value/some_var", json=[None, 12.0])
+
+        assert response.status_code == 204
+        assert_array_equal(model.value, [None, 12.0])
+
+    def test_set_value_at_indices(self, fake_app, model):
+        with fake_app.test_client() as httpclient:
+            response = httpclient.post(
+                "/set_value_at_indices/some_var",
+                json={"indices": [1, 0], "values": [12.0, None]},
+            )
+
+        assert response.status_code == 204
+        assert_array_equal(model.value, [None, 12.0])

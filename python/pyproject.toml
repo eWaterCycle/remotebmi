@@ -46,6 +46,8 @@ dev = [
     "pytest-cov",
     "mypy",
     "types-docker",
+    "simplejson",
+    "types-simplejson",
 ]
 
 [project.scripts]
