@@ -5,14 +5,16 @@ on:
     branches: [main]
     paths:
       - "openapi.yaml"
-      - "python/remotebmi/**"
+      - "python/src/**"
+      - "python/benchmarks/**"
       - "python/tests/**"
       - "python/pyproject.toml"
       - .github/workflows/python.yml
   pull_request:
     paths:
       - "openapi.yaml"
-      - "python/remotebmi/**"
+      - "python/src/**"
+      - "python/benchmarks/**"
       - "python/tests/**"
       - "python/pyproject.toml"
       - .github/workflows/python.yml

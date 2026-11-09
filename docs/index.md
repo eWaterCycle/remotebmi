@@ -33,6 +33,13 @@ model.update()
 model.get_value('var_name')
 ```
 
+By default the values of `get_value` and `set_value` are transferred as JSON.
+For large arrays it is faster to transfer them as raw bytes (`application/octet-stream`).
+
+```python
+model = RemoteBmiClient('http://localhost:50051', binary_values=True)
+```
+
 A client can also start a [Apptainer](https://apptainer.org) container containing the model and the server.
 
 ```python
@@ -78,6 +85,53 @@ and the client can connect to it with the following code.
 > client.get_component_name()
 leakybucket
 ```
+
+### Low overhead client and server
+
+Each BMI call is a HTTP request.
+For models with short time steps or many small calls, the overhead of
+`RemoteBmiClient` (httpx) and `run-bmi-server` (connexion) can dominate.
+The lean client and server implement the same API with about 6 times less overhead per call,
+and transfer values of `get_value` and `set_value` as raw bytes by default.
+
+```shell
+BMI_MODULE=mypackage BMI_CLASS=MyModel run-lean-bmi-server
+```
+
+```python
+from remotebmi import LeanBmiClient
+
+model = LeanBmiClient('http://localhost:50051')
+```
+
+`LeanBmiClient` works with any remotebmi server and `run-lean-bmi-server` with any remotebmi client.
+Differences with `RemoteBmiClient` are that `get_var_type` returns numpy type names (like `float32`)
+and errors raise `remotebmi.RemoteBmiError`.
+Disable keep-alive connections with `LeanBmiClient(url, keep_alive=False)` for the R server.
+
+The optional, experimental [Rust package](https://github.com/eWaterCycle/remotebmi/tree/main/rust)
+cuts the overhead per call further, to close to a bare TCP round trip.
+Use it with `BMI_SERVER_BACKEND=rust run-lean-bmi-server` and `LeanBmiClient(url, transport='rust')`.
+See the [benchmarks](https://github.com/eWaterCycle/remotebmi/tree/main/python/benchmarks) for numbers.
+
+On slow networks, the values can be compressed with [zstd](https://facebook.github.io/zstd/)
+using `LeanBmiClient(url, compress=True)`, when the server supports it (lean and Rust servers do).
+This needs Python 3.14 or `pip install remotebmi[zstd]`.
+On localhost or fast networks compression only slows things down.
+
+### Calling from a web browser
+
+To call a server from a web page on another origin, the server must send
+[CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS) headers.
+Set the `BMI_CORS_ORIGINS` environment variable to a comma separated list of allowed origins
+or `*` to allow any origin.
+
+```shell
+BMI_CORS_ORIGINS=https://example.com BMI_MODULE=mypackage BMI_CLASS=MyModel run-bmi-server
+```
+
+Works for `run-bmi-server` and `run-lean-bmi-server`.
+In Python use `make_app(model, cors_origins=['*'])` or `make_lean_app(model, cors_origins=['*'])`.
 
 ### Julia provider
 

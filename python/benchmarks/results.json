@@ -1,0 +1,424 @@
+{
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-6.8.0-146-generic-x86_64-with-glibc2.39",
+    "processor": "x86_64",
+    "uvloop": true,
+    "httptools": true,
+    "zstd": true,
+    "remotebmi_rs": true,
+    "grpc4bmi": true
+  },
+  "overhead": [
+    {
+      "stack": "direct model call (no remotebmi)",
+      "seconds": 3.482141220593343e-08
+    },
+    {
+      "stack": "Dispatcher only (Python part of lean and Rust servers)",
+      "seconds": 1.0507576179569211e-06
+    },
+    {
+      "stack": "LeanBmiClient without network (Python part of lean client)",
+      "seconds": 1.0982183494545605e-06
+    },
+    {
+      "stack": "current: RemoteBmiClient (httpx) -> connexion",
+      "seconds": 0.0003918070615256397
+    },
+    {
+      "stack": "lean Python: LeanBmiClient (http.client) -> lean ASGI",
+      "seconds": 6.215876464832348e-05
+    },
+    {
+      "stack": "LeanBmiClient (http.client) -> Rust server",
+      "seconds": 4.2627446655174595e-05
+    },
+    {
+      "stack": "LeanBmiClient (Rust transport) -> lean ASGI",
+      "seconds": 3.6063770019634234e-05
+    },
+    {
+      "stack": "Rust: LeanBmiClient (Rust transport) -> Rust server",
+      "seconds": 1.626684613031948e-05
+    },
+    {
+      "stack": "grpc4bmi (baseline)",
+      "seconds": 0.00014289589990212903
+    }
+  ],
+  "transfer": [
+    {
+      "stack": "current (httpx -> connexion)",
+      "kind": "smooth",
+      "size": 1000,
+      "bytes": 4000,
+      "get_value_seconds": 0.0007888707226584302,
+      "set_value_seconds": 0.0008764309609290422
+    },
+    {
+      "stack": "lean Python",
+      "kind": "smooth",
+      "size": 1000,
+      "bytes": 4000,
+      "get_value_seconds": 6.85390488275317e-05,
+      "set_value_seconds": 6.629905859423246e-05
+    },
+    {
+      "stack": "lean Python + zstd",
+      "kind": "smooth",
+      "size": 1000,
+      "bytes": 4000,
+      "get_value_seconds": 9.02066384282918e-05,
+      "set_value_seconds": 8.791053735368592e-05
+    },
+    {
+      "stack": "Rust",
+      "kind": "smooth",
+      "size": 1000,
+      "bytes": 4000,
+      "get_value_seconds": 1.9320485595608616e-05,
+      "set_value_seconds": 1.7469010498150084e-05
+    },
+    {
+      "stack": "Rust + zstd",
+      "kind": "smooth",
+      "size": 1000,
+      "bytes": 4000,
+      "get_value_seconds": 3.2772068359498974e-05,
+      "set_value_seconds": 2.9496630005176883e-05
+    },
+    {
+      "stack": "grpc4bmi",
+      "kind": "smooth",
+      "size": 1000,
+      "bytes": 4000,
+      "get_value_seconds": 0.0003407750136723564,
+      "set_value_seconds": 0.00033902407031405346
+    },
+    {
+      "stack": "current (httpx -> connexion)",
+      "kind": "smooth",
+      "size": 100000,
+      "bytes": 400000,
+      "get_value_seconds": 0.0010060599726529063,
+      "set_value_seconds": 0.0010265180820283604
+    },
+    {
+      "stack": "lean Python",
+      "kind": "smooth",
+      "size": 100000,
+      "bytes": 400000,
+      "get_value_seconds": 0.00011768755175722845,
+      "set_value_seconds": 0.00015175219970586795
+    },
+    {
+      "stack": "lean Python + zstd",
+      "kind": "smooth",
+      "size": 100000,
+      "bytes": 400000,
+      "get_value_seconds": 0.0005806867187487796,
+      "set_value_seconds": 0.000611117544920603
+    },
+    {
+      "stack": "Rust",
+      "kind": "smooth",
+      "size": 100000,
+      "bytes": 400000,
+      "get_value_seconds": 7.179377343824456e-05,
+      "set_value_seconds": 6.711147827154207e-05
+    },
+    {
+      "stack": "Rust + zstd",
+      "kind": "smooth",
+      "size": 100000,
+      "bytes": 400000,
+      "get_value_seconds": 0.00048665054882945924,
+      "set_value_seconds": 0.0005260391816435117
+    },
+    {
+      "stack": "grpc4bmi",
+      "kind": "smooth",
+      "size": 100000,
+      "bytes": 400000,
+      "get_value_seconds": 0.014657519312549994,
+      "set_value_seconds": 0.014926831062666679
+    },
+    {
+      "stack": "current (httpx -> connexion)",
+      "kind": "smooth",
+      "size": 1000000,
+      "bytes": 4000000,
+      "get_value_seconds": 0.004639446499993483,
+      "set_value_seconds": 0.004044228875045519
+    },
+    {
+      "stack": "lean Python",
+      "kind": "smooth",
+      "size": 1000000,
+      "bytes": 4000000,
+      "get_value_seconds": 0.0008690172382870287,
+      "set_value_seconds": 0.0007803680859268525
+    },
+    {
+      "stack": "lean Python + zstd",
+      "kind": "smooth",
+      "size": 1000000,
+      "bytes": 4000000,
+      "get_value_seconds": 0.006383860578125677,
+      "set_value_seconds": 0.006629571093753839
+    },
+    {
+      "stack": "Rust",
+      "kind": "smooth",
+      "size": 1000000,
+      "bytes": 4000000,
+      "get_value_seconds": 0.000592828810546564,
+      "set_value_seconds": 0.0005694196464816059
+    },
+    {
+      "stack": "Rust + zstd",
+      "kind": "smooth",
+      "size": 1000000,
+      "bytes": 4000000,
+      "get_value_seconds": 0.005781857906242749,
+      "set_value_seconds": 0.005838034343753407
+    },
+    {
+      "stack": "grpc4bmi",
+      "kind": "smooth",
+      "size": 1000000,
+      "bytes": 4000000,
+      "get_value_seconds": 0.15451315750033245,
+      "set_value_seconds": 0.15341945450018102
+    },
+    {
+      "stack": "current (httpx -> connexion)",
+      "kind": "smooth",
+      "size": 10000000,
+      "bytes": 40000000,
+      "get_value_seconds": 0.07264507675063214,
+      "set_value_seconds": 0.0624745682498542
+    },
+    {
+      "stack": "lean Python",
+      "kind": "smooth",
+      "size": 10000000,
+      "bytes": 40000000,
+      "get_value_seconds": 0.058227652999448765,
+      "set_value_seconds": 0.04732522425001662
+    },
+    {
+      "stack": "lean Python + zstd",
+      "kind": "smooth",
+      "size": 10000000,
+      "bytes": 40000000,
+      "get_value_seconds": 0.12477067100007844,
+      "set_value_seconds": 0.1268095595005434
+    },
+    {
+      "stack": "Rust",
+      "kind": "smooth",
+      "size": 10000000,
+      "bytes": 40000000,
+      "get_value_seconds": 0.012051514031327315,
+      "set_value_seconds": 0.021863245187432767
+    },
+    {
+      "stack": "Rust + zstd",
+      "kind": "smooth",
+      "size": 10000000,
+      "bytes": 40000000,
+      "get_value_seconds": 0.08749042849922262,
+      "set_value_seconds": 0.08125827225012472
+    },
+    {
+      "stack": "current (httpx -> connexion)",
+      "kind": "sparse",
+      "size": 1000,
+      "bytes": 4000,
+      "get_value_seconds": 0.0008153220546915918,
+      "set_value_seconds": 0.0008946173515624878
+    },
+    {
+      "stack": "lean Python",
+      "kind": "sparse",
+      "size": 1000,
+      "bytes": 4000,
+      "get_value_seconds": 6.812086108354265e-05,
+      "set_value_seconds": 6.54571755367428e-05
+    },
+    {
+      "stack": "lean Python + zstd",
+      "kind": "sparse",
+      "size": 1000,
+      "bytes": 4000,
+      "get_value_seconds": 9.389695092743011e-05,
+      "set_value_seconds": 9.137329565422903e-05
+    },
+    {
+      "stack": "Rust",
+      "kind": "sparse",
+      "size": 1000,
+      "bytes": 4000,
+      "get_value_seconds": 1.765489099114781e-05,
+      "set_value_seconds": 1.7567621826364288e-05
+    },
+    {
+      "stack": "Rust + zstd",
+      "kind": "sparse",
+      "size": 1000,
+      "bytes": 4000,
+      "get_value_seconds": 3.0388587890950447e-05,
+      "set_value_seconds": 3.3221310669073745e-05
+    },
+    {
+      "stack": "grpc4bmi",
+      "kind": "sparse",
+      "size": 1000,
+      "bytes": 4000,
+      "get_value_seconds": 0.00033770959570134096,
+      "set_value_seconds": 0.0003389135195313031
+    },
+    {
+      "stack": "current (httpx -> connexion)",
+      "kind": "sparse",
+      "size": 100000,
+      "bytes": 400000,
+      "get_value_seconds": 0.001003814949228854,
+      "set_value_seconds": 0.0010219172929737397
+    },
+    {
+      "stack": "lean Python",
+      "kind": "sparse",
+      "size": 100000,
+      "bytes": 400000,
+      "get_value_seconds": 0.00011743579638689994,
+      "set_value_seconds": 0.00015507652783242065
+    },
+    {
+      "stack": "lean Python + zstd",
+      "kind": "sparse",
+      "size": 100000,
+      "bytes": 400000,
+      "get_value_seconds": 0.0011344610156385215,
+      "set_value_seconds": 0.0015754606562268236
+    },
+    {
+      "stack": "Rust",
+      "kind": "sparse",
+      "size": 100000,
+      "bytes": 400000,
+      "get_value_seconds": 7.09179045408348e-05,
+      "set_value_seconds": 6.718739160227472e-05
+    },
+    {
+      "stack": "Rust + zstd",
+      "kind": "sparse",
+      "size": 100000,
+      "bytes": 400000,
+      "get_value_seconds": 0.001043233808587729,
+      "set_value_seconds": 0.001061446160150581
+    },
+    {
+      "stack": "grpc4bmi",
+      "kind": "sparse",
+      "size": 100000,
+      "bytes": 400000,
+      "get_value_seconds": 0.014365675312546955,
+      "set_value_seconds": 0.014551457000152368
+    },
+    {
+      "stack": "current (httpx -> connexion)",
+      "kind": "sparse",
+      "size": 1000000,
+      "bytes": 4000000,
+      "get_value_seconds": 0.0030334270468870272,
+      "set_value_seconds": 0.0020379273828154965
+    },
+    {
+      "stack": "lean Python",
+      "kind": "sparse",
+      "size": 1000000,
+      "bytes": 4000000,
+      "get_value_seconds": 0.0007407208554681688,
+      "set_value_seconds": 0.0007793838164076305
+    },
+    {
+      "stack": "lean Python + zstd",
+      "kind": "sparse",
+      "size": 1000000,
+      "bytes": 4000000,
+      "get_value_seconds": 0.010932168562476363,
+      "set_value_seconds": 0.011109133437457785
+    },
+    {
+      "stack": "Rust",
+      "kind": "sparse",
+      "size": 1000000,
+      "bytes": 4000000,
+      "get_value_seconds": 0.0005706412753880841,
+      "set_value_seconds": 0.0006131017792938565
+    },
+    {
+      "stack": "Rust + zstd",
+      "kind": "sparse",
+      "size": 1000000,
+      "bytes": 4000000,
+      "get_value_seconds": 0.010432127531316837,
+      "set_value_seconds": 0.010879677000048105
+    },
+    {
+      "stack": "grpc4bmi",
+      "kind": "sparse",
+      "size": 1000000,
+      "bytes": 4000000,
+      "get_value_seconds": 0.15040988250075316,
+      "set_value_seconds": 0.15261466650008515
+    },
+    {
+      "stack": "current (httpx -> connexion)",
+      "kind": "sparse",
+      "size": 10000000,
+      "bytes": 40000000,
+      "get_value_seconds": 0.06827742325003783,
+      "set_value_seconds": 0.07089486800032319
+    },
+    {
+      "stack": "lean Python",
+      "kind": "sparse",
+      "size": 10000000,
+      "bytes": 40000000,
+      "get_value_seconds": 0.05947309474959184,
+      "set_value_seconds": 0.04752597800006697
+    },
+    {
+      "stack": "lean Python + zstd",
+      "kind": "sparse",
+      "size": 10000000,
+      "bytes": 40000000,
+      "get_value_seconds": 0.13353261949851003,
+      "set_value_seconds": 0.14617725250172953
+    },
+    {
+      "stack": "Rust",
+      "kind": "sparse",
+      "size": 10000000,
+      "bytes": 40000000,
+      "get_value_seconds": 0.010956425218751065,
+      "set_value_seconds": 0.02086765900003229
+    },
+    {
+      "stack": "Rust + zstd",
+      "kind": "sparse",
+      "size": 10000000,
+      "bytes": 40000000,
+      "get_value_seconds": 0.1262846029985667,
+      "set_value_seconds": 0.12862590800068574
+    }
+  ],
+  "zstd_ratio": {
+    "smooth": 1.3172592143187658,
+    "sparse": 2.7490146844117396
+  }
+}

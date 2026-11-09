@@ -40,7 +40,13 @@ dependencies = [
 version = "0.1.1"
 
 [project.optional-dependencies]
+# zstd compression with LeanBmiClient(compress=True) and lean server,
+# included in Python standard library since 3.14
+zstd = [
+    "backports.zstd; python_version < '3.14'",
+]
 dev = [
+    "backports.zstd; python_version < '3.14'",
     "ruff",
     "pytest",
     "pytest-cov",
@@ -50,6 +56,7 @@ dev = [
 
 [project.scripts]
 run-bmi-server='remotebmi.server:main'
+run-lean-bmi-server='remotebmi.server.lean:main'
 
 [project.urls]
 Homepage = "https://github.com/eWaterCycle/remotebmi"
@@ -128,6 +135,16 @@ ignore = [
 "tests/**/*" = [
     "ARG", "ANN", "D", "E501", "DTZ001", "N802", "S101", "S108", "PLR2004"
 ]
+"benchmarks/**/*" = [
+    # Model methods have unused arguments
+    "ARG002",
+    # Optional dependencies are imported where used
+    "PLC0415",
+    # Runs server subprocesses
+    "S603",
+    # Prints results
+    "T201",
+]
 "docs/**/*.ipynb" = [
     # Allow wide lines in notebooks
     "E501",
@@ -155,7 +172,11 @@ warn_unused_ignores = true
 [[tool.mypy.overrides]]
 module = [
     "connexion.*",
-    "docker.*"
+    "docker.*",
+    "grpc",
+    "grpc4bmi.*",
+    "remotebmi_rs",
+    "yaml",
 ]
 ignore_missing_imports = true
 

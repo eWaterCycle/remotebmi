@@ -6,6 +6,10 @@ info:
     OpenAPI specification for the Basic Modeling Interface (BMI).
     All functions are described on the
     [BMI homepage](https://bmi.readthedocs.io/).
+    A server can optionally support the zstd content coding,
+    it then sends an `Accept-Encoding: zstd` response header,
+    compresses responses when the `Accept-Encoding` request header
+    accepts zstd and accepts requests with `Content-Encoding: zstd`.
   version: "2.0"
   license:
     name: Apache 2.0
@@ -539,7 +543,11 @@ paths:
   /get_value/{name}:
     get:
       operationId: get_value
-      description: Get the value of a variable.
+      description: >
+        Get the value of a variable.
+        The client picks the response format with the Accept header,
+        JSON is returned when the Accept header is absent or
+        does not prefer application/octet-stream.
       externalDocs:
         url: https://bmi.readthedocs.io/en/stable/#get-value
       responses:
@@ -549,6 +557,9 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/GetValueResponse"
+            application/octet-stream:
+              schema:
+                $ref: "#/components/schemas/ValueBytes"
         default:
           description: An unexpected error response.
           content:
@@ -600,7 +611,9 @@ paths:
   /set_value/{name}:
     post:
       operationId: set_value
-      description: Set the value of a variable.
+      description: >
+        Set the value of a variable.
+        The client picks the request body format with the Content-Type header.
       externalDocs:
         url: https://bmi.readthedocs.io/en/stable/#set-value
       responses:
@@ -624,6 +637,9 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/SetValueRequest"
+          application/octet-stream:
+            schema:
+              $ref: "#/components/schemas/ValueBytes"
       tags:
         - Setters
   /set_value_at_indices/{name}:
@@ -1269,6 +1285,15 @@ components:
       items:
         type: number
       minItems: 1
+    ValueBytes:
+      type: string
+      format: binary
+      description: >
+        Values of a variable as raw bytes.
+        Each item is encoded as the type returned by get_var_type
+        (float is 32 bit float, double is 64 bit float)
+        in little-endian byte order.
+        The number of bytes equals the value returned by get_var_nbytes.
     Grid:
       type: integer
       format: int32

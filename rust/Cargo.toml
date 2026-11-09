@@ -1,0 +1,21 @@
+[package]
+name = "remotebmi-rs"
+version = "0.1.0"
+edition = "2021"
+description = "Rust HTTP server and client transport for remotebmi (experimental)"
+license = "Apache-2.0"
+publish = false
+
+[lib]
+name = "remotebmi_rs"
+crate-type = ["cdylib"]
+
+[dependencies]
+httparse = "1.10"
+libc = "0.2"
+pyo3 = "0.29"
+zstd = "0.14"
+
+[profile.release]
+lto = true
+codegen-units = 1

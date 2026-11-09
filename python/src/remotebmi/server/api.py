@@ -2,8 +2,10 @@ from typing import Literal
 
 import numpy as np
 from bmipy import Bmi
-from connexion import request
+from connexion import problem, request
+from connexion.lifecycle import ConnexionResponse
 
+from remotebmi._http import JSON, prefers_octet_stream, wire_dtype
 from remotebmi.reserve import (
     reserve_grid_edge_nodes,
     reserve_grid_face_,
@@ -21,16 +23,17 @@ def model() -> Bmi:
     return request.state.model  # type: ignore[no-any-return]
 
 
-def initialize(body: dict[Literal["config_file"], str]) -> None:
+def initialize(body: dict[Literal["config_file"], str]) -> tuple[None, int]:
     model().initialize(body["config_file"])
+    return None, 201
 
 
 def update() -> None:
     model().update()
 
 
-def update_until(until: float) -> None:
-    model().update_until(until)
+def update_until(body: float) -> None:
+    model().update_until(body)
 
 
 def finalize() -> None:
@@ -83,26 +86,39 @@ def get_var_itemsize(name: str) -> int:
     return model().get_var_itemsize(name)
 
 
-def get_value(name: str) -> list[int | float]:
+def get_value(name: str) -> bytes | tuple[list[int | float], int, dict[str, str]]:
     items = reserve_values(model(), name)
-    return model().get_value(name, items).tolist()  # type: ignore[no-any-return]
+    values = model().get_value(name, items)
+    if prefers_octet_stream(request.headers.get("accept", "")):
+        return values.astype(values.dtype.newbyteorder("<")).tobytes()
+    return values.tolist(), 200, {"Content-Type": JSON}
 
 
-def get_value_at_indices(name: str, indices: np.ndarray) -> list[int | float]:
+def get_value_at_indices(name: str, body: list[int]) -> list[int | float]:
+    indices = np.array(body, dtype=np.int64)
     items = reserve_values_at_indices(model(), name, indices)
-    return (  # type: ignore[no-any-return]
-        model().get_value_at_indices(name, np.array(indices, dtype=int), items).tolist()
-    )
+    return model().get_value_at_indices(name, items, indices).tolist()  # type: ignore[no-any-return]
 
 
-def set_value(name: str, src: list) -> None:
-    items = np.array(src)
+def set_value(name: str, body: list | bytes) -> ConnexionResponse | None:  # type: ignore[no-any-unimported]
+    if not body:
+        # connexion passes an empty octet-stream body as empty dict
+        return problem(400, "Bad Request", "Request body must not be empty")
+    if isinstance(body, bytes):
+        dtype = wire_dtype(model().get_var_type(name))
+        if len(body) % dtype.itemsize:
+            detail = f"Body length {len(body)} is not a multiple of item size {dtype.itemsize} of {dtype}"
+            return problem(400, "Bad Request", detail)
+        items = np.frombuffer(body, dtype=dtype).astype(dtype.newbyteorder("="))
+    else:
+        items = np.array(body)
     model().set_value(name, items)
+    return None
 
 
-def set_value_at_indices(name: str, indices: list, values: list) -> None:
-    items = np.array(values)
-    model().set_value_at_indices(name, np.array(indices, dtype=int), items)
+def set_value_at_indices(name: str, body: dict[str, list]) -> None:
+    indices = np.array(body["indices"], dtype=np.int64)
+    model().set_value_at_indices(name, indices, np.array(body["values"]))
 
 
 def get_grid_rank(grid: int) -> int:
