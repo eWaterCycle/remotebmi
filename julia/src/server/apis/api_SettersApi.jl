@@ -6,8 +6,9 @@ function set_value_read(handler)
     openapi_params = Dict{String, Any}()
     path_params = HTTP.getparams(req)
     openapi_params["name"] = OpenAPI.Servers.to_param(String, path_params, "name"; required = true)
-    openapi_params["request_body"] =
-      OpenAPI.Servers.to_param_type(Vector{Float64}, String(req.body))
+    # Custom change: parse once and validate each element via IEEENumber;
+    # OpenAPI.to_param_type cannot read numeric/string union models in arrays.
+    openapi_params["request_body"] = IEEENumber.(JSON.parse(String(req.body)))
     req.context[:openapi_params] = openapi_params
 
     return handler(req)

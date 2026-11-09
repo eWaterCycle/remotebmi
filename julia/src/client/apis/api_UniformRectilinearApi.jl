@@ -12,7 +12,7 @@ This can be used to construct the `OpenAPI.Clients.Client` instance.
 basepath(::Type{UniformRectilinearApi}) = "http://localhost:50051"
 
 const _returntypes_get_grid_origin_UniformRectilinearApi = Dict{Regex, Type}(
-  Regex("^" * replace("200", "x" => ".") * "\$") => Vector{Float64},
+  Regex("^" * replace("200", "x" => ".") * "\$") => Vector{IEEEDouble},
   Regex("^" * replace("0", "x" => ".") * "\$") => ProblemDetails,
 )
 
@@ -39,7 +39,7 @@ end
 Params:
 - grid::Int64 (required)
 
-Return: Vector{Float64}, OpenAPI.Clients.ApiResponse
+Return: Vector{IEEEDouble}, OpenAPI.Clients.ApiResponse
 """
 function get_grid_origin(_api::UniformRectilinearApi, grid::Int64; _mediaType = nothing)
   _ctx = _oacinternal_get_grid_origin(_api, grid; _mediaType = _mediaType)
@@ -98,7 +98,7 @@ function get_grid_shape(
 end
 
 const _returntypes_get_grid_spacing_UniformRectilinearApi = Dict{Regex, Type}(
-  Regex("^" * replace("200", "x" => ".") * "\$") => Vector{Float64},
+  Regex("^" * replace("200", "x" => ".") * "\$") => Vector{IEEEDouble},
   Regex("^" * replace("0", "x" => ".") * "\$") => ProblemDetails,
 )
 
@@ -125,7 +125,7 @@ end
 Params:
 - grid::Int64 (required)
 
-Return: Vector{Float64}, OpenAPI.Clients.ApiResponse
+Return: Vector{IEEEDouble}, OpenAPI.Clients.ApiResponse
 """
 function get_grid_spacing(_api::UniformRectilinearApi, grid::Int64; _mediaType = nothing)
   _ctx = _oacinternal_get_grid_spacing(_api, grid; _mediaType = _mediaType)

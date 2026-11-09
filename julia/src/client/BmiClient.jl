@@ -29,6 +29,9 @@ export GetTimeUnitsResponse
 export GetVarLocationResponseLocation
 export GetVarTypeResponse
 export GetVarUnitsResponse
+export IEEENumber
+export IEEEDouble
+export IEEEDoubleNoNaN
 export InitializeRequest
 export ProblemDetails
 export SetValueAtIndicesRequest
