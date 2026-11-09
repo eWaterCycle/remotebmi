@@ -38,16 +38,16 @@ jobs:
         working-directory: /tmp
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: Cache rig downloads and installed packages
+      # Restoring installed packages makes rig skip their system dependencies.
+      - name: Cache rig downloads
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: |
             /tmp/rig-cache
             /tmp/rig-downloads
-            R/.rvenv/lib
-          key: rig-ubuntu-26.04-${{ runner.arch }}-v1-${{ hashFiles('R/rproj.toml', 'R/rproj.lock') }}
+          key: rig-ubuntu-26.04-${{ runner.arch }}-v2-${{ hashFiles('R/rproj.toml', 'R/rproj.lock') }}
           restore-keys: |
-            rig-ubuntu-26.04-${{ runner.arch }}-v1-
+            rig-ubuntu-26.04-${{ runner.arch }}-v2-
       - name: Sync R project
         run: |
           rig proj sync --locked
