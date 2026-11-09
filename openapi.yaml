@@ -47,8 +47,9 @@ tags:
   - name: Unstructured
     description: Unstructured grid
   - name: RemoteBMI
-    description: > 
-      Paths not part of BMI spec, for remoteBMI server/client communication only.
+    description: >
+      Paths not part of BMI spec, for remoteBMI server/client communication
+      only.
       Mainly used for compatibility checks.
 paths:
   /initialize:
@@ -551,7 +552,8 @@ paths:
           description: A successful response.
           headers:
             Content-Encoding:
-              description: Present when the response body is compressed with zstd.
+              description: >
+                Present when the response body is compressed with zstd.
               schema:
                 type: string
                 enum: [zstd]
@@ -563,9 +565,10 @@ paths:
               schema:
                 type: string
                 format: binary
-                description: > 
+                description: >
                   Raw array bytes.
-                  See variable information and remotebmi capabilities for details on the data format.
+                  See variable information and remotebmi capabilities for
+                  details on the data format.
         default:
           description: An unexpected error response.
           content:
@@ -576,7 +579,7 @@ paths:
         - name: Accept-Encoding
           in: header
           required: false
-          description: > 
+          description: >
             Request zstd compression if supported by the server.
             See remotebmi capabilities if zstd compression is supported.
           schema:
@@ -600,7 +603,8 @@ paths:
           description: A successful response.
           headers:
             Content-Encoding:
-              description: Present when the response body is compressed with zstd.
+              description: >
+                Present when the response body is compressed with zstd.
               schema:
                 type: string
                 enum: [zstd]
@@ -612,9 +616,10 @@ paths:
               schema:
                 type: string
                 format: binary
-                description: > 
+                description: >
                   Raw array bytes.
-                  See variable information and remotebmi capabilities for details on the data format.
+                  See variable information and remotebmi capabilities for
+                  details on the data format.
         default:
           description: An unexpected error response.
           content:
@@ -640,12 +645,12 @@ paths:
         - name: Accept-Encoding
           in: header
           required: false
-          description: > 
+          description: >
             Request zstd compression if supported by the server.
             See remotebmi capabilities if zstd compression is supported.
           schema:
             type: string
-            enum: [zstd]            
+            enum: [zstd]
       requestBody:
         required: true
         content:
@@ -659,7 +664,8 @@ paths:
               description: >
                 Raw contiguous integer bytes containing
                 at least one non-negative, zero-based index.
-                Use index_type and byte_order reported by remotebmi capabilities.
+                Use index_type and byte_order reported by remotebmi
+                capabilities.
       tags:
         - Getters
 
@@ -706,7 +712,8 @@ paths:
               format: binary
               description: >
                 Raw array bytes.
-                See variable information and remotebmi capabilities for details on the data format.
+                See variable information and remotebmi capabilities for details
+                on the data format.
       tags:
         - Setters
   /set_value_at_indices/{name}:
@@ -759,13 +766,15 @@ paths:
                   description: >
                     Raw contiguous integer bytes containing
                     at least one non-negative, zero-based index.
-                    Use index_type and byte_order reported by remotebmi capabilities.
+                    Use index_type and byte_order reported by remotebmi
+                    capabilities.
                 values:
                   type: string
                   format: binary
                   description: >
                     Raw array bytes with one value per index, in the same order.
-                    See variable information and remotebmi capabilities for details on the data format.
+                    See variable information and remotebmi capabilities for
+                    details on the data format.
               additionalProperties: false
             encoding:
               indices:
@@ -1247,7 +1256,7 @@ components:
       type: object
       additionalProperties: false
       properties:
-        bmi_version: 
+        bmi_version:
           type: string
           description: BMI version of model running by server
           example: "2.0"
@@ -1259,7 +1268,8 @@ components:
           type: boolean
           description: >
             Whether getters and setters support binary values and indices.
-            Use `byte_order`, `index_type`, and variable information to interpret the bytes.
+            Use `byte_order`, `index_type`, and variable information to
+            interpret the bytes.
           example: false
           default: false
         index_type:
@@ -1279,8 +1289,10 @@ components:
         supports_zstd:
           type: boolean
           description: >
-            Whether getter and setter requests and responses support zstd compression.
-            Use `Accept-Encoding: zstd` and `Content-Encoding: zstd` headers to negotiate compression.
+            Whether getter and setter requests and responses support zstd
+            compression.
+            Use `Accept-Encoding: zstd` and `Content-Encoding: zstd` headers to
+            negotiate compression.
           default: false
       required:
         - bmi_version
@@ -1422,7 +1434,8 @@ components:
               binary interchange formats with the indicated width in bits.
             - `float` and `double` are legacy aliases for `binary32` and
               `binary64`, respectively.
-            - `intN` and `uintN` are signed two's-complement and unsigned integers
+            - `intN` and `uintN` are signed two's-complement and unsigned
+            integers
               with `N` bits (8, 16, 32, or 64), respectively.
               For money, use integer minor units
               (for example, `int64` cents: `1234` represents EUR 12.34).
@@ -1436,10 +1449,12 @@ components:
               For this type, `get_var_itemsize` is `1` and `get_var_nbytes` is
               the unpacked boolean count. Full transfers use that count;
               indexed transfers use the number of requested indices.
-              The packed body contains `ceil(count / 8)` bytes before compression.
+              The packed body contains `ceil(count / 8)` bytes before
+              compression.
 
             Use `byte_order` from remotebmi capabilities for multi-byte values.
-            Except for `bitmask`, `get_var_itemsize` must match the type's byte width.
+            Except for `bitmask`, `get_var_itemsize` must match the type's byte
+            width.
           externalDocs:
             url: https://en.wikipedia.org/wiki/IEEE_754
           enum:
