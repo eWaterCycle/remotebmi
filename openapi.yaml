@@ -46,6 +46,10 @@ tags:
     description: Uniform rectilinear grid
   - name: Unstructured
     description: Unstructured grid
+  - name: RemoteBMI
+    description: > 
+      Paths not part of BMI spec, for remoteBMI server/client communication only.
+      Mainly used for compatibility checks.
 paths:
   /initialize:
     post:
@@ -545,10 +549,23 @@ paths:
       responses:
         "200":
           description: A successful response.
+          headers:
+            Content-Encoding:
+              description: Present when the response body is compressed with zstd.
+              schema:
+                type: string
+                enum: [zstd]
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/GetValueResponse"
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+                description: > 
+                  Raw array bytes.
+                  See variable information and remotebmi capabilities for details on the data format.
         default:
           description: An unexpected error response.
           content:
@@ -556,6 +573,15 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProblemDetails"
       parameters:
+        - name: Accept-Encoding
+          in: header
+          required: false
+          description: > 
+            Request zstd compression if supported by the server.
+            See remotebmi capabilities if zstd compression is supported.
+          schema:
+            type: string
+            enum: [zstd]
         - name: name
           in: path
           required: true
@@ -572,10 +598,23 @@ paths:
       responses:
         "200":
           description: A successful response.
+          headers:
+            Content-Encoding:
+              description: Present when the response body is compressed with zstd.
+              schema:
+                type: string
+                enum: [zstd]
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/GetValueAtIndicesResponse"
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+                description: > 
+                  Raw array bytes.
+                  See variable information and remotebmi capabilities for details on the data format.
         default:
           description: An unexpected error response.
           content:
@@ -583,17 +622,44 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProblemDetails"
       parameters:
+        - name: Content-Encoding
+          in: header
+          required: false
+          description: >
+            Set to zstd when the JSON or binary indices request body is
+            compressed with zstd. Omit for an uncompressed body.
+            See remotebmi capabilities if zstd compression is supported.
+          schema:
+            type: string
+            enum: [zstd]
         - name: name
           in: path
           required: true
           schema:
             $ref: "#/components/schemas/VarName"
+        - name: Accept-Encoding
+          in: header
+          required: false
+          description: > 
+            Request zstd compression if supported by the server.
+            See remotebmi capabilities if zstd compression is supported.
+          schema:
+            type: string
+            enum: [zstd]            
       requestBody:
         required: true
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/Indices"
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+              description: >
+                Raw contiguous integer bytes containing
+                at least one non-negative, zero-based index.
+                Use index_type and byte_order reported by remotebmi capabilities.
       tags:
         - Getters
 
@@ -613,6 +679,16 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProblemDetails"
       parameters:
+        - name: Content-Encoding
+          in: header
+          required: false
+          description: >
+            Set to zstd when the JSON or raw array bytes request body is
+            compressed with zstd. Omit for an uncompressed body.
+            See remotebmi capabilities if zstd compression is supported.
+          schema:
+            type: string
+            enum: [zstd]
         - name: name
           in: path
           required: true
@@ -624,6 +700,13 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/SetValueRequest"
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+              description: >
+                Raw array bytes.
+                See variable information and remotebmi capabilities for details on the data format.
       tags:
         - Setters
   /set_value_at_indices/{name}:
@@ -642,6 +725,16 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProblemDetails"
       parameters:
+        - name: Content-Encoding
+          in: header
+          required: false
+          description: >
+            Set to zstd when the request body is compressed with zstd.
+            Omit for an uncompressed body.
+            See remotebmi capabilities if zstd compression is supported.
+          schema:
+            type: string
+            enum: [zstd]
         - name: name
           in: path
           required: true
@@ -653,6 +746,32 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/SetValueAtIndicesRequest"
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - indices
+                - values
+              properties:
+                indices:
+                  type: string
+                  format: binary
+                  description: >
+                    Raw contiguous integer bytes containing
+                    at least one non-negative, zero-based index.
+                    Use index_type and byte_order reported by remotebmi capabilities.
+                values:
+                  type: string
+                  format: binary
+                  description: >
+                    Raw array bytes with one value per index, in the same order.
+                    See variable information and remotebmi capabilities for details on the data format.
+              additionalProperties: false
+            encoding:
+              indices:
+                contentType: application/octet-stream
+              values:
+                contentType: application/octet-stream
       tags:
         - Setters
 
@@ -1103,8 +1222,73 @@ paths:
             $ref: "#/components/schemas/Grid"
       tags:
         - Unstructured
+  /remotebmi_capabilities:
+    get:
+      operationId: remotebmi_capabilities
+      description: Get the capabilities of the RemoteBMI server.
+      responses:
+        "200":
+          description: A successful response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RemotebmiCapabilities"
+        default:
+          description: An unexpected error response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      tags:
+        - RemoteBMI
 components:
   schemas:
+    RemotebmiCapabilities:
+      type: object
+      additionalProperties: false
+      properties:
+        bmi_version: 
+          type: string
+          description: BMI version of model running by server
+          example: "2.0"
+        remotebmi_version:
+          type: string
+          description: RemoteBMI version of server.
+          example: "0.2.0"
+        supports_binary:
+          type: boolean
+          description: >
+            Whether getters and setters support binary values and indices.
+            Use `byte_order`, `index_type`, and variable information to interpret the bytes.
+          example: false
+          default: false
+        index_type:
+          type: string
+          description: >
+            Integer type used for binary indices, with the width in bits.
+            Must be provided when supports_binary is true.
+            Use byte_order for the byte order.
+          enum: [int32, int64]
+          example: int32
+        byte_order:
+          type: string
+          description: Byte order used for binary values and indices.
+          enum: [little, big]
+          example: little
+          default: little
+        supports_zstd:
+          type: boolean
+          description: >
+            Whether getter and setter requests and responses support zstd compression.
+            Use `Accept-Encoding: zstd` and `Content-Encoding: zstd` headers to negotiate compression.
+          default: false
+      required:
+        - bmi_version
+        - remotebmi_version
+        - supports_binary
+        - index_type
+        - byte_order
+        - supports_zstd
     IEEENumber:
       example: 1.0
       oneOf:
@@ -1231,13 +1415,48 @@ components:
       properties:
         type:
           type: string
+          description: |
+            Element type used for binary values:
+
+            - `binary32` and `binary64` are IEEE 754
+              binary interchange formats with the indicated width in bits.
+            - `float` and `double` are legacy aliases for `binary32` and
+              `binary64`, respectively.
+            - `intN` and `uintN` are signed two's-complement and unsigned integers
+              with `N` bits (8, 16, 32, or 64), respectively.
+              For money, use integer minor units
+              (for example, `int64` cents: `1234` represents EUR 12.34).
+              Specify the currency and scale in the variable units returned by
+              `get_var_units`.
+            - `bool` occupies one byte, with `0` for false and `1` for true.
+            - `bitmask` packs boolean values into bytes, with `0` for false and
+              `1` for true. Value `i` is bit `i % 8` of byte `i // 8`, counting
+              bits from the least significant bit. Unused high bits in the last
+              byte must be zero. `byte_order` does not affect this format.
+              For this type, `get_var_itemsize` is `1` and `get_var_nbytes` is
+              the unpacked boolean count. Full transfers use that count;
+              indexed transfers use the number of requested indices.
+              The packed body contains `ceil(count / 8)` bytes before compression.
+
+            Use `byte_order` from remotebmi capabilities for multi-byte values.
+            Except for `bitmask`, `get_var_itemsize` must match the type's byte width.
           externalDocs:
-            url: https://swagger.io/docs/specification/data-models/data-types/#numbers  # yamllint disable-line rule:line-length
+            url: https://en.wikipedia.org/wiki/IEEE_754
           enum:
             - float
             - double
+            - binary32
+            - binary64
+            - bool
+            - bitmask
+            - int8
+            - int16
             - int32
             - int64
+            - uint8
+            - uint16
+            - uint32
+            - uint64
       required:
         - type
       additionalProperties: false
