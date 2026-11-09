@@ -93,8 +93,8 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 
 # **update_until**
-> update_until(_api::IRFApi, body::Float64; _mediaType=nothing) -> Nothing, OpenAPI.Clients.ApiResponse <br/>
-> update_until(_api::IRFApi, response_stream::Channel, body::Float64; _mediaType=nothing) -> Channel{ Nothing }, OpenAPI.Clients.ApiResponse
+> update_until(_api::IRFApi, body::IEEEDoubleNoNaN; _mediaType=nothing) -> Nothing, OpenAPI.Clients.ApiResponse <br/>
+> update_until(_api::IRFApi, response_stream::Channel, body::IEEEDoubleNoNaN; _mediaType=nothing) -> Channel{ Nothing }, OpenAPI.Clients.ApiResponse
 
 
 
@@ -105,7 +105,7 @@ Updates the model to a particular time
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **_api** | **IRFApi** | API context | 
-**body** | **Float64**|  | 
+**body** | [**IEEEDoubleNoNaN**](IEEEDoubleNoNaN.md)|  |
 
 ### Return type
 

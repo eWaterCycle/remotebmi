@@ -10,8 +10,8 @@ Method | HTTP request | Description
 
 
 # **get_grid_x**
-> get_grid_x(_api::NURCApi, grid::Int64; _mediaType=nothing) -> Vector{Float64}, OpenAPI.Clients.ApiResponse <br/>
-> get_grid_x(_api::NURCApi, response_stream::Channel, grid::Int64; _mediaType=nothing) -> Channel{ Vector{Float64} }, OpenAPI.Clients.ApiResponse
+> get_grid_x(_api::NURCApi, grid::Int64; _mediaType=nothing) -> Vector{IEEEDouble}, OpenAPI.Clients.ApiResponse <br/>
+> get_grid_x(_api::NURCApi, response_stream::Channel, grid::Int64; _mediaType=nothing) -> Channel{ Vector{IEEEDouble} }, OpenAPI.Clients.ApiResponse
 
 
 
@@ -26,7 +26,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**Vector{Float64}**
+[**Vector{IEEEDouble}**](IEEEDouble.md)
 
 ### Authorization
 
@@ -40,8 +40,8 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 
 # **get_grid_y**
-> get_grid_y(_api::NURCApi, grid::Int64; _mediaType=nothing) -> Vector{Float64}, OpenAPI.Clients.ApiResponse <br/>
-> get_grid_y(_api::NURCApi, response_stream::Channel, grid::Int64; _mediaType=nothing) -> Channel{ Vector{Float64} }, OpenAPI.Clients.ApiResponse
+> get_grid_y(_api::NURCApi, grid::Int64; _mediaType=nothing) -> Vector{IEEEDouble}, OpenAPI.Clients.ApiResponse <br/>
+> get_grid_y(_api::NURCApi, response_stream::Channel, grid::Int64; _mediaType=nothing) -> Channel{ Vector{IEEEDouble} }, OpenAPI.Clients.ApiResponse
 
 
 
@@ -56,7 +56,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**Vector{Float64}**
+[**Vector{IEEEDouble}**](IEEEDouble.md)
 
 ### Authorization
 
@@ -70,8 +70,8 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 
 # **get_grid_z**
-> get_grid_z(_api::NURCApi, grid::Int64; _mediaType=nothing) -> Vector{Float64}, OpenAPI.Clients.ApiResponse <br/>
-> get_grid_z(_api::NURCApi, response_stream::Channel, grid::Int64; _mediaType=nothing) -> Channel{ Vector{Float64} }, OpenAPI.Clients.ApiResponse
+> get_grid_z(_api::NURCApi, grid::Int64; _mediaType=nothing) -> Vector{IEEEDouble}, OpenAPI.Clients.ApiResponse <br/>
+> get_grid_z(_api::NURCApi, response_stream::Channel, grid::Int64; _mediaType=nothing) -> Channel{ Vector{IEEEDouble} }, OpenAPI.Clients.ApiResponse
 
 
 
@@ -86,7 +86,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**Vector{Float64}**
+[**Vector{IEEEDouble}**](IEEEDouble.md)
 
 ### Authorization
 

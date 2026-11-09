@@ -9,7 +9,7 @@ Method | HTTP request | Description
 
 
 # **set_value**
-> set_value(req::HTTP.Request, name::String, request_body::Vector{Float64};) -> Nothing
+> set_value(req::HTTP.Request, name::String, request_body::Vector{IEEENumber};) -> Nothing
 
 
 
@@ -21,7 +21,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **req** | **HTTP.Request** | The HTTP Request object | 
 **name** | **String**|  | [default to nothing]
-**request_body** | [**Vector{Float64}**](Float64.md)|  | 
+**request_body** | [**Vector{IEEENumber}**](IEEENumber.md)|  |
 
 ### Return type
 

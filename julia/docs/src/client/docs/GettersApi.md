@@ -9,8 +9,8 @@ Method | HTTP request | Description
 
 
 # **get_value**
-> get_value(_api::GettersApi, name::String; _mediaType=nothing) -> Vector{Float64}, OpenAPI.Clients.ApiResponse <br/>
-> get_value(_api::GettersApi, response_stream::Channel, name::String; _mediaType=nothing) -> Channel{ Vector{Float64} }, OpenAPI.Clients.ApiResponse
+> get_value(_api::GettersApi, name::String; _mediaType=nothing) -> Vector{IEEENumber}, OpenAPI.Clients.ApiResponse <br/>
+> get_value(_api::GettersApi, response_stream::Channel, name::String; _mediaType=nothing) -> Channel{ Vector{IEEENumber} }, OpenAPI.Clients.ApiResponse
 
 
 
@@ -25,7 +25,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**Vector{Float64}**
+[**Vector{IEEENumber}**](IEEENumber.md)
 
 ### Authorization
 
@@ -39,8 +39,8 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 
 # **get_value_at_indices**
-> get_value_at_indices(_api::GettersApi, name::String, request_body::Vector{Int64}; _mediaType=nothing) -> Vector{Float64}, OpenAPI.Clients.ApiResponse <br/>
-> get_value_at_indices(_api::GettersApi, response_stream::Channel, name::String, request_body::Vector{Int64}; _mediaType=nothing) -> Channel{ Vector{Float64} }, OpenAPI.Clients.ApiResponse
+> get_value_at_indices(_api::GettersApi, name::String, request_body::Vector{Int64}; _mediaType=nothing) -> Vector{IEEENumber}, OpenAPI.Clients.ApiResponse <br/>
+> get_value_at_indices(_api::GettersApi, response_stream::Channel, name::String, request_body::Vector{Int64}; _mediaType=nothing) -> Channel{ Vector{IEEENumber} }, OpenAPI.Clients.ApiResponse
 
 
 
@@ -56,7 +56,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**Vector{Float64}**
+[**Vector{IEEENumber}**](IEEENumber.md)
 
 ### Authorization
 

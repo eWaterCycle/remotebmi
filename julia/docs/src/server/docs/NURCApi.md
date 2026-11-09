@@ -10,7 +10,7 @@ Method | HTTP request | Description
 
 
 # **get_grid_x**
-> get_grid_x(req::HTTP.Request, grid::Int64;) -> Vector{Float64}
+> get_grid_x(req::HTTP.Request, grid::Int64;) -> Vector{IEEEDouble}
 
 
 
@@ -25,7 +25,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**Vector{Float64}**
+[**Vector{IEEEDouble}**](IEEEDouble.md)
 
 ### Authorization
 
@@ -39,7 +39,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_grid_y**
-> get_grid_y(req::HTTP.Request, grid::Int64;) -> Vector{Float64}
+> get_grid_y(req::HTTP.Request, grid::Int64;) -> Vector{IEEEDouble}
 
 
 
@@ -54,7 +54,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**Vector{Float64}**
+[**Vector{IEEEDouble}**](IEEEDouble.md)
 
 ### Authorization
 
@@ -68,7 +68,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_grid_z**
-> get_grid_z(req::HTTP.Request, grid::Int64;) -> Vector{Float64}
+> get_grid_z(req::HTTP.Request, grid::Int64;) -> Vector{IEEEDouble}
 
 
 
@@ -83,7 +83,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**Vector{Float64}**
+[**Vector{IEEEDouble}**](IEEEDouble.md)
 
 ### Authorization
 
