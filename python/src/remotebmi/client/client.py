@@ -3,7 +3,7 @@ from bmipy import Bmi
 from httpx import Client, Limits
 from numpy import ndarray
 
-from remotebmi.nonfinite import decode_many, encode_many
+from remotebmi.nonfinite import decode_many, encode, encode_many
 
 from .utils import validate_url
 
@@ -52,7 +52,7 @@ class RemoteBmiClient(Bmi):
         response.raise_for_status()
 
     def update_until(self, until: float) -> None:
-        response = self.client.post("/update_until", json={"until": until})
+        response = self.client.post("/update_until", json=encode(until))
         response.raise_for_status()
 
     def finalize(self) -> None:
@@ -192,16 +192,14 @@ class RemoteBmiClient(Bmi):
     def get_grid_origin(self, grid: int, origin: ndarray) -> ndarray:
         response = self.client.get(f"/get_grid_origin/{grid}")
         response.raise_for_status()
-        items = np.array(response.json())
-        np.copyto(origin, items)
-        return items
+        decode_many(response.json(), dest=origin)
+        return origin
 
     def get_grid_spacing(self, grid: int, spacing: ndarray) -> ndarray:
         response = self.client.get(f"/get_grid_spacing/{grid}")
         response.raise_for_status()
-        items = np.array(response.json())
-        np.copyto(spacing, items)
-        return items
+        decode_many(response.json(), dest=spacing)
+        return spacing
 
     def get_grid_shape(self, grid: int, shape: ndarray) -> ndarray:
         response = self.client.get(f"/get_grid_shape/{grid}")
@@ -213,23 +211,20 @@ class RemoteBmiClient(Bmi):
     def get_grid_x(self, grid: int, x: ndarray) -> ndarray:
         response = self.client.get(f"/get_grid_x/{grid}")
         response.raise_for_status()
-        items = np.array(response.json())
-        np.copyto(x, items)
-        return items
+        decode_many(response.json(), dest=x)
+        return x
 
     def get_grid_y(self, grid: int, y: ndarray) -> ndarray:
         response = self.client.get(f"/get_grid_y/{grid}")
         response.raise_for_status()
-        items = np.array(response.json())
-        np.copyto(y, items)
-        return items
+        decode_many(response.json(), dest=y)
+        return y
 
     def get_grid_z(self, grid: int, z: ndarray) -> ndarray:
         response = self.client.get(f"/get_grid_z/{grid}")
         response.raise_for_status()
-        items = np.array(response.json())
-        np.copyto(z, items)
-        return items
+        decode_many(response.json(), dest=z)
+        return z
 
     def get_grid_node_count(self, grid: int) -> int:
         response = self.client.get(f"/get_grid_node_count/{grid}")

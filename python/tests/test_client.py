@@ -10,6 +10,7 @@ import pytest
 from numpy.testing import assert_array_equal
 
 from remotebmi import RemoteBmiClient
+from remotebmi.nonfinite import IEEENumber
 
 
 @pytest.mark.parametrize(
@@ -117,3 +118,94 @@ class TestNonFiniteFloat32Model:
             client.set_value_at_indices("some_var", indices, src)
 
         assert_array_equal(src, original)
+
+    def assert_grid_response(
+        self,
+        method: Callable[[RemoteBmiClient, int, np.ndarray], np.ndarray],
+        path: str,
+    ):
+        def handle_request(request: httpx.Request):
+            assert request.url.path == path
+            return httpx.Response(200, json=["NaN", "Infinity", "-Infinity", 42.0])
+
+        out = np.empty(4, dtype=np.float64)
+        with make_fake_client(handle_request) as client:
+            result = method(client, 1, out)
+
+        assert result is out
+        assert_array_equal(out, [np.nan, np.inf, -np.inf, 42.0])
+
+    def assert_time_response(
+        self,
+        method: Callable[[RemoteBmiClient], float],
+        path: str,
+        value: float,
+        encoded: IEEENumber,
+    ):
+        def handle_request(request: httpx.Request):
+            assert request.url.path == path
+            return httpx.Response(200, json=encoded)
+
+        with make_fake_client(handle_request) as client:
+            assert method(client) == value
+
+    def test_get_grid_spacing(self):
+        self.assert_grid_response(
+            RemoteBmiClient.get_grid_spacing, "/get_grid_spacing/1"
+        )
+
+    def test_get_grid_origin(self):
+        self.assert_grid_response(RemoteBmiClient.get_grid_origin, "/get_grid_origin/1")
+
+    def test_get_grid_x(self):
+        self.assert_grid_response(RemoteBmiClient.get_grid_x, "/get_grid_x/1")
+
+    def test_get_grid_y(self):
+        self.assert_grid_response(RemoteBmiClient.get_grid_y, "/get_grid_y/1")
+
+    def test_get_grid_z(self):
+        self.assert_grid_response(RemoteBmiClient.get_grid_z, "/get_grid_z/1")
+
+    @pytest.mark.parametrize(
+        "value, encoded", [(42.0, 42.0), (np.inf, "Infinity"), (-np.inf, "-Infinity")]
+    )
+    def test_get_start_time(self, value: float, encoded: IEEENumber):
+        self.assert_time_response(
+            RemoteBmiClient.get_start_time, "/get_start_time", value, encoded
+        )
+
+    @pytest.mark.parametrize(
+        "value, encoded", [(42.0, 42.0), (np.inf, "Infinity"), (-np.inf, "-Infinity")]
+    )
+    def test_get_end_time(self, value: float, encoded: IEEENumber):
+        self.assert_time_response(
+            RemoteBmiClient.get_end_time, "/get_end_time", value, encoded
+        )
+
+    @pytest.mark.parametrize(
+        "value, encoded", [(42.0, 42.0), (np.inf, "Infinity"), (-np.inf, "-Infinity")]
+    )
+    def test_get_current_time(self, value: float, encoded: IEEENumber):
+        self.assert_time_response(
+            RemoteBmiClient.get_current_time, "/get_current_time", value, encoded
+        )
+
+    @pytest.mark.parametrize(
+        "value, encoded", [(42.0, 42.0), (np.inf, "Infinity"), (-np.inf, "-Infinity")]
+    )
+    def test_get_time_step(self, value: float, encoded: IEEENumber):
+        self.assert_time_response(
+            RemoteBmiClient.get_time_step, "/get_time_step", value, encoded
+        )
+
+    @pytest.mark.parametrize(
+        "value, encoded", [(42.0, 42.0), (np.inf, "Infinity"), (-np.inf, "-Infinity")]
+    )
+    def test_update_until_ieee_double(self, value: float, encoded: IEEENumber):
+        def handle_request(request: httpx.Request):
+            assert request.url.path == "/update_until"
+            assert json.loads(request.content) == encoded
+            return httpx.Response(204)
+
+        with make_fake_client(handle_request) as client:
+            client.update_until(value)

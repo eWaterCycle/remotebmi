@@ -4,7 +4,7 @@ import numpy as np
 from bmipy import Bmi
 from connexion import request
 
-from remotebmi.nonfinite import IEEENumber, decode_many, encode_many
+from remotebmi.nonfinite import IEEENumber, decode, decode_many, encode, encode_many
 from remotebmi.reserve import (
     reserve_grid_edge_nodes,
     reserve_grid_face_,
@@ -30,8 +30,8 @@ def update() -> None:
     model().update()
 
 
-def update_until(until: float) -> None:
-    model().update_until(until)
+def update_until(body: IEEENumber) -> None:
+    model().update_until(decode(body))
 
 
 def finalize() -> None:
@@ -129,45 +129,45 @@ def get_grid_size(grid: int) -> int:
     return model().get_grid_size(grid)
 
 
-def get_grid_spacing(grid: int) -> list[float]:
+def get_grid_spacing(grid: int) -> list[IEEENumber]:
     spacing = reserve_grid_padding(model(), grid)
-    return model().get_grid_spacing(grid, spacing).tolist()  # type: ignore[no-any-return]
+    return encode_many(model().get_grid_spacing(grid, spacing))
 
 
-def get_grid_origin(grid: int) -> list[float]:
+def get_grid_origin(grid: int) -> list[IEEENumber]:
     origin = reserve_grid_padding(model(), grid)
-    return model().get_grid_origin(grid, origin).tolist()  # type: ignore[no-any-return]
+    return encode_many(model().get_grid_origin(grid, origin))
 
 
-def get_grid_x(grid: int) -> list[float]:
+def get_grid_x(grid: int) -> list[IEEENumber]:
     items = reserve_grid_nodes(model(), grid, 0)
-    return model().get_grid_x(grid, items).tolist()  # type: ignore[no-any-return]
+    return encode_many(model().get_grid_x(grid, items))
 
 
-def get_grid_y(grid: int) -> list[float]:
+def get_grid_y(grid: int) -> list[IEEENumber]:
     items = reserve_grid_nodes(model(), grid, 1)
-    return model().get_grid_y(grid, items).tolist()  # type: ignore[no-any-return]
+    return encode_many(model().get_grid_y(grid, items))
 
 
-def get_grid_z(grid: int) -> list[float]:
+def get_grid_z(grid: int) -> list[IEEENumber]:
     items = reserve_grid_nodes(model(), grid, 2)
-    return model().get_grid_z(grid, items).tolist()  # type: ignore[no-any-return]
+    return encode_many(model().get_grid_z(grid, items))
 
 
-def get_start_time() -> float:
-    return model().get_start_time()
+def get_start_time() -> IEEENumber:
+    return encode(model().get_start_time())
 
 
-def get_end_time() -> float:
-    return model().get_end_time()
+def get_end_time() -> IEEENumber:
+    return encode(model().get_end_time())
 
 
-def get_current_time() -> float:
-    return model().get_current_time()
+def get_current_time() -> IEEENumber:
+    return encode(model().get_current_time())
 
 
-def get_time_step() -> float:
-    return model().get_time_step()
+def get_time_step() -> IEEENumber:
+    return encode(model().get_time_step())
 
 
 def get_time_units() -> dict[str, str]:
