@@ -12,7 +12,7 @@ mock_model <- list(
     method_called_with[["update"]] <<- TRUE
   },
   update_until = function(time) {
-    method_called_with[["update_until"]] <<- as.numeric(time)
+    method_called_with[["update_until"]] <<- time
   },
   bmi_finalize = function() {
     method_called_with[["bmi_finalize"]] <<- TRUE
@@ -53,7 +53,7 @@ mock_model <- list(
   },
   get_value = function(name) {
     method_called_with[["get_value"]] <<- list(name = name)
-    return(c(4.2, Inf, -Inf, NaN))
+    return(4.2)
   },
   get_value_at_indices = function(name, indices) {
     args <- list(name = name, indices = indices)
@@ -132,6 +132,35 @@ mock_model <- list(
     return(c(4, 4, 3))
   }
 )
+
+fake_nonfinite_model <- function(values = c(4.2, Inf, -Inf, NaN), time = Inf) {
+  calls <- new.env(parent = emptyenv())
+  list(
+    calls = calls,
+    get_value = function(name) values,
+    get_value_at_indices = function(name, indices) values,
+    get_grid_x = function(grid_id) values,
+    get_grid_y = function(grid_id) values,
+    get_grid_z = function(grid_id) values,
+    get_grid_origin = function(grid_id) values,
+    get_grid_spacing = function(grid_id) values,
+    get_time_step = function() time,
+    get_current_time = function() time,
+    get_start_time = function() time,
+    get_end_time = function() time,
+    set_value = function(name, value) {
+      calls$set_value <- list(name = name, value = value)
+    },
+    set_value_at_indices = function(name, indices, values) {
+      calls$set_value_at_indices <- list(
+        name = name, indices = indices, values = values
+      )
+    },
+    update_until = function(time) {
+      calls$update_until <- time
+    }
+  )
+}
 
 route <- create_route(mock_model)
 formatter <- reqres::format_json(auto_unbox = TRUE)
@@ -372,7 +401,7 @@ test_that("/get_value", {
   res <- req$respond()
   route$dispatch(req)
   expect_equal(res$status, 200)
-  expect_equal(res$body, formatter(list(4.2, "Infinity", "-Infinity", "NaN")))
+  expect_equal(res$body, formatter(list(4.2)))
   expect_equal(method_called_with[["get_value"]], list(name = "Q"))
 })
 
@@ -683,4 +712,222 @@ test_that("fallback route", {
   route$dispatch(req)
   expect_equal(res$status, 404)
   expect_equal(res$body, "Not found")
+})
+
+
+dispatch_json_request <- function(path, model = mock_model,
+                                  method = "get", content = "") {
+  fake_rook <- fiery::fake_request(path,
+    content = content, method = method,
+    headers = list("Content_Type" = "application/json")
+  )
+  req <- reqres::Request$new(fake_rook)
+  res <- req$respond()
+
+  create_route(model)$dispatch(req)
+
+  return(res)
+}
+
+ieee_array_cases <- list(
+  list(value = c(4.2, Inf, -Inf, NaN),
+       json = '[4.2,"Infinity","-Infinity","NaN"]'),
+  list(value = Inf, json = '["Infinity"]'),
+  list(value = 4.2, json = '[4.2]')
+)
+
+ieee_time_cases <- list(
+  list(value = 4.2, json = '4.2'),
+  list(value = Inf, json = '"Infinity"'),
+  list(value = -Inf, json = '"-Infinity"')
+)
+
+
+test_that("/get_value encodes IEEE values and keeps array shape", {
+  for (case in ieee_array_cases) {
+    model <- fake_nonfinite_model(values = case$value)
+
+    res <- dispatch_json_request("/get_value/1", model)
+
+    expect_equal(res$status, 200)
+    expect_equal(as.character(res$body), case$json)
+  }
+})
+
+
+test_that("/get_value_at_indices encodes IEEE values and keeps array shape", {
+  for (case in ieee_array_cases) {
+    model <- fake_nonfinite_model(values = case$value)
+
+    res <- dispatch_json_request("/get_value_at_indices/1", model,
+      method = "post", content = "[0]"
+    )
+
+    expect_equal(res$status, 200)
+    expect_equal(as.character(res$body), case$json)
+  }
+})
+
+
+test_that("/get_grid_x encodes IEEE values and keeps array shape", {
+  for (case in ieee_array_cases) {
+    model <- fake_nonfinite_model(values = case$value)
+
+    res <- dispatch_json_request("/get_grid_x/1", model)
+
+    expect_equal(res$status, 200)
+    expect_equal(as.character(res$body), case$json)
+  }
+})
+
+
+test_that("/get_grid_y encodes IEEE values and keeps array shape", {
+  for (case in ieee_array_cases) {
+    model <- fake_nonfinite_model(values = case$value)
+
+    res <- dispatch_json_request("/get_grid_y/1", model)
+
+    expect_equal(res$status, 200)
+    expect_equal(as.character(res$body), case$json)
+  }
+})
+
+
+test_that("/get_grid_z encodes IEEE values and keeps array shape", {
+  for (case in ieee_array_cases) {
+    model <- fake_nonfinite_model(values = case$value)
+
+    res <- dispatch_json_request("/get_grid_z/1", model)
+
+    expect_equal(res$status, 200)
+    expect_equal(as.character(res$body), case$json)
+  }
+})
+
+
+test_that("/get_grid_origin encodes IEEE values and keeps array shape", {
+  for (case in ieee_array_cases) {
+    model <- fake_nonfinite_model(values = case$value)
+
+    res <- dispatch_json_request("/get_grid_origin/1", model)
+
+    expect_equal(res$status, 200)
+    expect_equal(as.character(res$body), case$json)
+  }
+})
+
+
+test_that("/get_grid_spacing encodes IEEE values and keeps array shape", {
+  for (case in ieee_array_cases) {
+    model <- fake_nonfinite_model(values = case$value)
+
+    res <- dispatch_json_request("/get_grid_spacing/1", model)
+
+    expect_equal(res$status, 200)
+    expect_equal(as.character(res$body), case$json)
+  }
+})
+
+
+test_that("/get_time_step encodes finite values and infinities as scalars", {
+  for (case in ieee_time_cases) {
+    model <- fake_nonfinite_model(time = case$value)
+
+    res <- dispatch_json_request("/get_time_step", model)
+
+    expect_equal(res$status, 200)
+    expect_equal(as.character(res$body), case$json)
+  }
+})
+
+
+test_that("/get_current_time encodes finite values and infinities as scalars", {
+  for (case in ieee_time_cases) {
+    model <- fake_nonfinite_model(time = case$value)
+
+    res <- dispatch_json_request("/get_current_time", model)
+
+    expect_equal(res$status, 200)
+    expect_equal(as.character(res$body), case$json)
+  }
+})
+
+
+test_that("/get_start_time encodes finite values and infinities as scalars", {
+  for (case in ieee_time_cases) {
+    model <- fake_nonfinite_model(time = case$value)
+
+    res <- dispatch_json_request("/get_start_time", model)
+
+    expect_equal(res$status, 200)
+    expect_equal(as.character(res$body), case$json)
+  }
+})
+
+
+test_that("/get_end_time encodes finite values and infinities as scalars", {
+  for (case in ieee_time_cases) {
+    model <- fake_nonfinite_model(time = case$value)
+
+    res <- dispatch_json_request("/get_end_time", model)
+
+    expect_equal(res$status, 200)
+    expect_equal(as.character(res$body), case$json)
+  }
+})
+
+
+test_that("/set_value decodes non-finite strings to numeric model values", {
+  model <- fake_nonfinite_model()
+
+  res <- dispatch_json_request("/set_value/Q", model,
+    method = "post", content = '[4.2,"Infinity","-Infinity","NaN"]'
+  )
+
+  expect_equal(res$status, 204)
+  expect_identical(model$calls$set_value,
+    list(name = "Q", value = c(4.2, Inf, -Inf, NaN))
+  )
+})
+
+test_that("/set_value_at_indices decodes non-finite strings", {
+  model <- fake_nonfinite_model()
+
+  res <- dispatch_json_request("/set_value_at_indices/Q", model,
+    method = "post",
+    content = paste0(
+      '{"indices":[0,1,2,3],',
+      '"values":[4.2,"Infinity","-Infinity","NaN"]}'
+    )
+  )
+
+  expect_equal(res$status, 204)
+  args <- model$calls$set_value_at_indices
+  expect_equal(args$name, "Q")
+  expect_equal(args$indices, 0:3)
+  expect_identical(args$values, c(4.2, Inf, -Inf, NaN))
+})
+
+test_that("/update_until decodes finite values and infinities", {
+  for (case in ieee_time_cases) {
+    model <- fake_nonfinite_model()
+
+    res <- dispatch_json_request("/update_until", model,
+      method = "post", content = case$json
+    )
+
+    expect_equal(res$status, 204)
+    expect_identical(model$calls$update_until, case$value)
+  }
+})
+
+test_that("/update_until rejects NaN without calling the model", {
+  model <- fake_nonfinite_model()
+
+  res <- dispatch_json_request("/update_until", model,
+    method = "post", content = '"NaN"'
+  )
+
+  expect_equal(res$status, 400)
+  expect_null(model$calls$update_until)
 })

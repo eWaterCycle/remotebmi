@@ -1,3 +1,23 @@
+#' Encode an R scalar as IEEENumber / IEEEDouble from openapi.yaml.
+#' Finite numbers stay numeric; NaN, Inf and -Inf become the JSON strings
+#' "NaN", "Infinity" and "-Infinity". IEEEDoubleNoNaN callers must exclude NaN.
+#' @noRd
+encode_ieee_number <- function(value) {
+  if (is.nan(value)) {
+    return("NaN")
+  }
+  if (is.infinite(value)) {
+    return(if (value > 0) "Infinity" else "-Infinity")
+  }
+  return(value)
+}
+
+#' Decode parsed IEEENumber / IEEEDouble values to R numeric values.
+#' Reverses encode_ieee_number; accepts scalars or vectors/lists.
+#' This alias does not validate the schema or reject NaN for IEEEDoubleNoNaN.
+#' @noRd
+decode_ieee_number <- as.numeric
+
 last_segment <- function(path) {
   # keys values are lowercase at
   # https://github.com/thomasp85/routr/blob/8605611a10607016a83660f83f310075787a27b2/R/route.R#L250 # nolint: line_length_linter.
@@ -57,7 +77,14 @@ create_route <- function(model) {
     if (!parse_json_or_problem(request, response)) {
       return(FALSE)
     }
-    time <- request$body
+    time <- decode_ieee_number(request$body)
+    if (length(time) != 1L || is.na(time)) {
+      response$status <- 400L
+      response$type <- "application/json"
+      response$body <- list(title = "Time must be a number or infinity")
+      response$format(json = reqres::format_json(auto_unbox = TRUE))
+      return(FALSE)
+    }
     model$update_until(time)
     response$status <- 204L
     return(FALSE)
@@ -130,7 +157,7 @@ create_route <- function(model) {
   get_time_step <- function(request, response, keys, ...) {
     response$status <- 200L
     response$type <- "application/json"
-    response$body <- model$get_time_step()
+    response$body <- encode_ieee_number(model$get_time_step())
     response$format(json = reqres::format_json(auto_unbox = TRUE))
     return(FALSE)
   }
@@ -138,7 +165,7 @@ create_route <- function(model) {
   get_current_time <- function(request, response, keys, ...) {
     response$status <- 200L
     response$type <- "application/json"
-    response$body <- model$get_current_time()
+    response$body <- encode_ieee_number(model$get_current_time())
     response$format(json = reqres::format_json(auto_unbox = TRUE))
     return(FALSE)
   }
@@ -146,7 +173,7 @@ create_route <- function(model) {
   get_start_time <- function(request, response, keys, ...) {
     response$status <- 200L
     response$type <- "application/json"
-    response$body <- model$get_start_time()
+    response$body <- encode_ieee_number(model$get_start_time())
     response$format(json = reqres::format_json(auto_unbox = TRUE))
     return(FALSE)
   }
@@ -154,7 +181,7 @@ create_route <- function(model) {
   get_end_time <- function(request, response, keys, ...) {
     response$status <- 200L
     response$type <- "application/json"
-    response$body <- model$get_end_time()
+    response$body <- encode_ieee_number(model$get_end_time())
     response$format(json = reqres::format_json(auto_unbox = TRUE))
     return(FALSE)
   }
@@ -216,8 +243,10 @@ create_route <- function(model) {
   get_value <- function(request, response, keys, ...) {
     response$status <- 200L
     response$type <- "application/json"
-    response$body <- model$get_value(last_segment(request$path))
-    response$format(json = reqres::format_json())
+    response$body <- lapply(
+      model$get_value(last_segment(request$path)), encode_ieee_number
+    )
+    response$format(json = reqres::format_json(auto_unbox = TRUE))
     return(FALSE)
   }
 
@@ -246,8 +275,10 @@ create_route <- function(model) {
       response$format(json = reqres::format_json(auto_unbox = TRUE))
       return(FALSE)
     }
-    response$body <- model$get_value_at_indices(name, indices)
-    response$format(json = reqres::format_json())
+    response$body <- lapply(
+      model$get_value_at_indices(name, indices), encode_ieee_number
+    )
+    response$format(json = reqres::format_json(auto_unbox = TRUE))
     return(FALSE)
   }
 
@@ -255,7 +286,7 @@ create_route <- function(model) {
     if (!parse_json_or_problem(request, response)) {
       return(FALSE)
     }
-    model$set_value(last_segment(request$path), request$body)
+    model$set_value(last_segment(request$path), decode_ieee_number(request$body))
     response$status <- 204L
     return(FALSE)
   }
@@ -265,7 +296,9 @@ create_route <- function(model) {
       return(FALSE)
     }
     name <- last_segment(request$path)
-    model$set_value_at_indices(name, request$body$indices, request$body$values)
+    model$set_value_at_indices(
+      name, request$body$indices, decode_ieee_number(request$body$values)
+    )
     response$status <- 204L
     return(FALSE)
   }
@@ -297,32 +330,32 @@ create_route <- function(model) {
   get_grid_x <- function(request, response, keys, ...) {
     response$status <- 200L
     response$type <- "application/json"
-    response$body <- model$get_grid_x(keys$grid)
-    response$format(json = reqres::format_json())
+    response$body <- lapply(model$get_grid_x(keys$grid), encode_ieee_number)
+    response$format(json = reqres::format_json(auto_unbox = TRUE))
     return(FALSE)
   }
 
   get_grid_y <- function(request, response, keys, ...) {
     response$status <- 200L
     response$type <- "application/json"
-    response$body <- model$get_grid_y(keys$grid)
-    response$format(json = reqres::format_json())
+    response$body <- lapply(model$get_grid_y(keys$grid), encode_ieee_number)
+    response$format(json = reqres::format_json(auto_unbox = TRUE))
     return(FALSE)
   }
 
   get_grid_z <- function(request, response, keys, ...) {
     response$status <- 200L
     response$type <- "application/json"
-    response$body <- model$get_grid_z(keys$grid)
-    response$format(json = reqres::format_json())
+    response$body <- lapply(model$get_grid_z(keys$grid), encode_ieee_number)
+    response$format(json = reqres::format_json(auto_unbox = TRUE))
     return(FALSE)
   }
 
   get_grid_origin <- function(request, response, keys, ...) {
     response$status <- 200L
     response$type <- "application/json"
-    response$body <- model$get_grid_origin(keys$grid)
-    response$format(json = reqres::format_json())
+    response$body <- lapply(model$get_grid_origin(keys$grid), encode_ieee_number)
+    response$format(json = reqres::format_json(auto_unbox = TRUE))
     return(FALSE)
   }
 
@@ -337,8 +370,8 @@ create_route <- function(model) {
   get_grid_spacing <- function(request, response, keys, ...) {
     response$status <- 200L
     response$type <- "application/json"
-    response$body <- model$get_grid_spacing(keys$grid)
-    response$format(json = reqres::format_json())
+    response$body <- lapply(model$get_grid_spacing(keys$grid), encode_ieee_number)
+    response$format(json = reqres::format_json(auto_unbox = TRUE))
     return(FALSE)
   }
 
