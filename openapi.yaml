@@ -580,11 +580,11 @@ paths:
           in: header
           required: false
           description: >
-            Request zstd compression if supported by the server.
+            Accepted response encodings, optionally with quality weights.
+            Include zstd to request compression if supported by the server.
             See remotebmi capabilities if zstd compression is supported.
           schema:
             type: string
-            enum: [zstd]
         - name: name
           in: path
           required: true
@@ -646,11 +646,11 @@ paths:
           in: header
           required: false
           description: >
-            Request zstd compression if supported by the server.
+            Accepted response encodings, optionally with quality weights.
+            Include zstd to request compression if supported by the server.
             See remotebmi capabilities if zstd compression is supported.
           schema:
             type: string
-            enum: [zstd]
       requestBody:
         required: true
         content:
