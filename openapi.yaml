@@ -1121,7 +1121,8 @@ components:
         - type: number
           format: double
         - type: string
-          description: Non-finite IEEE 754 double precision floating-point values.
+          description: Non-finite IEEE 754 double precision
+            floating-point values.
           enum:
             - 'NaN'
             - 'Infinity'
@@ -1132,7 +1133,8 @@ components:
         - type: number
           format: double
         - type: string
-          description: Non-finite IEEE 754 double precision floating-point values, excluding NaN.
+          description: Non-finite IEEE 754 double precision
+            floating-point values, excluding NaN.
           enum:
             - 'Infinity'
             - '-Infinity'
