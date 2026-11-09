@@ -1,6 +1,9 @@
 # Connexion has no type stubs.
 # mypy: disable-error-code="no-untyped-def,no-any-unimported"
 
+import sys
+from importlib.metadata import version
+
 import numpy as np
 import pytest
 import simplejson
@@ -24,6 +27,22 @@ from .fake_models import (
 @pytest.fixture
 def fake_app():
     return make_app(Rect3DGridModel())
+
+
+def test_remotebmi_capabilities(fake_app: AsyncApp):
+    with fake_app.test_client() as httpclient:
+        response = httpclient.get("/remotebmi_capabilities")
+
+    assert response.status_code == 200
+    expected = {
+        "bmi_version": "2.0",
+        "remotebmi_version": version("remotebmi"),
+        "supports_binary": False,
+        "index_type": f"int{np.dtype(int).itemsize * 8}",
+        "byte_order": sys.byteorder,
+        "supports_zstd": False,
+    }
+    assert response.json() == expected
 
 
 @pytest.fixture

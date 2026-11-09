@@ -1,4 +1,6 @@
-from typing import Literal
+import sys
+from importlib.metadata import version
+from typing import Literal, TypedDict
 
 import numpy as np
 from bmipy import Bmi
@@ -15,6 +17,26 @@ from remotebmi.reserve import (
     reserve_values,
     reserve_values_at_indices,
 )
+
+
+class RemotebmiCapabilities(TypedDict):
+    bmi_version: str
+    remotebmi_version: str
+    supports_binary: bool
+    index_type: str
+    byte_order: Literal["little", "big"]
+    supports_zstd: bool
+
+
+def remotebmi_capabilities() -> RemotebmiCapabilities:
+    return {
+        "bmi_version": "2.0",
+        "remotebmi_version": version("remotebmi"),
+        "supports_binary": False,
+        "index_type": f"int{np.dtype(int).itemsize * 8}",
+        "byte_order": sys.byteorder,
+        "supports_zstd": False,
+    }
 
 
 def model() -> Bmi:
@@ -84,17 +106,19 @@ def get_var_itemsize(name: str) -> int:
     return model().get_var_itemsize(name)
 
 
-def get_value(name: str) -> list[IEEENumber]:
+def get_value(name: str) -> tuple[list[IEEENumber], int, dict[str, str]]:
     items = reserve_values(model(), name)
     model().get_value(name, items)
-    return encode_many(items)
+    return encode_many(items), 200, {"Content-Type": "application/json"}
 
 
-def get_value_at_indices(name: str, body: list[int]) -> list[IEEENumber]:
+def get_value_at_indices(
+    name: str, body: list[int]
+) -> tuple[list[IEEENumber], int, dict[str, str]]:
     indices = np.array(body, dtype=int)
     items = reserve_values_at_indices(model(), name, indices)
     model().get_value_at_indices(name, items, indices)
-    return encode_many(items)
+    return encode_many(items), 200, {"Content-Type": "application/json"}
 
 
 def set_value(name: str, body: list) -> None:
