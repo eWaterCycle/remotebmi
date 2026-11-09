@@ -5,12 +5,10 @@ on:
     paths:
       - "openapi.yaml"
       - .github/workflows/openapi.yml
-      - python/src/remotebmi/server/openapi.yaml
   pull_request:
     paths:
       - "openapi.yaml"
       - .github/workflows/openapi.yml
-      - python/src/remotebmi/server/openapi.yaml
     types: [opened, reopened]
 
 concurrency:
@@ -47,14 +45,3 @@ jobs:
 
       - name: Yamllint
         run: yamllint openapi.yaml
-  copycheck:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          sparse-checkout: |
-            openapi.yaml
-            python/src/remotebmi/server/openapi.yaml
-      - name: Check spec copies are the same
-        run: diff openapi.yaml python/src/remotebmi/server/openapi.yaml

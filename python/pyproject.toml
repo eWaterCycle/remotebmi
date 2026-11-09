@@ -41,6 +41,7 @@ version = "0.1.1"
 
 [project.optional-dependencies]
 dev = [
+    "hatchling",
     "ruff",
     "pytest",
     "pytest-cov",
@@ -50,6 +51,8 @@ dev = [
 
 [project.scripts]
 run-bmi-server='remotebmi.server:main'
+
+[tool.hatch.build.hooks.custom]
 
 [project.urls]
 Homepage = "https://github.com/eWaterCycle/remotebmi"

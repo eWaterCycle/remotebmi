@@ -39,6 +39,9 @@ def make_app(model: Bmi) -> AsyncApp:
     )
 
     openapi_path = Path(__file__).parent / "openapi.yaml"
+    if not openapi_path.is_file():
+        # Editable installs and source checkouts use the repository specification.
+        openapi_path = Path(__file__).resolve().parents[4] / "openapi.yaml"
     app.add_api(openapi_path, resolver=RelativeResolver("remotebmi.server.api"))
     app.add_error_handler(Exception, handle_model_error)
     return app
