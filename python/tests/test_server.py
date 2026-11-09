@@ -7,6 +7,7 @@ from importlib.metadata import version
 import numpy as np
 import pytest
 import simplejson
+import zstandard
 from connexion import AsyncApp
 from numpy.testing import assert_array_equal
 
@@ -19,6 +20,7 @@ from remotebmi.reserve import (
 from remotebmi.server import make_app
 
 from .fake_models import (
+    Float32Model,
     NonFiniteFloat32Model,
     Rect3DGridModel,
 )
@@ -283,3 +285,120 @@ class TestNonFiniteFloat32Model:
 
         assert response.status_code == 204
         assert_array_equal(model.time, value)
+
+
+class TestCompression:
+    @pytest.fixture
+    def model(self):
+        model = Float32Model()
+        model.value[:] = [1.0, 2.0, 3.0]
+        return model
+
+    @pytest.fixture
+    def fake_app(self, model: Float32Model):
+        return make_app(model)
+
+    def get_raw_value_response(
+        self,
+        fake_app: AsyncApp,
+        model: Float32Model,
+        headers: dict[str, str],
+    ):
+        model.value = np.tile(model.value, 256)
+        with fake_app.test_client() as httpclient:
+            httpclient.headers.pop("Accept-Encoding", None)
+            with httpclient.stream(
+                "GET",
+                "/get_value/some_var",
+                headers=headers,
+            ) as response:
+                body = b"".join(response.iter_raw())
+
+        expected_response = {
+            "status_code": 200,
+            "content-type": "application/json",
+            "vary": "Accept-Encoding",
+            "content-length": str(len(body)),
+        }
+        actual_response = {
+            "status_code": response.status_code,
+            "content-type": response.headers.get("content-type"),
+            "vary": response.headers.get("vary"),
+            "content-length": response.headers.get("content-length"),
+        }
+        assert actual_response == expected_response
+        return response, body
+
+    @pytest.mark.parametrize("accept_encoding", ["zstd", "gzip, zstd", "ZSTD"])
+    def test_get_value_compression(
+        self,
+        fake_app: AsyncApp,
+        model: Float32Model,
+        accept_encoding: str,
+    ):
+        response, body = self.get_raw_value_response(
+            fake_app, model, {"Accept-Encoding": accept_encoding}
+        )
+
+        assert response.headers["content-encoding"] == "zstd"
+        decoded = zstandard.ZstdDecompressor().decompress(body, max_output_size=100_000)
+        self.assert_value_body(decoded)
+
+    @pytest.mark.parametrize(
+        "headers",
+        [
+            {"Accept-Encoding": "*"},  # Only explicit zstd enables compression.
+            {"Accept-Encoding": "zstd;q=0"},  # Weighted tokens do not match bare zstd.
+            {"Accept-Encoding": "zstd;q=0.5"},  # Quality weights are not parsed.
+            {"Accept-Encoding": "gzip"},
+            {"Accept-Encoding": "identity"},
+            {"Accept-Encoding": ""},
+            {},
+        ],
+    )
+    def test_get_value_uncompressed(
+        self,
+        fake_app: AsyncApp,
+        model: Float32Model,
+        headers: dict[str, str],
+    ):
+        response, body = self.get_raw_value_response(fake_app, model, headers)
+
+        assert "content-encoding" not in response.headers
+        self.assert_value_body(body)
+
+    def assert_value_body(self, body: bytes):
+        assert simplejson.loads(body, allow_nan=False) == [1.0, 2.0, 3.0] * 256
+
+    def test_get_value_small_response(self, fake_app: AsyncApp):
+        with fake_app.test_client() as httpclient:
+            response = httpclient.get(
+                "/get_value/some_var", headers={"Accept-Encoding": "zstd"}
+            )
+
+        expected_response = {"content-encoding": "zstd", "values": [1.0, 2.0, 3.0]}
+        assert {
+            "content-encoding": response.headers.get("content-encoding"),
+            "values": response.json(),
+        } == expected_response
+
+    def test_get_value_client_decompression(
+        self, fake_client: RemoteBmiClient, model: Float32Model
+    ):
+        model.value = np.tile(model.value, 256)
+        result = fake_client.get_value("some_var", np.empty_like(model.value))
+        assert_array_equal(result, model.value)
+
+    def test_other_getter_remains_uncompressed(self, fake_app: AsyncApp):
+        with fake_app.test_client() as httpclient:
+            response = httpclient.post(
+                "/get_value_at_indices/some_var",
+                json=[0] * 256,
+                headers={"Accept-Encoding": "zstd"},
+            )
+
+        expected_response = {"content-encoding": None, "values": [1.0] * 256}
+        assert {
+            "content-encoding": response.headers.get("content-encoding"),
+            "values": response.json(),
+        } == expected_response
