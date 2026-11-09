@@ -1,7 +1,7 @@
 """Encode and decode non-finite BMI values for JSON exchange.
 
 Non-finite values use the strings defined by the IEEENumber schema in
-server/openapi.yaml. Finite values and None are preserved.
+server/openapi.yaml. Finite values are preserved.
 """
 
 from math import isnan
@@ -10,8 +10,8 @@ from typing import Literal
 from numpy import ndarray
 
 NonFiniteSymbols = Literal["NaN", "Infinity", "-Infinity"]
-IEEENumber = int | float | NonFiniteSymbols | None
-RawNumber = int | float | None
+IEEENumber = int | float | NonFiniteSymbols
+RawNumber = int | float
 
 
 def encode(value: RawNumber) -> IEEENumber:
@@ -24,8 +24,6 @@ def encode(value: RawNumber) -> IEEENumber:
         "NaN", "Infinity", or "-Infinity" for a non-finite value; otherwise,
         the original value.
     """
-    if value is None:
-        return None
     if isnan(value):
         return "NaN"
     if value == float("inf"):
@@ -57,8 +55,6 @@ def decode(value: IEEENumber) -> RawNumber:
         The corresponding non-finite value for "NaN", "Infinity", or
         "-Infinity"; otherwise, the original value.
     """
-    if value is None:
-        return None
     if value == "NaN":
         return float("nan")
     if value == "Infinity":

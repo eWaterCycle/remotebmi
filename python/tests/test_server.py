@@ -14,7 +14,6 @@ from remotebmi.server import make_app
 
 from .fake_models import (
     NonFiniteFloat32Model,
-    NonFiniteNoneModel,
     Rect3DGridModel,
 )
 
@@ -155,46 +154,3 @@ class TestNonFiniteFloat32Model:
 
         assert response.status_code == 204
         assert_array_equal(model.value, [np.inf, -np.inf, np.nan, 42.0])
-
-
-class TestNonFiniteNoneModel:
-    @pytest.fixture
-    def model(self):
-        return NonFiniteNoneModel()
-
-    @pytest.fixture
-    def fake_app(self, model):
-        return make_app(model)
-
-    def test_get_value(self, fake_app):
-        with fake_app.test_client() as httpclient:
-            response = httpclient.get("/get_value/some_var")
-
-        values = simplejson.loads(response.content, allow_nan=False)
-
-        assert values == [42.0, None]
-
-    def test_get_value_at_indices(self, fake_app):
-        with fake_app.test_client() as httpclient:
-            response = httpclient.post("/get_value_at_indices/some_var", json=[1, 0])
-
-        values = simplejson.loads(response.content, allow_nan=False)
-
-        assert values == [None, 42.0]
-
-    def test_set_value(self, fake_app, model):
-        with fake_app.test_client() as httpclient:
-            response = httpclient.post("/set_value/some_var", json=[None, 12.0])
-
-        assert response.status_code == 204
-        assert_array_equal(model.value, [None, 12.0])
-
-    def test_set_value_at_indices(self, fake_app, model):
-        with fake_app.test_client() as httpclient:
-            response = httpclient.post(
-                "/set_value_at_indices/some_var",
-                json={"indices": [1, 0], "values": [12.0, None]},
-            )
-
-        assert response.status_code == 204
-        assert_array_equal(model.value, [None, 12.0])
