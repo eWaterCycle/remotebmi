@@ -3,6 +3,7 @@
 
 import sys
 from importlib.metadata import version
+from typing import Literal
 
 import numpy as np
 import pytest
@@ -42,7 +43,7 @@ def test_remotebmi_capabilities(fake_app: AsyncApp):
         "supports_binary": False,
         "index_type": f"int{np.dtype(int).itemsize * 8}",
         "byte_order": sys.byteorder,
-        "supports_zstd": False,
+        "supports_zstd": True,
     }
     assert response.json() == expected
 
@@ -329,6 +330,9 @@ class TestCompression:
         assert actual_response == expected_response
         return response, body
 
+    def assert_value_body(self, body: bytes):
+        assert simplejson.loads(body, allow_nan=False) == [1.0, 2.0, 3.0] * 256
+
     @pytest.mark.parametrize("accept_encoding", ["zstd", "gzip, zstd", "ZSTD"])
     def test_get_value_compression(
         self,
@@ -367,9 +371,6 @@ class TestCompression:
         assert "content-encoding" not in response.headers
         self.assert_value_body(body)
 
-    def assert_value_body(self, body: bytes):
-        assert simplejson.loads(body, allow_nan=False) == [1.0, 2.0, 3.0] * 256
-
     def test_get_value_small_response(self, fake_app: AsyncApp):
         with fake_app.test_client() as httpclient:
             response = httpclient.get(
@@ -389,7 +390,7 @@ class TestCompression:
         result = fake_client.get_value("some_var", np.empty_like(model.value))
         assert_array_equal(result, model.value)
 
-    def test_other_getter_remains_uncompressed(self, fake_app: AsyncApp):
+    def test_indexed_getter_compression(self, fake_app: AsyncApp):
         with fake_app.test_client() as httpclient:
             response = httpclient.post(
                 "/get_value_at_indices/some_var",
@@ -397,8 +398,160 @@ class TestCompression:
                 headers={"Accept-Encoding": "zstd"},
             )
 
-        expected_response = {"content-encoding": None, "values": [1.0] * 256}
+        expected_response = {"content-encoding": "zstd", "values": [1.0] * 256}
         assert {
             "content-encoding": response.headers.get("content-encoding"),
             "values": response.json(),
         } == expected_response
+
+    def post_compressed(self, fake_app: AsyncApp, path: str, body: object):
+        content = zstandard.ZstdCompressor().compress(simplejson.dumps(body).encode())
+        with fake_app.test_client() as httpclient:
+            return httpclient.post(
+                path,
+                content=content,
+                headers={
+                    "Content-Type": "application/json",
+                    "Content-Encoding": "zstd",
+                    "Accept-Encoding": "zstd",
+                },
+            )
+
+    def test_compressed_indices(self, fake_app: AsyncApp):
+        response = self.post_compressed(
+            fake_app, "/get_value_at_indices/some_var", [2, 0]
+        )
+        assert {
+            "status": response.status_code,
+            "encoding": response.headers.get("content-encoding"),
+            "values": response.json(),
+        } == {"status": 200, "encoding": "zstd", "values": [3.0, 1.0]}
+
+    @pytest.mark.parametrize(
+        "path, body, expected",
+        [
+            ("/set_value/some_var", [4.0, 5.0, 6.0], [4.0, 5.0, 6.0]),
+            (
+                "/set_value_at_indices/some_var",
+                {"indices": [2, 0], "values": [4.0, 5.0]},
+                [5.0, 2.0, 4.0],
+            ),
+        ],
+    )
+    def test_compressed_setter(
+        self,
+        fake_app: AsyncApp,
+        model: Float32Model,
+        path: str,
+        body: object,
+        expected: list[float],
+    ):
+        response = self.post_compressed(fake_app, path, body)
+        assert {
+            "status": response.status_code,
+            "encoding": response.headers.get("content-encoding"),
+            "body": response.content,
+            "values": model.value.tolist(),
+        } == {"status": 204, "encoding": None, "body": b"", "values": expected}
+
+    @pytest.mark.parametrize(
+        "encoding, content, status",
+        [
+            ("zstd", b"invalid", 400),
+            ("zstd", b"\x28\xb5", 400),
+            ("zstd", zstandard.ZstdCompressor().compress(b"[]")[:-1], 400),
+            ("zstd", zstandard.ZstdCompressor().compress(b"[]") + b"extra", 400),
+            ("gzip", b"[]", 415),
+        ],
+    )
+    def test_invalid_request_encoding(
+        self,
+        fake_app: AsyncApp,
+        model: Float32Model,
+        encoding: str,
+        content: bytes,
+        status: int,
+    ):
+        with fake_app.test_client() as httpclient:
+            response = httpclient.post(
+                "/set_value/some_var",
+                content=content,
+                headers={
+                    "Content-Type": "application/json",
+                    "Content-Encoding": encoding,
+                },
+            )
+        assert {"status": response.status_code, "values": model.value.tolist()} == {
+            "status": status,
+            "values": [1.0, 2.0, 3.0],
+        }
+
+    def test_compressed_body_is_validated(
+        self, fake_app: AsyncApp, model: Float32Model
+    ):
+        response = self.post_compressed(
+            fake_app, "/set_value/some_var", {"unexpected": []}
+        )
+        assert {"status": response.status_code, "values": model.value.tolist()} == {
+            "status": 400,
+            "values": [1.0, 2.0, 3.0],
+        }
+
+    @pytest.mark.parametrize(
+        "compression, accept_encoding, content_encoding",
+        [
+            ("auto", "zstd", "zstd"),
+            ("never", "identity", None),
+            ("always", "zstd", "zstd"),
+        ],
+    )
+    def test_value_transfers(
+        self,
+        fake_app: AsyncApp,
+        model: Float32Model,
+        compression: Literal["auto", "never", "always"],
+        accept_encoding: str,
+        content_encoding: str | None,
+    ):
+        request_headers: list[tuple[str | None, str | None]] = []
+
+        def record_headers(request):
+            request_headers.append(
+                (
+                    request.headers.get("accept-encoding"),
+                    request.headers.get("content-encoding"),
+                )
+            )
+
+        with fake_app.test_client() as httpclient:
+            httpclient.event_hooks["request"].append(record_headers)
+            client = RemoteBmiClient(
+                "http://testserver", client=httpclient, compression=compression
+            )
+            client.set_value("some_var", np.array([4.0, 5.0, 6.0]))
+            full_result = client.get_value("some_var", np.empty(3))
+            client.set_value_at_indices(
+                "some_var", np.array([0, 2]), np.array([7.0, 8.0])
+            )
+            indexed_result = client.get_value_at_indices(
+                "some_var", np.empty(2), np.array([2, 0])
+            )
+
+        expected = {
+            "full_result": [4.0, 5.0, 6.0],
+            "indexed_result": [8.0, 7.0],
+            "model_values": [7.0, 5.0, 8.0],
+            "request_headers": [
+                (accept_encoding, content_encoding),
+                (accept_encoding, None),
+                (accept_encoding, content_encoding),
+                (accept_encoding, content_encoding),
+            ],
+        }
+        actual = {
+            "full_result": full_result.tolist(),
+            "indexed_result": indexed_result.tolist(),
+            "model_values": model.value.tolist(),
+            "request_headers": request_headers[-4:],
+        }
+        assert actual == expected

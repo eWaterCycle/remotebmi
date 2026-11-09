@@ -35,8 +35,7 @@ def remotebmi_capabilities() -> RemotebmiCapabilities:
         "supports_binary": False,
         "index_type": f"int{np.dtype(int).itemsize * 8}",
         "byte_order": sys.byteorder,
-        # The capability also promises request decompression for setters.
-        "supports_zstd": False,
+        "supports_zstd": True,
     }
 
 

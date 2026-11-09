@@ -17,7 +17,7 @@ from connexion.options import SwaggerUIOptions
 from connexion.resolver import RelativeResolver
 
 from remotebmi.server.build import from_env
-from remotebmi.server.compression import GetValueCompressionMiddleware
+from remotebmi.server.compression import ValueCompressionMiddleware
 
 
 def handle_model_error(request: ConnexionRequest, exc: Exception) -> ConnexionResponse:  # noqa: ARG001
@@ -45,9 +45,9 @@ def make_app(model: Bmi) -> AsyncApp:
         # Editable installs and source checkouts use the repository specification.
         openapi_path = Path(__file__).resolve().parents[4] / "openapi.yaml"
     app.add_api(openapi_path, resolver=RelativeResolver("remotebmi.server.api"))
-    # Compress after response validation, with routing information available.
+    # Decode requests before validation and compress responses afterward.
     app.add_middleware(
-        GetValueCompressionMiddleware,
+        ValueCompressionMiddleware,
         position=MiddlewarePosition.BEFORE_VALIDATION,
     )
     app.add_error_handler(Exception, handle_model_error)
