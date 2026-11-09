@@ -22,6 +22,7 @@ end
       for value in valid
         @test model(value).value === value
         @test OpenAPI.from_json(model(), :value, value).value === value
+        @test OpenAPI.from_json(model(), :value, value; stylectx = nothing).value === value
         @test OpenAPI.from_json(model(), value).value === value
         instance = model(0.0)
         instance.value = value
@@ -34,6 +35,7 @@ end
       for value in invalid
         @test_throws ArgumentError model(value)
         @test_throws ArgumentError OpenAPI.from_json(model(), :value, value)
+        @test_throws ArgumentError OpenAPI.from_json(model(), :value, value; stylectx = nothing)
         @test_throws ArgumentError OpenAPI.from_json(model(), value)
         instance = model(1.0)
         @test_throws ArgumentError instance.value = value

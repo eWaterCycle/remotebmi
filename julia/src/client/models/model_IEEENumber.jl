@@ -32,7 +32,8 @@ function Base.setproperty!(o::IEEENumber, name::Symbol, value)
 end
 
 # OpenAPI's generic reader stringifies numbers when String is part of the union.
-function OpenAPI.from_json(o::IEEENumber, name::Symbol, value::Union{Real, String})
+# Accept stylectx to keep this override active with newer OpenAPI.jl versions.
+function OpenAPI.from_json(o::IEEENumber, name::Symbol, value::Union{Real, String}; stylectx = nothing)
   setproperty!(o, name, value)
   return o
 end
