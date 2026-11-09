@@ -5,6 +5,14 @@ import BasicModelInterface as BMI
 Base.@kwdef mutable struct Model
   values::Vector{Float64} = [1.0, 2.0, 3.0, 4.0]
   current::Float64 = 0.0
+  start::Float64 = 0.0
+  stop::Float64 = 168.0
+  step::Float64 = 1.0
+  spacing::Vector{Float64} = [0.1, 1.1, 2.1]
+  origin::Vector{Float64} = [0.1, 0.2, 0.3]
+  x::Vector{Float64} = [0.1, 0.2, 0.3, 0.4]
+  y::Vector{Float64} = [1.1, 1.2, 1.3]
+  z::Vector{Float64} = [2.1, 2.2]
 end
 
 BMI.initialize(::Type{Model}, config_file) = Model()
@@ -35,28 +43,29 @@ function BMI.get_var_grid(m::Model, name)
   end
   return 1
 end
-BMI.get_var_type(m::Model, name) = "Float64"
+BMI.get_var_type(m::Model, name) = name == "intvar" ? "Int64" : "Float64"
 BMI.get_var_units(m::Model, name) = "unit1"
 BMI.get_var_itemsize(m::Model, name) = 8
-BMI.get_var_nbytes(m::Model, name) = 32
+BMI.get_var_nbytes(m::Model, name) = 8 * length(m.values)
 BMI.get_var_location(m::Model, name) = "node"
 # Time functions
 BMI.get_current_time(m::Model) = m.current
-BMI.get_start_time(m::Model) = 0
-BMI.get_end_time(m::Model) = 168
-BMI.get_time_step(m::Model) = 1
+BMI.get_start_time(m::Model) = m.start
+BMI.get_end_time(m::Model) = m.stop
+BMI.get_time_step(m::Model) = m.step
 BMI.get_time_units(m::Model) = "h"
 # Variable getter and setter functions
-function BMI.get_value(m::Model, name::String, dest::Vector{T}) where {T <: AbstractFloat}
-  copyto!(dest, m.values)
+function BMI.get_value(m::Model, name::String, dest::Vector{T}) where {T <: Real}
+  copyto!(dest, name == "intvar" ? fill(2^53 + 1, length(m.values)) : m.values)
 end
 function BMI.get_value_at_indices(
   m::Model,
   name::String,
   dest::Vector{T},
   indices::Vector{Int},
-) where {T <: AbstractFloat}
-  copyto!(dest, m.values[indices])
+) where {T <: Real}
+  values = name == "intvar" ? fill(2^53 + 1, length(m.values)) : m.values
+  copyto!(dest, values[indices])
 end
 function BMI.set_value(m::Model, name::String, src::Vector{T}) where {T <: AbstractFloat}
   copyto!(m.values, src)
@@ -77,19 +86,19 @@ BMI.get_grid_size(m::Model, grid) = 4
 BMI.get_grid_rank(m::Model, grid) = 3
 BMI.get_grid_shape(m::Model, grid) = Int[2, 3, 4]
 function BMI.get_grid_spacing(m::Model, grid, spacing::Vector{T}) where {T <: AbstractFloat}
-  copyto!(spacing, [0.1, 1.1, 2.1])
+  copyto!(spacing, m.spacing)
 end
 function BMI.get_grid_origin(m::Model, grid, origin::Vector{T}) where {T <: AbstractFloat}
-  copyto!(origin, [0.1, 0.2, 0.3])
+  copyto!(origin, m.origin)
 end
 function BMI.get_grid_x(m::Model, grid, x::Vector{T}) where {T <: AbstractFloat}
-  copyto!(x, [0.1, 0.2, 0.3, 0.4])
+  copyto!(x, m.x)
 end
 function BMI.get_grid_y(m::Model, grid, y::Vector{T}) where {T <: AbstractFloat}
-  copyto!(y, [1.1, 1.2, 1.3])
+  copyto!(y, m.y)
 end
 function BMI.get_grid_z(m::Model, grid, z::Vector{T}) where {T <: AbstractFloat}
-  copyto!(z, [2.1, 2.2])
+  copyto!(z, m.z)
 end
 BMI.get_grid_node_count(m::Model, grid) = 6
 BMI.get_grid_edge_count(m::Model, grid) = 8

@@ -1,5 +1,8 @@
 using Test
 using Sockets
+using HTTP
+using JSON
+import RemoteBMI
 import RemoteBMI.Client: BMIClient
 import RemoteBMI.Server: run_bmi_server
 import BasicModelInterface as BMI
@@ -115,6 +118,174 @@ end
     @test BMI.get_grid_face_edges(model, 1, zeros(Int, 11)) == Int[0, 1, 2, 3, 4, 5, 6, 1, 6, 7, 2]
     @test BMI.get_grid_face_nodes(model, 1, zeros(Int, 11)) == Int[0, 1, 2, 3, 1, 4, 5, 2, 2, 5, 3]
     @test BMI.get_grid_nodes_per_face(model, 1, zeros(Int, 3)) == Int[4, 4, 3]
+  end
+
+  @testset "IEEE non-finite values" begin
+    raw_model = RemoteBMI.Server.m
+    raw_get(path) = JSON.parse(String(HTTP.get(model.base_url * path).body))
+    number_cases = ((NaN, "NaN"), (Inf, "Infinity"), (-Inf, "-Infinity"), (1.25, 1.25))
+    time_cases = ((Inf, "Infinity"), (-Inf, "-Infinity"), (2.5, 2.5))
+
+    @testset "get_value" begin
+      for (value, encoded) in number_cases
+        raw_model.values = [value, 2.0, value, 4.0]
+
+        @test raw_get("/get_value/var1") == [encoded, 2.0, encoded, 4.0]
+        dest = zeros(4)
+        @test BMI.get_value(model, "var1", dest) === dest
+        @test isequal(dest, raw_model.values)
+        @test isequal(BMI.get_value(model, "var1", zeros(Float32, 4)), Float32.(raw_model.values))
+      end
+
+      @test raw_get("/get_value/intvar") == fill(2^53 + 1, 4)
+      @test BMI.get_value(model, "intvar", zeros(Int64, 4)) == fill(2^53 + 1, 4)
+
+      raw_model.values = [NaN]
+      @test raw_get("/get_value/var1") == ["NaN"]
+      @test isequal(BMI.get_value(model, "var1", zeros(1)), [NaN])
+    end
+
+    @testset "get_value_at_indices" begin
+      for (value, encoded) in number_cases
+        raw_model.values = [value, 2.0, value, 4.0]
+
+        @test isequal(BMI.get_value_at_indices(model, "var1", zeros(2), [1, 2]), [value, 2.0])
+        response = HTTP.post(model.base_url * "/get_value_at_indices/var1", ["Content-Type" => "application/json"], "[0]")
+        @test JSON.parse(String(response.body)) == [encoded]
+        @test isequal(BMI.get_value_at_indices(model, "var1", zeros(1), [1]), [value])
+      end
+
+      @test BMI.get_value_at_indices(model, "intvar", zeros(Int64, 1), [2]) == [2^53 + 1]
+    end
+
+    @testset "set_value" begin
+      for (value, _) in number_cases
+        raw_model.values = zeros(4)
+        values = [value, 2.0, value, 4.0]
+
+        @test BMI.set_value(model, "var1", values) === nothing
+        @test isequal(raw_model.values, values)
+      end
+
+      @test BMI.set_value(model, "var1", [1, 2, 3, 4]) === nothing
+      @test raw_model.values == [1.0, 2.0, 3.0, 4.0]
+
+      raw_model.values = zeros(1)
+      @test BMI.set_value(model, "var1", [Inf]) === nothing
+      @test raw_model.values == [Inf]
+    end
+
+    @testset "set_value_at_indices" begin
+      for (value, _) in number_cases
+        raw_model.values = [1.0, 2.0, 3.0, 4.0]
+
+        @test BMI.set_value_at_indices(model, "var1", [2], [value]) === nothing
+        @test isequal(raw_model.values[2], value)
+      end
+
+      @test BMI.set_value_at_indices(model, "var1", [2], [5]) === nothing
+      @test raw_model.values[2] == 5.0
+    end
+
+    @testset "get_grid_spacing" begin
+      for (value, encoded) in number_cases
+        raw_model.spacing .= value
+        dest = zeros(length(raw_model.spacing))
+
+        @test raw_get("/get_grid_spacing/1") == fill(encoded, length(dest))
+        @test BMI.get_grid_spacing(model, 1, dest) === dest
+        @test isequal(dest, raw_model.spacing)
+      end
+    end
+
+    @testset "get_grid_origin" begin
+      for (value, encoded) in number_cases
+        raw_model.origin .= value
+        dest = zeros(length(raw_model.origin))
+
+        @test raw_get("/get_grid_origin/1") == fill(encoded, length(dest))
+        @test BMI.get_grid_origin(model, 1, dest) === dest
+        @test isequal(dest, raw_model.origin)
+      end
+    end
+
+    @testset "get_grid_x" begin
+      for (value, encoded) in number_cases
+        raw_model.x .= value
+        dest = zeros(length(raw_model.x))
+
+        @test raw_get("/get_grid_x/1") == fill(encoded, length(dest))
+        @test BMI.get_grid_x(model, 1, dest) === dest
+        @test isequal(dest, raw_model.x)
+      end
+    end
+
+    @testset "get_grid_y" begin
+      for (value, encoded) in number_cases
+        raw_model.y .= value
+        dest = zeros(length(raw_model.y))
+
+        @test raw_get("/get_grid_y/1") == fill(encoded, length(dest))
+        @test BMI.get_grid_y(model, 1, dest) === dest
+        @test isequal(dest, raw_model.y)
+      end
+    end
+
+    @testset "get_grid_z" begin
+      for (value, encoded) in number_cases
+        raw_model.z .= value
+        dest = zeros(length(raw_model.z))
+
+        @test raw_get("/get_grid_z/1") == fill(encoded, length(dest))
+        @test BMI.get_grid_z(model, 1, dest) === dest
+        @test isequal(dest, raw_model.z)
+      end
+    end
+
+    @testset "get_current_time" begin
+      for (value, encoded) in time_cases
+        raw_model.current = value
+
+        @test raw_get("/get_current_time") == encoded
+        @test BMI.get_current_time(model) == value
+      end
+    end
+
+    @testset "get_start_time" begin
+      for (value, encoded) in time_cases
+        raw_model.start = value
+
+        @test raw_get("/get_start_time") == encoded
+        @test BMI.get_start_time(model) == value
+      end
+    end
+
+    @testset "get_end_time" begin
+      for (value, encoded) in time_cases
+        raw_model.stop = value
+
+        @test raw_get("/get_end_time") == encoded
+        @test BMI.get_end_time(model) == value
+      end
+    end
+
+    @testset "get_time_step" begin
+      for (value, encoded) in time_cases
+        raw_model.step = value
+
+        @test raw_get("/get_time_step") == encoded
+        @test BMI.get_time_step(model) == value
+      end
+    end
+
+    @testset "update_until" begin
+      for (value, _) in time_cases
+        raw_model.current = 0.0
+
+        @test BMI.update_until(model, value) === nothing
+        @test isequal(raw_model.current, value)
+      end
+    end
   end
 
   # TODO Stop server, now gets killed when Julia exits
