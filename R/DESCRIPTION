@@ -1,6 +1,6 @@
 Package: remotebmi
 Title: BMI over http
-Version: 0.0.0.9000
+Version: 0.1.1
 Authors@R: 
     person("Stefan", "Verhoeven", , "s.verhoeven@esciencecenter.nl", role = c("aut", "cre"),
            comment = c(ORCID = "https://orcid.org/0000-0002-5821-2060"))
