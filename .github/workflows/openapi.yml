@@ -5,12 +5,10 @@ on:
     paths:
       - "openapi.yaml"
       - .github/workflows/openapi.yml
-      - python/src/remotebmi/server/openapi.yaml
   pull_request:
     paths:
       - "openapi.yaml"
       - .github/workflows/openapi.yml
-      - python/src/remotebmi/server/openapi.yaml
     types: [opened, reopened]
 
 concurrency:
@@ -22,12 +20,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           sparse-checkout: |
             openapi.yaml
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 20
 
@@ -38,7 +36,7 @@ jobs:
         run: npx --package @stoplight/spectral-cli spectral lint openapi.yaml
 
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: "3.12"
 
@@ -47,14 +45,3 @@ jobs:
 
       - name: Yamllint
         run: yamllint openapi.yaml
-  copycheck:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          sparse-checkout: |
-            openapi.yaml
-            python/src/remotebmi/server/openapi.yaml
-      - name: Check spec copies are the same
-        run: diff openapi.yaml python/src/remotebmi/server/openapi.yaml

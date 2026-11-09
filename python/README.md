@@ -33,12 +33,12 @@ A client can connect to a running server with the following code.
 ```python
 from remotebmi import RemoteBmiClient
 
-model = RemoteBmiClient('http://localhost:50051')
+model = RemoteBmiClient("http://localhost:50051")
 # Now you can use the BMI methods on model
 # for example
-model.initialize('config.file')
+model.initialize("config.file")
 model.update()
-model.get_value('var_name')
+model.get_value("var_name")
 ```
 
 A client can also start a [Apptainer](https://apptainer.org) container containing the model and the server.
@@ -46,7 +46,7 @@ A client can also start a [Apptainer](https://apptainer.org) container containin
 ```python
 from remotebmi import BmiClientApptainer
 
-model = BmiClientApptainer('my_model.sif', work_dir='/tmp')
+model = BmiClientApptainer("my_model.sif", work_dir="/tmp")
 ```
 
 The client picks a random port and expects the container to run the BMI web server on that port.
@@ -57,7 +57,7 @@ A client can also start a [Docker](https://docs.docker.com/engine/) container co
 ```python
 from remotebmi import BmiClientDocker
 
-model = BmiClientDocker('ewatercycle/wflowjl:0.7.3', work_dir='/tmp')
+model = BmiClientDocker("ewatercycle/wflowjl:0.7.3", work_dir="/tmp")
 ```
 
 The BMI web server inside the Docker container should be running on port 50051.

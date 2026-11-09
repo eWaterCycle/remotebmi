@@ -27,6 +27,7 @@ __pycache__
 /venv
 python/.venv/
 python/heat.toml
+python/src/remotebmi/server/openapi.yaml
 python/docs/_build
 julia/example/Project.toml
 julia/example/heat.toml
@@ -34,3 +35,7 @@ openapi-generator-cli.jar
 openapitools.json
 PEQ_Hupsel.dat
 walrus.yml
+
+# Ignore skills
+.agents/
+skills-lock.json
