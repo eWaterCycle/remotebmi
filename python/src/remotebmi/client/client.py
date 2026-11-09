@@ -1,8 +1,19 @@
+from collections.abc import Generator
+from contextlib import ExitStack, contextmanager
+from functools import cached_property
+from typing import cast
+
 import numpy as np
 from bmipy import Bmi
 from httpx import Client, Limits
 from numpy import ndarray
 
+from remotebmi.capabilities import RemotebmiCapabilities
+from remotebmi.client.compression import (
+    Compression,
+    _CompressionClient,
+    validate_compression,
+)
 from remotebmi.nonfinite import decode_many, encode, encode_many
 
 from .utils import validate_url
@@ -15,6 +26,7 @@ class RemoteBmiClient(Bmi):
         timeout: int = 60 * 60 * 24,
         max_keepalive_connections: int = 0,
         client: Client | None = None,
+        compression: Compression = "auto",
     ):
         """RemoteBmiClient constructor
 
@@ -26,11 +38,15 @@ class RemoteBmiClient(Bmi):
                 connections" allow reusing of connections which is more efficient.
                 However, the R server implementation can break when they are used.
             client: An optional httpx.Client instance to use. Mainly used for testing.
+            compression: Value-transfer compression: auto negotiates server support,
+                never disables it, and always requires it. Defaults to auto.
 
         Raises:
             ValueError: If the base_url is invalid.
         """
+        validate_compression(compression)
         validate_url(base_url)
+        self.compression = compression
         # In some Python environments the reusing connection causes `illegal status line: bytesarray(b'14')` error
         # So we need to disable keepalive connections to be more reliable, but less efficient
         limits = Limits(max_keepalive_connections=max_keepalive_connections)
@@ -42,6 +58,43 @@ class RemoteBmiClient(Bmi):
     def __del__(self) -> None:
         if hasattr(self, "client"):
             self.client.close()
+
+    @cached_property
+    def capabilities(self) -> RemotebmiCapabilities | None:
+        """Cached server capabilities, or None when the endpoint returns 404."""
+        request = self.client.build_request(
+            "GET",
+            "/remotebmi_capabilities",
+            headers={"Accept-Encoding": "identity"},
+        )
+        request.headers.pop("Content-Encoding", None)
+        response = self.client.send(request)
+        if response.status_code == 404:
+            return None
+        response.raise_for_status()
+        return cast("RemotebmiCapabilities", response.json())
+
+    def _use_zstd(self) -> bool:
+        if self.compression == "never":
+            return False
+        capabilities = self.capabilities
+        supports_zstd = (
+            capabilities is not None and capabilities.get("supports_zstd") is True
+        )
+        if self.compression == "always" and not supports_zstd:
+            msg = "Server does not support zstd compression"
+            raise RuntimeError(msg)
+        return supports_zstd
+
+    @contextmanager
+    def _compression_client(self) -> Generator[_CompressionClient, None, None]:
+        with ExitStack() as responses:
+            yield _CompressionClient(
+                client=self.client,
+                compress=self._use_zstd(),
+                require_compressed_response=self.compression == "always",
+                responses=responses,
+            )
 
     def initialize(self, config_file: str) -> None:
         response = self.client.post("/initialize", json={"config_file": config_file})
@@ -149,27 +202,31 @@ class RemoteBmiClient(Bmi):
         return float(response.json())
 
     def get_value(self, name: str, dest: ndarray) -> ndarray:
-        response = self.client.get(f"/get_value/{name}")
-        response.raise_for_status()
-        decode_many(response.json(), dest=dest)
+        with self._compression_client() as client:
+            response = client.get(f"/get_value/{name}")
+            response.raise_for_status()
+            decode_many(response.json(), dest=dest)
         return dest
 
     def get_value_at_indices(self, name: str, dest: ndarray, inds: ndarray) -> ndarray:
-        response = self.client.post(f"/get_value_at_indices/{name}", json=inds.tolist())
-        response.raise_for_status()
-        decode_many(response.json(), dest=dest)
+        with self._compression_client() as client:
+            response = client.post(f"/get_value_at_indices/{name}", json=inds.tolist())
+            response.raise_for_status()
+            decode_many(response.json(), dest=dest)
         return dest
 
     def set_value(self, name: str, src: ndarray) -> None:
-        response = self.client.post(f"/set_value/{name}", json=encode_many(src))
-        response.raise_for_status()
+        with self._compression_client() as client:
+            response = client.post(f"/set_value/{name}", json=encode_many(src))
+            response.raise_for_status()
 
     def set_value_at_indices(self, name: str, inds: ndarray, src: ndarray) -> None:
-        response = self.client.post(
-            f"/set_value_at_indices/{name}",
-            json={"indices": inds.tolist(), "values": encode_many(src)},
-        )
-        response.raise_for_status()
+        with self._compression_client() as client:
+            response = client.post(
+                f"/set_value_at_indices/{name}",
+                json={"indices": inds.tolist(), "values": encode_many(src)},
+            )
+            response.raise_for_status()
 
     def get_value_ptr(self, name: str) -> ndarray:
         raise NotImplementedError

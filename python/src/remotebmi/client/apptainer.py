@@ -7,6 +7,7 @@ from posixpath import abspath
 from tempfile import SpooledTemporaryFile
 
 from remotebmi.client.client import RemoteBmiClient
+from remotebmi.client.compression import Compression
 from remotebmi.client.utils import DeadContainerError, get_unique_port
 
 logger = logging.getLogger(__name__)
@@ -20,6 +21,7 @@ class BmiClientApptainer(RemoteBmiClient):
         input_dirs: Iterable[str] = (),
         delay: int = 0,
         capture_logs: bool = True,
+        compression: Compression = "auto",
     ):
         if isinstance(input_dirs, str):
             msg = (
@@ -75,7 +77,7 @@ class BmiClientApptainer(RemoteBmiClient):
                 self.logs(),
             )
         url = f"http://{host}:{port}"
-        super().__init__(url)
+        super().__init__(url, compression=compression)
 
     def __del__(self) -> None:
         if hasattr(self, "container"):

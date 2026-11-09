@@ -1,11 +1,12 @@
 import sys
 from importlib.metadata import version
-from typing import Literal, TypedDict
+from typing import Literal
 
 import numpy as np
 from bmipy import Bmi
 from connexion import request
 
+from remotebmi.capabilities import RemotebmiCapabilities
 from remotebmi.nonfinite import IEEENumber, decode, decode_many, encode, encode_many
 from remotebmi.reserve import (
     reserve_grid_edge_nodes,
@@ -17,15 +18,6 @@ from remotebmi.reserve import (
     reserve_values,
     reserve_values_at_indices,
 )
-
-
-class RemotebmiCapabilities(TypedDict):
-    bmi_version: str
-    remotebmi_version: str
-    supports_binary: bool
-    index_type: str
-    byte_order: Literal["little", "big"]
-    supports_zstd: bool
 
 
 def remotebmi_capabilities() -> RemotebmiCapabilities:

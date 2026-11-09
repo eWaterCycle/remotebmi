@@ -7,6 +7,7 @@ import docker
 from docker.models.containers import Container  # noqa: TC002
 
 from remotebmi.client.client import RemoteBmiClient
+from remotebmi.client.compression import Compression
 from remotebmi.client.utils import DeadContainerError, get_unique_port, getuser
 
 
@@ -21,6 +22,7 @@ class BmiClientDocker(RemoteBmiClient):
         user: str | int = getuser(),
         remove: bool = False,
         delay: int = 5,
+        compression: Compression = "auto",
     ):
         if isinstance(input_dirs, str):
             msg = (
@@ -64,7 +66,7 @@ class BmiClientDocker(RemoteBmiClient):
                 raise DeadContainerError(msg, exitcode, logs)
 
         url = f"http://{host}:{port}"
-        super().__init__(url)
+        super().__init__(url, compression=compression)
 
     def __del__(self) -> None:
         if hasattr(self, "container"):
