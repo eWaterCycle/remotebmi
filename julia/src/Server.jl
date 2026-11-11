@@ -112,7 +112,7 @@ function update(req::HTTP.Request;)::Nothing
 end
 
 function update_until(req::HTTP.Request, body::IEEEDouble;)::Nothing
-  BMI.update_until(m, Float64(decode(body.value)))
+  BMI.update_until(m, Float64(decode(body)))
   return nothing
 end
 
@@ -148,7 +148,7 @@ end
 
 function set_value(req::HTTP.Request, name::String, request_body::Vector{IEEENumber};)::Nothing
   src = reserve_get_value(m, name)
-  copyto!(src, [decode(value.value) for value in request_body])
+  copyto!(src, decode.(request_body))
   BMI.set_value(m, name, src)
   return nothing
 end
@@ -161,7 +161,7 @@ function set_value_at_indices(
   # OpenAPI request is zero-based, while Julia is one-based
   jindexes = set_value_at_indices_request.indices .+ 1
   src = reserve_get_value_at_indices(m, name, jindexes)
-  copyto!(src, [decode(value.value) for value in set_value_at_indices_request.values])
+  copyto!(src, decode.(set_value_at_indices_request.values))
   BMI.set_value_at_indices(m, name, jindexes, src)
   return nothing
 end
