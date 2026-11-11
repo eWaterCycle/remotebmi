@@ -11,7 +11,7 @@ from numpy import ndarray
 from remotebmi.capabilities import RemotebmiCapabilities
 from remotebmi.client.compression import (
     Compression,
-    _CompressionClient,
+    CompressionClient,
     validate_compression,
 )
 from remotebmi.nonfinite import decode_many, encode, encode_many
@@ -87,9 +87,9 @@ class RemoteBmiClient(Bmi):
         return supports_zstd
 
     @contextmanager
-    def _compression_client(self) -> Generator[_CompressionClient, None, None]:
+    def _compression_client(self) -> Generator[CompressionClient, None, None]:
         with ExitStack() as responses:
-            yield _CompressionClient(
+            yield CompressionClient(
                 client=self.client,
                 compress=self._use_zstd(),
                 require_compressed_response=self.compression == "always",

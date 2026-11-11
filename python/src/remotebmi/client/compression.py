@@ -19,7 +19,7 @@ def validate_compression(compression: Compression) -> None:
 
 
 @dataclass
-class _CompressionClient:
+class CompressionClient:
     """Apply compression per request and register responses for context cleanup."""
 
     client: Client
