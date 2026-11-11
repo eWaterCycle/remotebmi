@@ -10,7 +10,7 @@ Method | HTTP request | Description
 
 
 # **get_grid_origin**
-> get_grid_origin(req::HTTP.Request, grid::Int64;) -> Vector{Float64}
+> get_grid_origin(req::HTTP.Request, grid::Int64;) -> Vector{IEEEDouble}
 
 
 
@@ -25,7 +25,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**Vector{Float64}**
+[**Vector{IEEEDouble}**](IEEEDouble.md)
 
 ### Authorization
 
@@ -68,7 +68,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_grid_spacing**
-> get_grid_spacing(req::HTTP.Request, grid::Int64;) -> Vector{Float64}
+> get_grid_spacing(req::HTTP.Request, grid::Int64;) -> Vector{IEEEDouble}
 
 
 
@@ -83,7 +83,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**Vector{Float64}**
+[**Vector{IEEEDouble}**](IEEEDouble.md)
 
 ### Authorization
 

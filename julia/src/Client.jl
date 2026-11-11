@@ -1,5 +1,7 @@
 module Client
 
+using ..NonFinite: encode, decode
+
 using HTTP
 using JSON
 using OpenAPI
@@ -38,7 +40,7 @@ end
 
 function BMI.update_until(m::BMIClient, time::Float64)
   api = IRFApi(OpenAPI.Clients.Client(m.base_url))
-  data, response = update_until(api, time)
+  data, response = update_until(api, IEEEDouble(encode(time)))
   return nothing
 end
 
@@ -127,19 +129,19 @@ end
 function BMI.get_current_time(m::BMIClient)
   api = TimeInformationApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_current_time(api)
-  return data
+  return decode(data)
 end
 
 function BMI.get_start_time(m::BMIClient)
   api = TimeInformationApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_start_time(api)
-  return data
+  return decode(data)
 end
 
 function BMI.get_end_time(m::BMIClient)
   api = TimeInformationApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_end_time(api)
-  return data
+  return decode(data)
 end
 
 function BMI.get_time_units(m::BMIClient)
@@ -151,7 +153,7 @@ end
 function BMI.get_time_step(m::BMIClient)
   api = TimeInformationApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_time_step(api)
-  return data
+  return decode(data)
 end
 
 # Variable getter and setter functions
@@ -159,7 +161,7 @@ end
 function BMI.get_value(m::BMIClient, name::String, dest::AbstractArray{T}) where {T}
   api = GettersApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_value(api, name)
-  copyto!(dest, data)
+  copyto!(dest, decode.(data))
   return dest
 end
 
@@ -172,13 +174,13 @@ function BMI.get_value_at_indices(
   api = GettersApi(OpenAPI.Clients.Client(m.base_url))
   oinds = inds .- 1
   data, response = get_value_at_indices(api, name, oinds)
-  copyto!(dest, data)
+  copyto!(dest, decode.(data))
   return dest
 end
 
 function BMI.set_value(m::BMIClient, name::String, src::AbstractArray{T}) where {T}
   api = SettersApi(OpenAPI.Clients.Client(m.base_url))
-  data, response = set_value(api, name, src)
+  data, response = set_value(api, name, IEEENumber.(encode.(src)))
   return nothing
 end
 
@@ -190,7 +192,7 @@ function BMI.set_value_at_indices(
 ) where {T}
   api = SettersApi(OpenAPI.Clients.Client(m.base_url))
   oinds = inds .- 1
-  request = SetValueAtIndicesRequest(; indices = oinds, values = src)
+  request = SetValueAtIndicesRequest(; indices = oinds, values = IEEENumber.(encode.(src)))
   data, response = set_value_at_indices(api, name, request)
   return nothing
 end
@@ -224,35 +226,35 @@ end
 function BMI.get_grid_spacing(m::BMIClient, grid, spacing::Vector{T}) where {T <: AbstractFloat}
   api = UniformRectilinearApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_grid_spacing(api, grid)
-  copyto!(spacing, data)
+  copyto!(spacing, decode.(data))
   return spacing
 end
 
 function BMI.get_grid_origin(m::BMIClient, grid, origin::Vector{T}) where {T <: AbstractFloat}
   api = UniformRectilinearApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_grid_origin(api, grid)
-  copyto!(origin, data)
+  copyto!(origin, decode.(data))
   return origin
 end
 
 function BMI.get_grid_x(m::BMIClient, grid, x::Vector{T}) where {T <: AbstractFloat}
   api = NURCApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_grid_x(api, grid)
-  copyto!(x, data)
+  copyto!(x, decode.(data))
   return x
 end
 
 function BMI.get_grid_y(m::BMIClient, grid, y::Vector{T}) where {T <: AbstractFloat}
   api = NURCApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_grid_y(api, grid)
-  copyto!(y, data)
+  copyto!(y, decode.(data))
   return y
 end
 
 function BMI.get_grid_z(m::BMIClient, grid, z::Vector{T}) where {T <: AbstractFloat}
   api = NURCApi(OpenAPI.Clients.Client(m.base_url))
   data, response = get_grid_z(api, grid)
-  copyto!(z, data)
+  copyto!(z, decode.(data))
   return z
 end
 

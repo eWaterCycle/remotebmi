@@ -95,6 +95,8 @@ Class | Method | HTTP request | Description
  - [GetVarLocationResponseLocation](docs/GetVarLocationResponseLocation.md)
  - [GetVarTypeResponse](docs/GetVarTypeResponse.md)
  - [GetVarUnitsResponse](docs/GetVarUnitsResponse.md)
+ - [IEEENumber](docs/IEEENumber.md)
+ - [IEEEDouble](docs/IEEEDouble.md)
  - [InitializeRequest](docs/InitializeRequest.md)
  - [ProblemDetails](docs/ProblemDetails.md)
  - [SetValueAtIndicesRequest](docs/SetValueAtIndicesRequest.md)

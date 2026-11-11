@@ -9,7 +9,7 @@ Method | HTTP request | Description
 
 
 # **get_value**
-> get_value(req::HTTP.Request, name::String;) -> Vector{Float64}
+> get_value(req::HTTP.Request, name::String;) -> Vector{IEEENumber}
 
 
 
@@ -24,7 +24,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**Vector{Float64}**
+[**Vector{IEEENumber}**](IEEENumber.md)
 
 ### Authorization
 
@@ -38,7 +38,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_value_at_indices**
-> get_value_at_indices(req::HTTP.Request, name::String, request_body::Vector{Int64};) -> Vector{Float64}
+> get_value_at_indices(req::HTTP.Request, name::String, request_body::Vector{Int64};) -> Vector{IEEENumber}
 
 
 
@@ -54,7 +54,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**Vector{Float64}**
+[**Vector{IEEENumber}**](IEEENumber.md)
 
 ### Authorization
 

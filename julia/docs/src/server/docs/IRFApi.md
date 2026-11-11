@@ -90,7 +90,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **update_until**
-> update_until(req::HTTP.Request, body::Float64;) -> Nothing
+> update_until(req::HTTP.Request, body::IEEEDouble;) -> Nothing
 
 
 
@@ -101,7 +101,7 @@ Updates the model to a particular time
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **req** | **HTTP.Request** | The HTTP Request object | 
-**body** | **Float64**|  | 
+**body** | [**IEEEDouble**](IEEEDouble.md)|  |
 
 ### Return type
 

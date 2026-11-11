@@ -23,10 +23,19 @@ julia> BMI.get_component_name(model)
 """
 module RemoteBMI
 
+include("./NonFinite.jl")
+
 include("./Server.jl")
 export Server
 
 include("./Client.jl")
 export Client
+
+NonFinite.decode(value::Union{
+  Client.BmiClient.IEEENumber,
+  Client.BmiClient.IEEEDouble,
+  Server.BmiServer.IEEENumber,
+  Server.BmiServer.IEEEDouble,
+}) = NonFinite.decode(value.value)
 
 end

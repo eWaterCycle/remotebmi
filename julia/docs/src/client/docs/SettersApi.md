@@ -9,8 +9,8 @@ Method | HTTP request | Description
 
 
 # **set_value**
-> set_value(_api::SettersApi, name::String, request_body::Vector{Float64}; _mediaType=nothing) -> Nothing, OpenAPI.Clients.ApiResponse <br/>
-> set_value(_api::SettersApi, response_stream::Channel, name::String, request_body::Vector{Float64}; _mediaType=nothing) -> Channel{ Nothing }, OpenAPI.Clients.ApiResponse
+> set_value(_api::SettersApi, name::String, request_body::Vector{IEEENumber}; _mediaType=nothing) -> Nothing, OpenAPI.Clients.ApiResponse <br/>
+> set_value(_api::SettersApi, response_stream::Channel, name::String, request_body::Vector{IEEENumber}; _mediaType=nothing) -> Channel{ Nothing }, OpenAPI.Clients.ApiResponse
 
 
 
@@ -22,7 +22,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **_api** | **SettersApi** | API context | 
 **name** | **String**|  | [default to nothing]
-**request_body** | [**Vector{Float64}**](Float64.md)|  | 
+**request_body** | [**Vector{IEEENumber}**](IEEENumber.md)|  |
 
 ### Return type
 

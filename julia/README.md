@@ -39,6 +39,9 @@ java -jar ./openapi-generator-cli.jar  generate -i ./openapi.yaml  -g julia-clie
 # Copy the generated src
 cp -r julia-client/src/* julia/src/client/
 cp -r julia-server/src/* julia/src/server/
+# Retain the custom validation and JSON readers in the IEEE models.
+# Keep the custom set_value request reader: OpenAPI.Servers does not parse
+# arrays of numeric/string union models correctly.
 # Copy the generated docs
 mkdir -p julia/docs/src/client/ julia/docs/src/server/
 cp -r julia-client/docs julia/docs/src/client/docs

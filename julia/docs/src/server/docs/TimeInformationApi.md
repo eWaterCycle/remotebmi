@@ -12,7 +12,7 @@ Method | HTTP request | Description
 
 
 # **get_current_time**
-> get_current_time(req::HTTP.Request;) -> Float64
+> get_current_time(req::HTTP.Request;) -> IEEEDouble
 
 
 
@@ -23,7 +23,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-**Float64**
+[**IEEEDouble**](IEEEDouble.md)
 
 ### Authorization
 
@@ -37,7 +37,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_end_time**
-> get_end_time(req::HTTP.Request;) -> Float64
+> get_end_time(req::HTTP.Request;) -> IEEEDouble
 
 
 
@@ -48,7 +48,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-**Float64**
+[**IEEEDouble**](IEEEDouble.md)
 
 ### Authorization
 
@@ -62,7 +62,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_start_time**
-> get_start_time(req::HTTP.Request;) -> Float64
+> get_start_time(req::HTTP.Request;) -> IEEEDouble
 
 
 
@@ -73,7 +73,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-**Float64**
+[**IEEEDouble**](IEEEDouble.md)
 
 ### Authorization
 
@@ -87,7 +87,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get_time_step**
-> get_time_step(req::HTTP.Request;) -> Float64
+> get_time_step(req::HTTP.Request;) -> IEEEDouble
 
 
 
@@ -98,7 +98,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-**Float64**
+[**IEEEDouble**](IEEEDouble.md)
 
 ### Authorization
 

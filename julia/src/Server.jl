@@ -1,5 +1,7 @@
 module Server
 
+using ..NonFinite: encode, decode
+
 using HTTP
 
 include("./server/BmiServer.jl")
@@ -35,7 +37,7 @@ function get_output_var_names(req::HTTP.Request;)::Vector{String}
   return BMI.get_output_var_names(m)
 end
 
-function reserve_get_value(m, name::String;)::Vector{Float64}
+function reserve_get_value(m, name::String;)
   raw_dtype = BMI.get_var_type(m, name)
   item_size = BMI.get_var_itemsize(m, name)
   total_size = BMI.get_var_nbytes(m, name)
@@ -54,13 +56,13 @@ function reserve_get_value(m, name::String;)::Vector{Float64}
   return zeros(dtype, size)
 end
 
-function get_value(req::HTTP.Request, name::String;)::Vector{Float64}
+function get_value(req::HTTP.Request, name::String;)::Vector{IEEENumber}
   dest = reserve_get_value(m, name)
   values = BMI.get_value(m, name, dest)
-  return values
+  return IEEENumber.(encode.(values))
 end
 
-function reserve_get_value_at_indices(m, name::String, indices::Vector{Int64};)::Vector{Float64}
+function reserve_get_value_at_indices(m, name::String, indices::Vector{Int64};)
   total_size = length(indices)
   raw_dtype = BMI.get_var_type(m, name)
   dtype_table = Dict(
@@ -81,10 +83,10 @@ function get_value_at_indices(
   req::HTTP.Request,
   name::String,
   indices::Vector{Int64};
-)::Vector{Float64}
+)::Vector{IEEENumber}
   jindices = indices .+ 1
   dest = reserve_get_value_at_indices(m, name, jindices)
-  return BMI.get_value_at_indices(m, name, dest, jindices)
+  return IEEENumber.(encode.(BMI.get_value_at_indices(m, name, dest, jindices)))
 end
 
 function get_grid_rank(req::HTTP.Request, grid::Int64;)::Int64
@@ -109,8 +111,8 @@ function update(req::HTTP.Request;)::Nothing
   return nothing
 end
 
-function update_until(req::HTTP.Request, body::Float64;)::Nothing
-  BMI.update_until(m, body)
+function update_until(req::HTTP.Request, body::IEEEDouble;)::Nothing
+  BMI.update_until(m, Float64(decode(body)))
   return nothing
 end
 
@@ -129,23 +131,25 @@ function reserve_grid_coords(m, grid::Int64, dim_index::Int8)::Vector{Float64}
   return zeros(Float64, size)
 end
 
-function get_grid_x(req::HTTP.Request, grid::Int64;)::Vector{Float64}
+function get_grid_x(req::HTTP.Request, grid::Int64;)::Vector{IEEEDouble}
   x = reserve_grid_coords(m, grid, Int8(1))
-  return BMI.get_grid_x(m, grid, x)
+  return IEEEDouble.(encode.(BMI.get_grid_x(m, grid, x)))
 end
 
-function get_grid_y(req::HTTP.Request, grid::Int64;)::Vector{Float64}
+function get_grid_y(req::HTTP.Request, grid::Int64;)::Vector{IEEEDouble}
   y = reserve_grid_coords(m, grid, Int8(2))
-  return BMI.get_grid_y(m, grid, y)
+  return IEEEDouble.(encode.(BMI.get_grid_y(m, grid, y)))
 end
 
-function get_grid_z(req::HTTP.Request, grid::Int64;)::Vector{Float64}
+function get_grid_z(req::HTTP.Request, grid::Int64;)::Vector{IEEEDouble}
   z = reserve_grid_coords(m, grid, Int8(3))
-  return BMI.get_grid_z(m, grid, z)
+  return IEEEDouble.(encode.(BMI.get_grid_z(m, grid, z)))
 end
 
-function set_value(req::HTTP.Request, name::String, request_body::Vector{Float64};)::Nothing
-  BMI.set_value(m, name, request_body)
+function set_value(req::HTTP.Request, name::String, request_body::Vector{IEEENumber};)::Nothing
+  src = reserve_get_value(m, name)
+  copyto!(src, decode.(request_body))
+  BMI.set_value(m, name, src)
   return nothing
 end
 
@@ -156,36 +160,35 @@ function set_value_at_indices(
 )::Nothing
   # OpenAPI request is zero-based, while Julia is one-based
   jindexes = set_value_at_indices_request.indices .+ 1
-  src = set_value_at_indices_request.values
+  src = reserve_get_value_at_indices(m, name, jindexes)
+  copyto!(src, decode.(set_value_at_indices_request.values))
   BMI.set_value_at_indices(m, name, jindexes, src)
   return nothing
 end
 
-function get_current_time(req::HTTP.Request;)::Float64
-  return BMI.get_current_time(m)
+function get_current_time(req::HTTP.Request;)::IEEEDouble
+  return IEEEDouble(encode(BMI.get_current_time(m)))
 end
 
-function get_end_time(req::HTTP.Request;)::Float64
-  # Julia Heat model returns Inf, but that is not a valid JSON number. 
-  # Therefore, it gets converted to null in the JSON response.
-  return BMI.get_end_time(m)
+function get_end_time(req::HTTP.Request;)::IEEEDouble
+  return IEEEDouble(encode(BMI.get_end_time(m)))
 end
 
-function get_start_time(req::HTTP.Request;)::Float64
-  return BMI.get_start_time(m)
+function get_start_time(req::HTTP.Request;)::IEEEDouble
+  return IEEEDouble(encode(BMI.get_start_time(m)))
 end
 
-function get_time_step(req::HTTP.Request;)::Float64
-  return BMI.get_time_step(m)
+function get_time_step(req::HTTP.Request;)::IEEEDouble
+  return IEEEDouble(encode(BMI.get_time_step(m)))
 end
 
 function get_time_units(req::HTTP.Request;)::GetTimeUnitsResponse
   return GetTimeUnitsResponse(BMI.get_time_units(m))
 end
 
-function get_grid_origin(req::HTTP.Request, grid::Int64;)::Vector{Float64}
+function get_grid_origin(req::HTTP.Request, grid::Int64;)::Vector{IEEEDouble}
   origin = reserve_grid_spacing(m, grid)
-  return BMI.get_grid_origin(m, grid, origin)
+  return IEEEDouble.(encode.(BMI.get_grid_origin(m, grid, origin)))
 end
 
 function get_grid_shape(req::HTTP.Request, grid::Int64;)::Vector{Int64}
@@ -197,9 +200,9 @@ function reserve_grid_spacing(m, grid::Int64;)::Vector{Float64}
   return zeros(Float64, rank)
 end
 
-function get_grid_spacing(req::HTTP.Request, grid::Int64;)::Vector{Float64}
+function get_grid_spacing(req::HTTP.Request, grid::Int64;)::Vector{IEEEDouble}
   spacing = reserve_grid_spacing(m, grid)
-  return BMI.get_grid_spacing(m, grid, spacing)
+  return IEEEDouble.(encode.(BMI.get_grid_spacing(m, grid, spacing)))
 end
 
 function get_grid_edge_count(req::HTTP.Request, grid::Int64;)::Int64

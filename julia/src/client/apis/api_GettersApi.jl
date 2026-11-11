@@ -12,7 +12,7 @@ This can be used to construct the `OpenAPI.Clients.Client` instance.
 basepath(::Type{GettersApi}) = "http://localhost:50051"
 
 const _returntypes_get_value_GettersApi = Dict{Regex, Type}(
-  Regex("^" * replace("200", "x" => ".") * "\$") => Vector{Float64},
+  Regex("^" * replace("200", "x" => ".") * "\$") => Vector{IEEENumber},
   Regex("^" * replace("0", "x" => ".") * "\$") => ProblemDetails,
 )
 
@@ -37,7 +37,7 @@ end
 Params:
 - name::String (required)
 
-Return: Vector{Float64}, OpenAPI.Clients.ApiResponse
+Return: Vector{IEEENumber}, OpenAPI.Clients.ApiResponse
 """
 function get_value(_api::GettersApi, name::String; _mediaType = nothing)
   _ctx = _oacinternal_get_value(_api, name; _mediaType = _mediaType)
@@ -50,7 +50,7 @@ function get_value(_api::GettersApi, response_stream::Channel, name::String; _me
 end
 
 const _returntypes_get_value_at_indices_GettersApi = Dict{Regex, Type}(
-  Regex("^" * replace("200", "x" => ".") * "\$") => Vector{Float64},
+  Regex("^" * replace("200", "x" => ".") * "\$") => Vector{IEEENumber},
   Regex("^" * replace("0", "x" => ".") * "\$") => ProblemDetails,
 )
 
@@ -85,7 +85,7 @@ Params:
 - name::String (required)
 - request_body::Vector{Int64} (required)
 
-Return: Vector{Float64}, OpenAPI.Clients.ApiResponse
+Return: Vector{IEEENumber}, OpenAPI.Clients.ApiResponse
 """
 function get_value_at_indices(
   _api::GettersApi,

@@ -19,7 +19,7 @@ const _returntypes_set_value_SettersApi = Dict{Regex, Type}(
 function _oacinternal_set_value(
   _api::SettersApi,
   name::String,
-  request_body::Vector{Float64};
+  request_body::Vector{IEEENumber};
   _mediaType = nothing,
 )
   OpenAPI.validate_param("name", "set_value", :minLength, name, 1)
@@ -45,14 +45,14 @@ end
 
 Params:
 - name::String (required)
-- request_body::Vector{Float64} (required)
+- request_body::Vector{IEEENumber} (required)
 
 Return: Nothing, OpenAPI.Clients.ApiResponse
 """
 function set_value(
   _api::SettersApi,
   name::String,
-  request_body::Vector{Float64};
+  request_body::Vector{IEEENumber};
   _mediaType = nothing,
 )
   _ctx = _oacinternal_set_value(_api, name, request_body; _mediaType = _mediaType)
@@ -63,7 +63,7 @@ function set_value(
   _api::SettersApi,
   response_stream::Channel,
   name::String,
-  request_body::Vector{Float64};
+  request_body::Vector{IEEENumber};
   _mediaType = nothing,
 )
   _ctx = _oacinternal_set_value(_api, name, request_body; _mediaType = _mediaType)
