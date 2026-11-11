@@ -5,11 +5,15 @@ on:
     paths:
       - "openapi.yaml"
       - .github/workflows/openapi.yml
+    branches:
+      - main
   pull_request:
     paths:
       - "openapi.yaml"
       - .github/workflows/openapi.yml
     types: [opened, reopened]
+    branches:
+      - main
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
