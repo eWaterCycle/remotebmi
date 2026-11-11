@@ -13,6 +13,7 @@ decoder is needed.
 from math import isnan
 from typing import Literal
 
+import numpy as np
 from numpy import ndarray
 
 NonFiniteSymbols = Literal["NaN", "Infinity", "-Infinity"]
@@ -48,4 +49,12 @@ def encode_many(values: ndarray) -> list[IEEENumber]:
     Returns:
         A list of values encoded according to the IEEENumber schema, in input order.
     """
-    return [encode(v) for v in values.tolist()]
+    if np.isfinite(values).all():
+        result: list[IEEENumber] = values.tolist()
+        return result
+    out = values.astype(object)
+    out[np.isnan(values)] = "NaN"
+    out[np.isposinf(values)] = "Infinity"
+    out[np.isneginf(values)] = "-Infinity"
+    encoded: list[IEEENumber] = out.tolist()
+    return encoded
