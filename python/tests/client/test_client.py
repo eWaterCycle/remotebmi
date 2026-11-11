@@ -309,7 +309,7 @@ class TestCompression:
                     {
                         "method": "GET",
                         "path": "/remotebmi_capabilities",
-                        "accept_encoding": "identity",
+                        "accept_encoding": "gzip, zstd",
                         "content_encoding": None,
                     }
                 ],
@@ -353,7 +353,7 @@ class TestCompression:
                     {
                         "method": "GET",
                         "path": "/remotebmi_capabilities",
-                        "accept_encoding": "identity",
+                        "accept_encoding": "gzip, zstd",
                         "content_encoding": None,
                     },
                     expected_get,
@@ -396,7 +396,7 @@ class TestCompression:
                     "/get_value/temperature",
                     "/get_value/temperature",
                 ],
-                "encodings": ["identity"] * 3,
+                "encodings": ["gzip, zstd", "identity", "identity"],
             }
 
     def test_disabled_skips_capabilities(self):
@@ -531,7 +531,9 @@ class TestCompression:
             (True, [httpx.Response(404)]),
         ],
     )
-    def test_uncompressed_requests_remove_inherited_encoding(self, mode, capabilities):
+    def test_uncompressed_value_requests_remove_inherited_encoding(
+        self, mode, capabilities
+    ):
         with self.make_client(
             [*capabilities, httpx.Response(204)],
             compression=mode,
@@ -545,7 +547,7 @@ class TestCompression:
                 "values": json.loads(requests[-1].content),
                 "client_encoding": httpclient.headers["content-encoding"],
             } == {
-                "request_encodings": [None] * len(requests),
+                "request_encodings": ["zstd"] * len(capabilities) + [None],
                 "values": [1.0],
                 "client_encoding": "zstd",
             }

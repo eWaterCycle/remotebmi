@@ -59,9 +59,7 @@ class RemoteBmiClient(Bmi):
         request = self.client.build_request(
             "GET",
             "/remotebmi_capabilities",
-            headers={"Accept-Encoding": "identity"},
         )
-        request.headers.pop("Content-Encoding", None)
         response = self.client.send(request)
         if response.status_code == 404:
             return None
