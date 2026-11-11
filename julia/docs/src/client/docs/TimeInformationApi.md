@@ -12,8 +12,8 @@ Method | HTTP request | Description
 
 
 # **get_current_time**
-> get_current_time(_api::TimeInformationApi; _mediaType=nothing) -> Float64, OpenAPI.Clients.ApiResponse <br/>
-> get_current_time(_api::TimeInformationApi, response_stream::Channel; _mediaType=nothing) -> Channel{ Float64 }, OpenAPI.Clients.ApiResponse
+> get_current_time(_api::TimeInformationApi; _mediaType=nothing) -> IEEEDouble, OpenAPI.Clients.ApiResponse <br/>
+> get_current_time(_api::TimeInformationApi, response_stream::Channel; _mediaType=nothing) -> Channel{ IEEEDouble }, OpenAPI.Clients.ApiResponse
 
 
 
@@ -24,7 +24,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-**Float64**
+[**IEEEDouble**](IEEEDouble.md)
 
 ### Authorization
 
@@ -38,8 +38,8 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 
 # **get_end_time**
-> get_end_time(_api::TimeInformationApi; _mediaType=nothing) -> Float64, OpenAPI.Clients.ApiResponse <br/>
-> get_end_time(_api::TimeInformationApi, response_stream::Channel; _mediaType=nothing) -> Channel{ Float64 }, OpenAPI.Clients.ApiResponse
+> get_end_time(_api::TimeInformationApi; _mediaType=nothing) -> IEEEDouble, OpenAPI.Clients.ApiResponse <br/>
+> get_end_time(_api::TimeInformationApi, response_stream::Channel; _mediaType=nothing) -> Channel{ IEEEDouble }, OpenAPI.Clients.ApiResponse
 
 
 
@@ -50,7 +50,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-**Float64**
+[**IEEEDouble**](IEEEDouble.md)
 
 ### Authorization
 
@@ -64,8 +64,8 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 
 # **get_start_time**
-> get_start_time(_api::TimeInformationApi; _mediaType=nothing) -> Float64, OpenAPI.Clients.ApiResponse <br/>
-> get_start_time(_api::TimeInformationApi, response_stream::Channel; _mediaType=nothing) -> Channel{ Float64 }, OpenAPI.Clients.ApiResponse
+> get_start_time(_api::TimeInformationApi; _mediaType=nothing) -> IEEEDouble, OpenAPI.Clients.ApiResponse <br/>
+> get_start_time(_api::TimeInformationApi, response_stream::Channel; _mediaType=nothing) -> Channel{ IEEEDouble }, OpenAPI.Clients.ApiResponse
 
 
 
@@ -76,7 +76,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-**Float64**
+[**IEEEDouble**](IEEEDouble.md)
 
 ### Authorization
 
@@ -90,8 +90,8 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 
 # **get_time_step**
-> get_time_step(_api::TimeInformationApi; _mediaType=nothing) -> Float64, OpenAPI.Clients.ApiResponse <br/>
-> get_time_step(_api::TimeInformationApi, response_stream::Channel; _mediaType=nothing) -> Channel{ Float64 }, OpenAPI.Clients.ApiResponse
+> get_time_step(_api::TimeInformationApi; _mediaType=nothing) -> IEEEDouble, OpenAPI.Clients.ApiResponse <br/>
+> get_time_step(_api::TimeInformationApi, response_stream::Channel; _mediaType=nothing) -> Channel{ IEEEDouble }, OpenAPI.Clients.ApiResponse
 
 
 
@@ -102,7 +102,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-**Float64**
+[**IEEEDouble**](IEEEDouble.md)
 
 ### Authorization
 

@@ -23,10 +23,10 @@ The following server methods must be implemented:
     - *signature:* get_output_var_names(req::HTTP.Request;) -> Vector{String}
 - **get_value**
     - *invocation:* GET /get_value/{name}
-    - *signature:* get_value(req::HTTP.Request, name::String;) -> Vector{Float64}
+    - *signature:* get_value(req::HTTP.Request, name::String;) -> Vector{IEEENumber}
 - **get_value_at_indices**
     - *invocation:* POST /get_value_at_indices/{name}
-    - *signature:* get_value_at_indices(req::HTTP.Request, name::String, request_body::Vector{Int64};) -> Vector{Float64}
+    - *signature:* get_value_at_indices(req::HTTP.Request, name::String, request_body::Vector{Int64};) -> Vector{IEEENumber}
 - **get_grid_rank**
     - *invocation:* GET /get_grid_rank/{grid}
     - *signature:* get_grid_rank(req::HTTP.Request, grid::Int64;) -> Int64
@@ -47,46 +47,46 @@ The following server methods must be implemented:
     - *signature:* update(req::HTTP.Request;) -> Nothing
 - **update_until**
     - *invocation:* POST /update_until
-    - *signature:* update_until(req::HTTP.Request, body::Float64;) -> Nothing
+    - *signature:* update_until(req::HTTP.Request, body::IEEEDouble;) -> Nothing
 - **get_grid_x**
     - *invocation:* GET /get_grid_x/{grid}
-    - *signature:* get_grid_x(req::HTTP.Request, grid::Int64;) -> Vector{Float64}
+    - *signature:* get_grid_x(req::HTTP.Request, grid::Int64;) -> Vector{IEEEDouble}
 - **get_grid_y**
     - *invocation:* GET /get_grid_y/{grid}
-    - *signature:* get_grid_y(req::HTTP.Request, grid::Int64;) -> Vector{Float64}
+    - *signature:* get_grid_y(req::HTTP.Request, grid::Int64;) -> Vector{IEEEDouble}
 - **get_grid_z**
     - *invocation:* GET /get_grid_z/{grid}
-    - *signature:* get_grid_z(req::HTTP.Request, grid::Int64;) -> Vector{Float64}
+    - *signature:* get_grid_z(req::HTTP.Request, grid::Int64;) -> Vector{IEEEDouble}
 - **set_value**
     - *invocation:* POST /set_value/{name}
-    - *signature:* set_value(req::HTTP.Request, name::String, request_body::Vector{Float64};) -> Nothing
+    - *signature:* set_value(req::HTTP.Request, name::String, request_body::Vector{IEEENumber};) -> Nothing
 - **set_value_at_indices**
     - *invocation:* POST /set_value_at_indices/{name}
     - *signature:* set_value_at_indices(req::HTTP.Request, name::String, set_value_at_indices_request::SetValueAtIndicesRequest;) -> Nothing
 - **get_current_time**
     - *invocation:* GET /get_current_time
-    - *signature:* get_current_time(req::HTTP.Request;) -> Float64
+    - *signature:* get_current_time(req::HTTP.Request;) -> IEEEDouble
 - **get_end_time**
     - *invocation:* GET /get_end_time
-    - *signature:* get_end_time(req::HTTP.Request;) -> Float64
+    - *signature:* get_end_time(req::HTTP.Request;) -> IEEEDouble
 - **get_start_time**
     - *invocation:* GET /get_start_time
-    - *signature:* get_start_time(req::HTTP.Request;) -> Float64
+    - *signature:* get_start_time(req::HTTP.Request;) -> IEEEDouble
 - **get_time_step**
     - *invocation:* GET /get_time_step
-    - *signature:* get_time_step(req::HTTP.Request;) -> Float64
+    - *signature:* get_time_step(req::HTTP.Request;) -> IEEEDouble
 - **get_time_units**
     - *invocation:* GET /get_time_units
     - *signature:* get_time_units(req::HTTP.Request;) -> GetTimeUnitsResponse
 - **get_grid_origin**
     - *invocation:* GET /get_grid_origin/{grid}
-    - *signature:* get_grid_origin(req::HTTP.Request, grid::Int64;) -> Vector{Float64}
+    - *signature:* get_grid_origin(req::HTTP.Request, grid::Int64;) -> Vector{IEEEDouble}
 - **get_grid_shape**
     - *invocation:* GET /get_grid_shape/{grid}
     - *signature:* get_grid_shape(req::HTTP.Request, grid::Int64;) -> Vector{Int64}
 - **get_grid_spacing**
     - *invocation:* GET /get_grid_spacing/{grid}
-    - *signature:* get_grid_spacing(req::HTTP.Request, grid::Int64;) -> Vector{Float64}
+    - *signature:* get_grid_spacing(req::HTTP.Request, grid::Int64;) -> Vector{IEEEDouble}
 - **get_grid_edge_count**
     - *invocation:* GET /get_grid_edge_count/{grid}
     - *signature:* get_grid_edge_count(req::HTTP.Request, grid::Int64;) -> Int64
@@ -130,6 +130,7 @@ The following server methods must be implemented:
 module BmiServer
 
 using HTTP
+using JSON
 using URIs
 using TimeZones
 using OpenAPI
@@ -191,6 +192,8 @@ export GetTimeUnitsResponse
 export GetVarLocationResponseLocation
 export GetVarTypeResponse
 export GetVarUnitsResponse
+export IEEENumber
+export IEEEDouble
 export InitializeRequest
 export ProblemDetails
 export SetValueAtIndicesRequest

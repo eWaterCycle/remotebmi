@@ -23,6 +23,8 @@ julia> BMI.get_component_name(model)
 """
 module RemoteBMI
 
+include("./NonFinite.jl")
+
 include("./Server.jl")
 export Server
 

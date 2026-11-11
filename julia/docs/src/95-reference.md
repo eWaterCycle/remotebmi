@@ -12,6 +12,12 @@ Pages = ["95-reference.md"]
 Pages = ["95-reference.md"]
 ```
 
+## IEEE number conversion
+
+```@autodocs
+Modules = [RemoteBMI.NonFinite]
+```
+
 ## Server
 
 ```@autodocs

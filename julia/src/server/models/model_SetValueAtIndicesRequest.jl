@@ -9,11 +9,11 @@
     )
 
     - indices::Vector{Int64}
-    - values::Vector{Float64}
+    - values::Vector{IEEENumber}
 """
 Base.@kwdef mutable struct SetValueAtIndicesRequest <: OpenAPI.APIModel
   indices::Union{Nothing, Vector{Int64}} = nothing
-  values::Union{Nothing, Vector{Float64}} = nothing
+  values::Union{Nothing, Vector{IEEENumber}} = nothing
 
   function SetValueAtIndicesRequest(indices, values)
     OpenAPI.validate_property(SetValueAtIndicesRequest, Symbol("indices"), indices)
@@ -23,7 +23,7 @@ Base.@kwdef mutable struct SetValueAtIndicesRequest <: OpenAPI.APIModel
 end # type SetValueAtIndicesRequest
 
 const _property_types_SetValueAtIndicesRequest =
-  Dict{Symbol, String}(Symbol("indices") => "Vector{Int64}", Symbol("values") => "Vector{Float64}")
+  Dict{Symbol, String}(Symbol("indices") => "Vector{Int64}", Symbol("values") => "Vector{IEEENumber}")
 OpenAPI.property_type(::Type{SetValueAtIndicesRequest}, name::Symbol) =
   Union{Nothing, eval(Base.Meta.parse(_property_types_SetValueAtIndicesRequest[name]))}
 

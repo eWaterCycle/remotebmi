@@ -12,7 +12,7 @@ This can be used to construct the `OpenAPI.Clients.Client` instance.
 basepath(::Type{NURCApi}) = "http://localhost:50051"
 
 const _returntypes_get_grid_x_NURCApi = Dict{Regex, Type}(
-  Regex("^" * replace("200", "x" => ".") * "\$") => Vector{Float64},
+  Regex("^" * replace("200", "x" => ".") * "\$") => Vector{IEEEDouble},
   Regex("^" * replace("0", "x" => ".") * "\$") => ProblemDetails,
 )
 
@@ -35,7 +35,7 @@ end
 Params:
 - grid::Int64 (required)
 
-Return: Vector{Float64}, OpenAPI.Clients.ApiResponse
+Return: Vector{IEEEDouble}, OpenAPI.Clients.ApiResponse
 """
 function get_grid_x(_api::NURCApi, grid::Int64; _mediaType = nothing)
   _ctx = _oacinternal_get_grid_x(_api, grid; _mediaType = _mediaType)
@@ -48,7 +48,7 @@ function get_grid_x(_api::NURCApi, response_stream::Channel, grid::Int64; _media
 end
 
 const _returntypes_get_grid_y_NURCApi = Dict{Regex, Type}(
-  Regex("^" * replace("200", "x" => ".") * "\$") => Vector{Float64},
+  Regex("^" * replace("200", "x" => ".") * "\$") => Vector{IEEEDouble},
   Regex("^" * replace("0", "x" => ".") * "\$") => ProblemDetails,
 )
 
@@ -71,7 +71,7 @@ end
 Params:
 - grid::Int64 (required)
 
-Return: Vector{Float64}, OpenAPI.Clients.ApiResponse
+Return: Vector{IEEEDouble}, OpenAPI.Clients.ApiResponse
 """
 function get_grid_y(_api::NURCApi, grid::Int64; _mediaType = nothing)
   _ctx = _oacinternal_get_grid_y(_api, grid; _mediaType = _mediaType)
@@ -84,7 +84,7 @@ function get_grid_y(_api::NURCApi, response_stream::Channel, grid::Int64; _media
 end
 
 const _returntypes_get_grid_z_NURCApi = Dict{Regex, Type}(
-  Regex("^" * replace("200", "x" => ".") * "\$") => Vector{Float64},
+  Regex("^" * replace("200", "x" => ".") * "\$") => Vector{IEEEDouble},
   Regex("^" * replace("0", "x" => ".") * "\$") => ProblemDetails,
 )
 
@@ -107,7 +107,7 @@ end
 Params:
 - grid::Int64 (required)
 
-Return: Vector{Float64}, OpenAPI.Clients.ApiResponse
+Return: Vector{IEEEDouble}, OpenAPI.Clients.ApiResponse
 """
 function get_grid_z(_api::NURCApi, grid::Int64; _mediaType = nothing)
   _ctx = _oacinternal_get_grid_z(_api, grid; _mediaType = _mediaType)
