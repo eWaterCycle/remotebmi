@@ -1,6 +1,6 @@
 [project]
 name = "remotebmi"
-version = "0.0.0.9000"
+version = "0.1.1"
 type = "package"
 title = "BMI over http"
 description = "Runs a BMI model as a http json web service."
