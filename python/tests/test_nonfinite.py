@@ -4,7 +4,27 @@ import numpy as np
 import pytest
 from numpy.testing import assert_array_equal
 
-from remotebmi.nonfinite import IEEENumber, encode_many
+from remotebmi.nonfinite import IEEENumber, RawNumber, encode, encode_many
+
+
+@pytest.mark.parametrize("value", [0, -1, 2**53 + 1, 1.5, -2.5, 0.0, -0.0])
+def test_encode_finite(value: RawNumber) -> None:
+    assert encode(value) is value
+
+
+@pytest.mark.parametrize(
+    "value, expected",
+    [
+        (float("nan"), "NaN"),
+        (float("inf"), "Infinity"),
+        (float("-inf"), "-Infinity"),
+    ],
+)
+def test_encode_nonfinite(value: float, expected: str) -> None:
+    result = encode(value)
+
+    assert result == expected
+    assert json.loads(json.dumps(result, allow_nan=False)) == expected
 
 
 @pytest.mark.parametrize("dtype", [np.float32, np.float64])
