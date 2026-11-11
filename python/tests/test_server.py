@@ -358,6 +358,7 @@ class TestCompression:
             {"Accept-Encoding": ""},
             {},
         ],
+        ids=lambda headers: headers.get("Accept-Encoding", "missing") or "empty",
     )
     def test_get_value_uncompressed(
         self,
