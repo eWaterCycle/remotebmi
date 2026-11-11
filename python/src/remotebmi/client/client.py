@@ -3,6 +3,8 @@ from bmipy import Bmi
 from httpx import Client, Limits
 from numpy import ndarray
 
+from remotebmi.nonfinite import encode, encode_many
+
 from .utils import validate_url
 
 
@@ -50,7 +52,7 @@ class RemoteBmiClient(Bmi):
         response.raise_for_status()
 
     def update_until(self, until: float) -> None:
-        response = self.client.post("/update_until", json={"until": until})
+        response = self.client.post("/update_until", json=encode(until))
         response.raise_for_status()
 
     def finalize(self) -> None:
@@ -149,25 +151,23 @@ class RemoteBmiClient(Bmi):
     def get_value(self, name: str, dest: ndarray) -> ndarray:
         response = self.client.get(f"/get_value/{name}")
         response.raise_for_status()
-        items = np.array(response.json())
-        np.copyto(dest, items)
-        return items
+        dest[:] = response.json()
+        return dest
 
     def get_value_at_indices(self, name: str, dest: ndarray, inds: ndarray) -> ndarray:
         response = self.client.post(f"/get_value_at_indices/{name}", json=inds.tolist())
         response.raise_for_status()
-        items = np.array(response.json())
-        np.copyto(dest, items)
-        return items
+        dest[:] = response.json()
+        return dest
 
     def set_value(self, name: str, src: ndarray) -> None:
-        response = self.client.post(f"/set_value/{name}", json=src.tolist())
+        response = self.client.post(f"/set_value/{name}", json=encode_many(src))
         response.raise_for_status()
 
     def set_value_at_indices(self, name: str, inds: ndarray, src: ndarray) -> None:
         response = self.client.post(
             f"/set_value_at_indices/{name}",
-            json={"indices": inds.tolist(), "values": src.tolist()},
+            json={"indices": inds.tolist(), "values": encode_many(src)},
         )
         response.raise_for_status()
 
@@ -192,16 +192,14 @@ class RemoteBmiClient(Bmi):
     def get_grid_origin(self, grid: int, origin: ndarray) -> ndarray:
         response = self.client.get(f"/get_grid_origin/{grid}")
         response.raise_for_status()
-        items = np.array(response.json())
-        np.copyto(origin, items)
-        return items
+        origin[:] = response.json()
+        return origin
 
     def get_grid_spacing(self, grid: int, spacing: ndarray) -> ndarray:
         response = self.client.get(f"/get_grid_spacing/{grid}")
         response.raise_for_status()
-        items = np.array(response.json())
-        np.copyto(spacing, items)
-        return items
+        spacing[:] = response.json()
+        return spacing
 
     def get_grid_shape(self, grid: int, shape: ndarray) -> ndarray:
         response = self.client.get(f"/get_grid_shape/{grid}")
@@ -213,23 +211,20 @@ class RemoteBmiClient(Bmi):
     def get_grid_x(self, grid: int, x: ndarray) -> ndarray:
         response = self.client.get(f"/get_grid_x/{grid}")
         response.raise_for_status()
-        items = np.array(response.json())
-        np.copyto(x, items)
-        return items
+        x[:] = response.json()
+        return x
 
     def get_grid_y(self, grid: int, y: ndarray) -> ndarray:
         response = self.client.get(f"/get_grid_y/{grid}")
         response.raise_for_status()
-        items = np.array(response.json())
-        np.copyto(y, items)
-        return items
+        y[:] = response.json()
+        return y
 
     def get_grid_z(self, grid: int, z: ndarray) -> ndarray:
         response = self.client.get(f"/get_grid_z/{grid}")
         response.raise_for_status()
-        items = np.array(response.json())
-        np.copyto(z, items)
-        return items
+        z[:] = response.json()
+        return z
 
     def get_grid_node_count(self, grid: int) -> int:
         response = self.client.get(f"/get_grid_node_count/{grid}")
