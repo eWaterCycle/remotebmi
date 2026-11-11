@@ -1127,17 +1127,6 @@ components:
             - 'NaN'
             - 'Infinity'
             - '-Infinity'
-    IEEEDoubleNoNaN:
-      example: 1.0
-      oneOf:
-        - type: number
-          format: double
-        - type: string
-          description: Non-finite IEEE 754 double precision
-            floating-point values, excluding NaN.
-          enum:
-            - 'Infinity'
-            - '-Infinity'
     GetVarLocationResponseLocation:
       type: object
       properties:
@@ -1200,9 +1189,9 @@ components:
         - type
       additionalProperties: false
     GetTimeResponse:
-      $ref: '#/components/schemas/IEEEDoubleNoNaN'
+      $ref: '#/components/schemas/IEEEDouble'
     GetTimeStepResponse:
-      $ref: '#/components/schemas/IEEEDoubleNoNaN'
+      $ref: '#/components/schemas/IEEEDouble'
     GetTimeUnitsResponse:
       type: object
       properties:
