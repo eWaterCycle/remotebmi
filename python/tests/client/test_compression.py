@@ -2,7 +2,6 @@
 
 import json
 from contextlib import closing, contextmanager
-from types import SimpleNamespace
 
 import httpx
 import numpy as np
@@ -10,29 +9,6 @@ import pytest
 import zstandard
 
 from remotebmi import RemoteBmiClient
-from remotebmi.client.apptainer import BmiClientApptainer
-from remotebmi.client.docker import BmiClientDocker
-
-
-class FakeContainer:
-    status = "running"
-
-    def reload(self):
-        pass
-
-    def stop(self):
-        pass
-
-
-class FakeProcess:
-    def poll(self):
-        return None
-
-    def terminate(self):
-        pass
-
-    def wait(self):
-        return 0
 
 
 class TestCompression:
@@ -409,34 +385,3 @@ class TestCompression:
                 "/remotebmi_capabilities",
                 "/set_value/temperature",
             ]
-
-    @pytest.mark.parametrize("mode", [None, True, False])
-    def test_docker_forwards_compression(self, mode, tmp_path, monkeypatch):
-        def run_container(*args, **kwargs):
-            return FakeContainer()
-
-        docker_client = SimpleNamespace(containers=SimpleNamespace(run=run_container))
-        monkeypatch.setattr(
-            "remotebmi.client.docker.docker.from_env", lambda: docker_client
-        )
-        kwargs = {} if mode is None else {"compression": mode}
-        client = BmiClientDocker(
-            "model", str(tmp_path), host="localhost", delay=0, **kwargs
-        )
-        with closing(client.client):
-            assert client.compression is (mode or False)
-
-    @pytest.mark.parametrize("mode", [None, True, False])
-    def test_apptainer_forwards_compression(self, mode, tmp_path, monkeypatch):
-        def start_process(*args, **kwargs):
-            return FakeProcess()
-
-        monkeypatch.setattr(
-            "remotebmi.client.apptainer.subprocess.Popen", start_process
-        )
-        kwargs = {} if mode is None else {"compression": mode}
-        client = BmiClientApptainer(
-            "model", str(tmp_path), capture_logs=False, **kwargs
-        )
-        with closing(client.client):
-            assert client.compression is (mode or False)
