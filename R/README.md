@@ -105,3 +105,7 @@ array([0, 0])
 # And finally
 client.finalize()
 ```
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on contributing to the RemoteBMI R package.
