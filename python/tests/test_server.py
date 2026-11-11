@@ -193,7 +193,8 @@ class TestNonFiniteFloat32Model:
         self.assert_get_response(fake_app, "/get_grid_z/1", ["NaN", "Infinity"])
 
     @pytest.mark.parametrize(
-        "value, encoded", [(42.0, 42.0), (np.inf, "Infinity"), (-np.inf, "-Infinity")]
+        "value, encoded",
+        [(42.0, 42.0), (np.nan, "NaN"), (np.inf, "Infinity"), (-np.inf, "-Infinity")],
     )
     def test_get_start_time(
         self,
@@ -206,7 +207,8 @@ class TestNonFiniteFloat32Model:
         self.assert_get_response(fake_app, "/get_start_time", encoded)
 
     @pytest.mark.parametrize(
-        "value, encoded", [(42.0, 42.0), (np.inf, "Infinity"), (-np.inf, "-Infinity")]
+        "value, encoded",
+        [(42.0, 42.0), (np.nan, "NaN"), (np.inf, "Infinity"), (-np.inf, "-Infinity")],
     )
     def test_get_end_time(
         self,
@@ -219,7 +221,8 @@ class TestNonFiniteFloat32Model:
         self.assert_get_response(fake_app, "/get_end_time", encoded)
 
     @pytest.mark.parametrize(
-        "value, encoded", [(42.0, 42.0), (np.inf, "Infinity"), (-np.inf, "-Infinity")]
+        "value, encoded",
+        [(42.0, 42.0), (np.nan, "NaN"), (np.inf, "Infinity"), (-np.inf, "-Infinity")],
     )
     def test_get_current_time(
         self,
@@ -232,7 +235,8 @@ class TestNonFiniteFloat32Model:
         self.assert_get_response(fake_app, "/get_current_time", encoded)
 
     @pytest.mark.parametrize(
-        "value, encoded", [(42.0, 42.0), (np.inf, "Infinity"), (-np.inf, "-Infinity")]
+        "value, encoded",
+        [(42.0, 42.0), (np.nan, "NaN"), (np.inf, "Infinity"), (-np.inf, "-Infinity")],
     )
     def test_get_time_step(
         self,
@@ -245,7 +249,8 @@ class TestNonFiniteFloat32Model:
         self.assert_get_response(fake_app, "/get_time_step", encoded)
 
     @pytest.mark.parametrize(
-        "value, encoded", [(42.0, 42.0), (np.inf, "Infinity"), (-np.inf, "-Infinity")]
+        "value, encoded",
+        [(42.0, 42.0), (np.nan, "NaN"), (np.inf, "Infinity"), (-np.inf, "-Infinity")],
     )
     def test_update_until_ieee_double(
         self,
@@ -258,13 +263,4 @@ class TestNonFiniteFloat32Model:
             response = httpclient.post("/update_until", json=encoded)
 
         assert response.status_code == 204
-        assert model.time == value
-
-    def test_update_until_rejects_nan(
-        self, fake_app: AsyncApp, model: NonFiniteFloat32Model
-    ):
-        with fake_app.test_client() as httpclient:
-            response = httpclient.post("/update_until", json="NaN")
-
-        assert response.status_code == 400
-        assert model.time == 42.0
+        assert_array_equal(model.time, value)

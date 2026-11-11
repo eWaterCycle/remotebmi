@@ -147,7 +147,7 @@ class TestNonFiniteFloat32Model:
             return httpx.Response(200, json=encoded)
 
         with make_fake_client(handle_request) as client:
-            assert method(client) == value
+            assert_array_equal(method(client), value)
 
     def test_get_grid_spacing(self):
         self.assert_grid_response(
@@ -167,7 +167,8 @@ class TestNonFiniteFloat32Model:
         self.assert_grid_response(RemoteBmiClient.get_grid_z, "/get_grid_z/1")
 
     @pytest.mark.parametrize(
-        "value, encoded", [(42.0, 42.0), (np.inf, "Infinity"), (-np.inf, "-Infinity")]
+        "value, encoded",
+        [(42.0, 42.0), (np.nan, "NaN"), (np.inf, "Infinity"), (-np.inf, "-Infinity")],
     )
     def test_get_start_time(self, value: float, encoded: IEEENumber):
         self.assert_time_response(
@@ -175,7 +176,8 @@ class TestNonFiniteFloat32Model:
         )
 
     @pytest.mark.parametrize(
-        "value, encoded", [(42.0, 42.0), (np.inf, "Infinity"), (-np.inf, "-Infinity")]
+        "value, encoded",
+        [(42.0, 42.0), (np.nan, "NaN"), (np.inf, "Infinity"), (-np.inf, "-Infinity")],
     )
     def test_get_end_time(self, value: float, encoded: IEEENumber):
         self.assert_time_response(
@@ -183,7 +185,8 @@ class TestNonFiniteFloat32Model:
         )
 
     @pytest.mark.parametrize(
-        "value, encoded", [(42.0, 42.0), (np.inf, "Infinity"), (-np.inf, "-Infinity")]
+        "value, encoded",
+        [(42.0, 42.0), (np.nan, "NaN"), (np.inf, "Infinity"), (-np.inf, "-Infinity")],
     )
     def test_get_current_time(self, value: float, encoded: IEEENumber):
         self.assert_time_response(
@@ -191,7 +194,8 @@ class TestNonFiniteFloat32Model:
         )
 
     @pytest.mark.parametrize(
-        "value, encoded", [(42.0, 42.0), (np.inf, "Infinity"), (-np.inf, "-Infinity")]
+        "value, encoded",
+        [(42.0, 42.0), (np.nan, "NaN"), (np.inf, "Infinity"), (-np.inf, "-Infinity")],
     )
     def test_get_time_step(self, value: float, encoded: IEEENumber):
         self.assert_time_response(
@@ -199,7 +203,8 @@ class TestNonFiniteFloat32Model:
         )
 
     @pytest.mark.parametrize(
-        "value, encoded", [(42.0, 42.0), (np.inf, "Infinity"), (-np.inf, "-Infinity")]
+        "value, encoded",
+        [(42.0, 42.0), (np.nan, "NaN"), (np.inf, "Infinity"), (-np.inf, "-Infinity")],
     )
     def test_update_until_ieee_double(self, value: float, encoded: IEEENumber):
         def handle_request(request: httpx.Request):
