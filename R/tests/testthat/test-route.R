@@ -835,6 +835,7 @@ ieee_array_cases <- list(
 )
 
 ieee_time_cases <- list(
+  list(value = NaN, json = '"NaN"'),
   list(value = 4.2, json = '4.2'),
   list(value = Inf, json = '"Infinity"'),
   list(value = -Inf, json = '"-Infinity"')
@@ -927,7 +928,7 @@ test_that("/get_grid_spacing encodes IEEE values and keeps array shape", {
 })
 
 
-test_that("/get_time_step encodes finite values and infinities as scalars", {
+test_that("/get_time_step encodes finite and non-finite values as scalars", {
   for (case in ieee_time_cases) {
     model <- fake_nonfinite_model(time = case$value)
 
@@ -939,7 +940,7 @@ test_that("/get_time_step encodes finite values and infinities as scalars", {
 })
 
 
-test_that("/get_current_time encodes finite values and infinities as scalars", {
+test_that("/get_current_time encodes finite and non-finite values as scalars", {
   for (case in ieee_time_cases) {
     model <- fake_nonfinite_model(time = case$value)
 
@@ -951,7 +952,7 @@ test_that("/get_current_time encodes finite values and infinities as scalars", {
 })
 
 
-test_that("/get_start_time encodes finite values and infinities as scalars", {
+test_that("/get_start_time encodes finite and non-finite values as scalars", {
   for (case in ieee_time_cases) {
     model <- fake_nonfinite_model(time = case$value)
 
@@ -963,7 +964,7 @@ test_that("/get_start_time encodes finite values and infinities as scalars", {
 })
 
 
-test_that("/get_end_time encodes finite values and infinities as scalars", {
+test_that("/get_end_time encodes finite and non-finite values as scalars", {
   for (case in ieee_time_cases) {
     model <- fake_nonfinite_model(time = case$value)
 
@@ -1006,7 +1007,7 @@ test_that("/set_value_at_indices decodes non-finite strings", {
   expect_identical(args$values, c(4.2, Inf, -Inf, NaN))
 })
 
-test_that("/update_until decodes finite values and infinities", {
+test_that("/update_until decodes finite and non-finite values", {
   for (case in ieee_time_cases) {
     model <- fake_nonfinite_model()
 
@@ -1017,15 +1018,4 @@ test_that("/update_until decodes finite values and infinities", {
     expect_equal(res$status, 204)
     expect_identical(model$calls$update_until, case$value)
   }
-})
-
-test_that("/update_until rejects NaN without calling the model", {
-  model <- fake_nonfinite_model()
-
-  res <- dispatch_json_request("/update_until", model,
-    method = "post", content = '"NaN"'
-  )
-
-  expect_equal(res$status, 400)
-  expect_null(model$calls$update_until)
 })

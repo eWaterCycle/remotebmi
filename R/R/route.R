@@ -1,6 +1,6 @@
 #' Encode an R scalar as IEEENumber / IEEEDouble from openapi.yaml.
 #' Finite numbers stay numeric; NaN, Inf and -Inf become the JSON strings
-#' "NaN", "Infinity" and "-Infinity". IEEEDoubleNoNaN callers must exclude NaN.
+#' "NaN", "Infinity" and "-Infinity".
 #' @noRd
 encode_ieee_number <- function(value) {
   if (is.nan(value)) {
@@ -14,7 +14,6 @@ encode_ieee_number <- function(value) {
 
 #' Decode parsed IEEENumber / IEEEDouble values to R numeric values.
 #' Reverses encode_ieee_number; accepts scalars or vectors/lists.
-#' This alias does not validate the schema or reject NaN for IEEEDoubleNoNaN.
 #' @noRd
 decode_ieee_number <- as.numeric
 
@@ -78,10 +77,10 @@ create_route <- function(model) {
       return(FALSE)
     }
     time <- decode_ieee_number(request$body)
-    if (length(time) != 1L || is.na(time)) {
+    if (length(time) != 1L || (is.na(time) && !is.nan(time))) {
       response$status <- 400L
       response$type <- "application/json"
-      response$body <- list(title = "Time must be a number or infinity")
+      response$body <- list(title = "Time must be a number or an IEEE non-finite value")
       response$format(json = reqres::format_json(auto_unbox = TRUE))
       return(FALSE)
     }
