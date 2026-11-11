@@ -435,3 +435,57 @@ class WithItemSizeZeroAndVarTypeFloat32Model(Float32Model):
 class WithItemSizeZeroAndUnknownVarType(WithItemSizeZeroAndVarTypeFloat32Model):
     def get_var_type(self, name):
         return "real"
+
+
+class TimeModel(GridModel):
+    def __init__(self):
+        super().__init__()
+        self.time = 42.0
+
+    def update_until(self, time: float) -> None:
+        self.time = time
+
+    def get_start_time(self) -> float:
+        return self.time
+
+    def get_end_time(self) -> float:
+        return self.time
+
+    def get_current_time(self) -> float:
+        return self.time
+
+    def get_time_step(self) -> float:
+        return self.time
+
+
+class ArrayGridModel(Rect3DGridModel):
+    def __init__(self):
+        super().__init__()
+        self.grid_values = np.array((0.0, 1.0, 2.0, 3.0))
+
+    def get_grid_spacing(self, grid: int, dest: np.ndarray) -> np.ndarray:
+        np.copyto(src=self.grid_values[: dest.size], dst=dest)
+        return dest
+
+    def get_grid_origin(self, grid: int, dest: np.ndarray) -> np.ndarray:
+        np.copyto(src=self.grid_values[: dest.size], dst=dest)
+        return dest
+
+    def get_grid_x(self, grid: int, dest: np.ndarray) -> np.ndarray:
+        np.copyto(src=self.grid_values[: dest.size], dst=dest)
+        return dest
+
+    def get_grid_y(self, grid: int, dest: np.ndarray) -> np.ndarray:
+        np.copyto(src=self.grid_values[: dest.size], dst=dest)
+        return dest
+
+    def get_grid_z(self, grid: int, dest: np.ndarray) -> np.ndarray:
+        np.copyto(src=self.grid_values[: dest.size], dst=dest)
+        return dest
+
+
+class NonFiniteFloat32Model(DTypeModel, TimeModel, ArrayGridModel):
+    def __init__(self):
+        super().__init__()
+        self.value = np.array((np.nan, np.inf, -np.inf, 42.0), dtype=self.dtype)
+        self.grid_values = np.array((np.nan, np.inf, -np.inf, 42.0))
