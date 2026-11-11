@@ -28,12 +28,15 @@ classifiers = [
 requires-python = ">=3.10"
 dependencies = [
     "bmipy",
-    "numpy", 
+    "numpy",
     # client
-    "httpx>=0.27.2",
+    "httpx[zstd]>=0.27.2",
+    "jsonschema",
+    "pyyaml",
     # server
     "connexion",
     "uvicorn",
+    "zstandard",
     # docker
     "docker",
 ]
@@ -49,6 +52,8 @@ dev = [
     "types-docker",
     "simplejson",
     "types-simplejson",
+    "types-jsonschema",
+    "types-pyyaml",
 ]
 
 [project.scripts]

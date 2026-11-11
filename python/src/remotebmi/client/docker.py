@@ -21,6 +21,7 @@ class BmiClientDocker(RemoteBmiClient):
         user: str | int = getuser(),
         remove: bool = False,
         delay: int = 5,
+        compression: bool = False,
     ):
         if isinstance(input_dirs, str):
             msg = (
@@ -64,7 +65,7 @@ class BmiClientDocker(RemoteBmiClient):
                 raise DeadContainerError(msg, exitcode, logs)
 
         url = f"http://{host}:{port}"
-        super().__init__(url)
+        super().__init__(url, compression=compression)
 
     def __del__(self) -> None:
         if hasattr(self, "container"):

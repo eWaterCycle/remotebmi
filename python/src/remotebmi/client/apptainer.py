@@ -20,6 +20,7 @@ class BmiClientApptainer(RemoteBmiClient):
         input_dirs: Iterable[str] = (),
         delay: int = 0,
         capture_logs: bool = True,
+        compression: bool = False,
     ):
         if isinstance(input_dirs, str):
             msg = (
@@ -75,7 +76,7 @@ class BmiClientApptainer(RemoteBmiClient):
                 self.logs(),
             )
         url = f"http://{host}:{port}"
-        super().__init__(url)
+        super().__init__(url, compression=compression)
 
     def __del__(self) -> None:
         if hasattr(self, "container"):
