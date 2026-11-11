@@ -4,7 +4,7 @@ import numpy as np
 from bmipy import Bmi
 from connexion import request
 
-from remotebmi.nonfinite import IEEENumber, decode, decode_many, encode, encode_many
+from remotebmi.nonfinite import IEEENumber, encode, encode_many
 from remotebmi.reserve import (
     reserve_grid_edge_nodes,
     reserve_grid_face_,
@@ -31,7 +31,7 @@ def update() -> None:
 
 
 def update_until(body: IEEENumber) -> None:
-    model().update_until(decode(body))
+    model().update_until(float(body))
 
 
 def finalize() -> None:
@@ -99,7 +99,7 @@ def get_value_at_indices(name: str, body: list[int]) -> list[IEEENumber]:
 
 def set_value(name: str, body: list) -> None:
     items = reserve_values(model(), name)
-    decode_many(body, dest=items)
+    items[:] = body
     model().set_value(name, items)
 
 
@@ -108,7 +108,7 @@ def set_value_at_indices(
 ) -> None:
     indices = np.array(body["indices"], dtype=int)
     items = reserve_values_at_indices(model(), name, indices)
-    decode_many(body["values"], dest=items)
+    items[:] = body["values"]
     model().set_value_at_indices(name, indices, items)
 
 
