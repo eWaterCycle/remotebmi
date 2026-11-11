@@ -1,7 +1,7 @@
 """Encode and decode non-finite BMI values for JSON exchange.
 
 Non-finite values use the strings defined by the IEEENumber schema in
-server/openapi.yaml. Finite values are preserved.
+openapi.yaml. Finite values are preserved.
 """
 
 from math import isnan

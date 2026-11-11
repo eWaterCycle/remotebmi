@@ -5,7 +5,6 @@
 import contextlib
 from collections.abc import AsyncIterator
 from os import environ
-from pathlib import Path
 from traceback import format_exception
 
 import uvicorn
@@ -16,6 +15,7 @@ from connexion.middleware import MiddlewarePosition
 from connexion.options import SwaggerUIOptions
 from connexion.resolver import RelativeResolver
 
+from remotebmi.openapi import get_openapi_path
 from remotebmi.server.build import from_env
 from remotebmi.server.compression import ValueCompressionMiddleware
 
@@ -40,11 +40,7 @@ def make_app(model: Bmi) -> AsyncApp:
         lifespan=lifespan_handler,
     )
 
-    openapi_path = Path(__file__).parent / "openapi.yaml"
-    if not openapi_path.is_file():
-        # Editable installs and source checkouts use the repository specification.
-        openapi_path = Path(__file__).resolve().parents[4] / "openapi.yaml"
-    app.add_api(openapi_path, resolver=RelativeResolver("remotebmi.server.api"))
+    app.add_api(get_openapi_path(), resolver=RelativeResolver("remotebmi.server.api"))
     # Decode requests before validation and compress responses afterward.
     app.add_middleware(
         ValueCompressionMiddleware,
