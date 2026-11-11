@@ -111,7 +111,7 @@ function update(req::HTTP.Request;)::Nothing
   return nothing
 end
 
-function update_until(req::HTTP.Request, body::IEEEDoubleNoNaN;)::Nothing
+function update_until(req::HTTP.Request, body::IEEEDouble;)::Nothing
   BMI.update_until(m, Float64(decode(body.value)))
   return nothing
 end
@@ -166,20 +166,20 @@ function set_value_at_indices(
   return nothing
 end
 
-function get_current_time(req::HTTP.Request;)::IEEEDoubleNoNaN
-  return IEEEDoubleNoNaN(encode(BMI.get_current_time(m)))
+function get_current_time(req::HTTP.Request;)::IEEEDouble
+  return IEEEDouble(encode(BMI.get_current_time(m)))
 end
 
-function get_end_time(req::HTTP.Request;)::IEEEDoubleNoNaN
-  return IEEEDoubleNoNaN(encode(BMI.get_end_time(m)))
+function get_end_time(req::HTTP.Request;)::IEEEDouble
+  return IEEEDouble(encode(BMI.get_end_time(m)))
 end
 
-function get_start_time(req::HTTP.Request;)::IEEEDoubleNoNaN
-  return IEEEDoubleNoNaN(encode(BMI.get_start_time(m)))
+function get_start_time(req::HTTP.Request;)::IEEEDouble
+  return IEEEDouble(encode(BMI.get_start_time(m)))
 end
 
-function get_time_step(req::HTTP.Request;)::IEEEDoubleNoNaN
-  return IEEEDoubleNoNaN(encode(BMI.get_time_step(m)))
+function get_time_step(req::HTTP.Request;)::IEEEDouble
+  return IEEEDouble(encode(BMI.get_time_step(m)))
 end
 
 function get_time_units(req::HTTP.Request;)::GetTimeUnitsResponse

@@ -47,7 +47,7 @@ The following server methods must be implemented:
     - *signature:* update(req::HTTP.Request;) -> Nothing
 - **update_until**
     - *invocation:* POST /update_until
-    - *signature:* update_until(req::HTTP.Request, body::IEEEDoubleNoNaN;) -> Nothing
+    - *signature:* update_until(req::HTTP.Request, body::IEEEDouble;) -> Nothing
 - **get_grid_x**
     - *invocation:* GET /get_grid_x/{grid}
     - *signature:* get_grid_x(req::HTTP.Request, grid::Int64;) -> Vector{IEEEDouble}
@@ -65,16 +65,16 @@ The following server methods must be implemented:
     - *signature:* set_value_at_indices(req::HTTP.Request, name::String, set_value_at_indices_request::SetValueAtIndicesRequest;) -> Nothing
 - **get_current_time**
     - *invocation:* GET /get_current_time
-    - *signature:* get_current_time(req::HTTP.Request;) -> IEEEDoubleNoNaN
+    - *signature:* get_current_time(req::HTTP.Request;) -> IEEEDouble
 - **get_end_time**
     - *invocation:* GET /get_end_time
-    - *signature:* get_end_time(req::HTTP.Request;) -> IEEEDoubleNoNaN
+    - *signature:* get_end_time(req::HTTP.Request;) -> IEEEDouble
 - **get_start_time**
     - *invocation:* GET /get_start_time
-    - *signature:* get_start_time(req::HTTP.Request;) -> IEEEDoubleNoNaN
+    - *signature:* get_start_time(req::HTTP.Request;) -> IEEEDouble
 - **get_time_step**
     - *invocation:* GET /get_time_step
-    - *signature:* get_time_step(req::HTTP.Request;) -> IEEEDoubleNoNaN
+    - *signature:* get_time_step(req::HTTP.Request;) -> IEEEDouble
 - **get_time_units**
     - *invocation:* GET /get_time_units
     - *signature:* get_time_units(req::HTTP.Request;) -> GetTimeUnitsResponse
@@ -194,7 +194,6 @@ export GetVarTypeResponse
 export GetVarUnitsResponse
 export IEEENumber
 export IEEEDouble
-export IEEEDoubleNoNaN
 export InitializeRequest
 export ProblemDetails
 export SetValueAtIndicesRequest

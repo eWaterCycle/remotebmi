@@ -97,7 +97,6 @@ Class | Method | HTTP request | Description
  - [GetVarUnitsResponse](docs/GetVarUnitsResponse.md)
  - [IEEENumber](docs/IEEENumber.md)
  - [IEEEDouble](docs/IEEEDouble.md)
- - [IEEEDoubleNoNaN](docs/IEEEDoubleNoNaN.md)
  - [InitializeRequest](docs/InitializeRequest.md)
  - [ProblemDetails](docs/ProblemDetails.md)
  - [SetValueAtIndicesRequest](docs/SetValueAtIndicesRequest.md)

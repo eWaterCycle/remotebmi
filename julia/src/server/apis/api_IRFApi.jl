@@ -84,7 +84,7 @@ end
 function update_until_read(handler)
   function update_until_read_handler(req::HTTP.Request)
     openapi_params = Dict{String, Any}()
-    openapi_params["body"] = OpenAPI.Servers.to_param_type(IEEEDoubleNoNaN, String(req.body))
+    openapi_params["body"] = OpenAPI.Servers.to_param_type(IEEEDouble, String(req.body))
     req.context[:openapi_params] = openapi_params
 
     return handler(req)

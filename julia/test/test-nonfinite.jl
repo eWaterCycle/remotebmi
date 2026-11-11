@@ -16,9 +16,9 @@ end
 
 @testset "IEEE model field types" begin
   for models in (RemoteBMI.Client.BmiClient, RemoteBMI.Server.BmiServer)
-    for name in (:IEEENumber, :IEEEDouble, :IEEEDoubleNoNaN)
+    for name in (:IEEENumber, :IEEEDouble)
       model = getproperty(models, name)
-      valid = name == :IEEEDoubleNoNaN ? (1.25, "Infinity", "-Infinity") : (1.25, "NaN", "Infinity", "-Infinity")
+      valid = (1.25, "NaN", "Infinity", "-Infinity")
       for value in valid
         @test model(value).value === value
         @test OpenAPI.from_json(model(), :value, value).value === value
@@ -29,9 +29,6 @@ end
         @test instance.value === value
       end
       invalid = ("invalid", "nan", "Inf", "1.0", "", true, false, NaN, Inf, -Inf)
-      if name == :IEEEDoubleNoNaN
-        invalid = (invalid..., "NaN")
-      end
       for value in invalid
         @test_throws ArgumentError model(value)
         @test_throws ArgumentError OpenAPI.from_json(model(), :value, value)
@@ -46,10 +43,7 @@ end
       end
     end
     @test models.IEEENumber(2^53 + 1).value === 2^53 + 1
-    for name in (:IEEEDouble, :IEEEDoubleNoNaN)
-      model = getproperty(models, name)
-      @test model(1).value === 1.0
-      @test OpenAPI.from_json(model(), :value, 1).value === 1.0
-    end
+    @test models.IEEEDouble(1).value === 1.0
+    @test OpenAPI.from_json(models.IEEEDouble(), :value, 1).value === 1.0
   end
 end

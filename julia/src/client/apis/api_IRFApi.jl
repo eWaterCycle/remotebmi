@@ -120,7 +120,7 @@ const _returntypes_update_until_IRFApi = Dict{Regex, Type}(
   Regex("^" * replace("0", "x" => ".") * "\$") => ProblemDetails,
 )
 
-function _oacinternal_update_until(_api::IRFApi, body::IEEEDoubleNoNaN; _mediaType = nothing)
+function _oacinternal_update_until(_api::IRFApi, body::IEEEDouble; _mediaType = nothing)
   _ctx = OpenAPI.Clients.Ctx(
     _api.client,
     "POST",
@@ -140,16 +140,16 @@ end
 @doc raw"""Updates the model to a particular time
 
 Params:
-- body::IEEEDoubleNoNaN (required)
+- body::IEEEDouble (required)
 
 Return: Nothing, OpenAPI.Clients.ApiResponse
 """
-function update_until(_api::IRFApi, body::IEEEDoubleNoNaN; _mediaType = nothing)
+function update_until(_api::IRFApi, body::IEEEDouble; _mediaType = nothing)
   _ctx = _oacinternal_update_until(_api, body; _mediaType = _mediaType)
   return OpenAPI.Clients.exec(_ctx)
 end
 
-function update_until(_api::IRFApi, response_stream::Channel, body::IEEEDoubleNoNaN; _mediaType = nothing)
+function update_until(_api::IRFApi, response_stream::Channel, body::IEEEDouble; _mediaType = nothing)
   _ctx = _oacinternal_update_until(_api, body; _mediaType = _mediaType)
   return OpenAPI.Clients.exec(_ctx, response_stream)
 end

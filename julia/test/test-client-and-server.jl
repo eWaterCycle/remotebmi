@@ -124,7 +124,7 @@ end
     raw_model = RemoteBMI.Server.m
     raw_get(path) = JSON.parse(String(HTTP.get(model.base_url * path).body))
     number_cases = ((NaN, "NaN"), (Inf, "Infinity"), (-Inf, "-Infinity"), (1.25, 1.25))
-    time_cases = ((Inf, "Infinity"), (-Inf, "-Infinity"), (2.5, 2.5))
+    time_cases = ((NaN, "NaN"), (Inf, "Infinity"), (-Inf, "-Infinity"), (2.5, 2.5))
 
     @testset "get_value" begin
       for (value, encoded) in number_cases
@@ -247,7 +247,7 @@ end
         raw_model.current = value
 
         @test raw_get("/get_current_time") == encoded
-        @test BMI.get_current_time(model) == value
+        @test isequal(BMI.get_current_time(model), value)
       end
     end
 
@@ -256,7 +256,7 @@ end
         raw_model.start = value
 
         @test raw_get("/get_start_time") == encoded
-        @test BMI.get_start_time(model) == value
+        @test isequal(BMI.get_start_time(model), value)
       end
     end
 
@@ -265,7 +265,7 @@ end
         raw_model.stop = value
 
         @test raw_get("/get_end_time") == encoded
-        @test BMI.get_end_time(model) == value
+        @test isequal(BMI.get_end_time(model), value)
       end
     end
 
@@ -274,7 +274,7 @@ end
         raw_model.step = value
 
         @test raw_get("/get_time_step") == encoded
-        @test BMI.get_time_step(model) == value
+        @test isequal(BMI.get_time_step(model), value)
       end
     end
 

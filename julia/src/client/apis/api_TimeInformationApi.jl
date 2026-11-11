@@ -12,7 +12,7 @@ This can be used to construct the `OpenAPI.Clients.Client` instance.
 basepath(::Type{TimeInformationApi}) = "http://localhost:50051"
 
 const _returntypes_get_current_time_TimeInformationApi = Dict{Regex, Type}(
-  Regex("^" * replace("200", "x" => ".") * "\$") => IEEEDoubleNoNaN,
+  Regex("^" * replace("200", "x" => ".") * "\$") => IEEEDouble,
   Regex("^" * replace("0", "x" => ".") * "\$") => ProblemDetails,
 )
 
@@ -33,7 +33,7 @@ end
 
 Params:
 
-Return: IEEEDoubleNoNaN, OpenAPI.Clients.ApiResponse
+Return: IEEEDouble, OpenAPI.Clients.ApiResponse
 """
 function get_current_time(_api::TimeInformationApi; _mediaType = nothing)
   _ctx = _oacinternal_get_current_time(_api; _mediaType = _mediaType)
@@ -46,7 +46,7 @@ function get_current_time(_api::TimeInformationApi, response_stream::Channel; _m
 end
 
 const _returntypes_get_end_time_TimeInformationApi = Dict{Regex, Type}(
-  Regex("^" * replace("200", "x" => ".") * "\$") => IEEEDoubleNoNaN,
+  Regex("^" * replace("200", "x" => ".") * "\$") => IEEEDouble,
   Regex("^" * replace("0", "x" => ".") * "\$") => ProblemDetails,
 )
 
@@ -67,7 +67,7 @@ end
 
 Params:
 
-Return: IEEEDoubleNoNaN, OpenAPI.Clients.ApiResponse
+Return: IEEEDouble, OpenAPI.Clients.ApiResponse
 """
 function get_end_time(_api::TimeInformationApi; _mediaType = nothing)
   _ctx = _oacinternal_get_end_time(_api; _mediaType = _mediaType)
@@ -80,7 +80,7 @@ function get_end_time(_api::TimeInformationApi, response_stream::Channel; _media
 end
 
 const _returntypes_get_start_time_TimeInformationApi = Dict{Regex, Type}(
-  Regex("^" * replace("200", "x" => ".") * "\$") => IEEEDoubleNoNaN,
+  Regex("^" * replace("200", "x" => ".") * "\$") => IEEEDouble,
   Regex("^" * replace("0", "x" => ".") * "\$") => ProblemDetails,
 )
 
@@ -101,7 +101,7 @@ end
 
 Params:
 
-Return: IEEEDoubleNoNaN, OpenAPI.Clients.ApiResponse
+Return: IEEEDouble, OpenAPI.Clients.ApiResponse
 """
 function get_start_time(_api::TimeInformationApi; _mediaType = nothing)
   _ctx = _oacinternal_get_start_time(_api; _mediaType = _mediaType)
@@ -114,7 +114,7 @@ function get_start_time(_api::TimeInformationApi, response_stream::Channel; _med
 end
 
 const _returntypes_get_time_step_TimeInformationApi = Dict{Regex, Type}(
-  Regex("^" * replace("200", "x" => ".") * "\$") => IEEEDoubleNoNaN,
+  Regex("^" * replace("200", "x" => ".") * "\$") => IEEEDouble,
   Regex("^" * replace("0", "x" => ".") * "\$") => ProblemDetails,
 )
 
@@ -135,7 +135,7 @@ end
 
 Params:
 
-Return: IEEEDoubleNoNaN, OpenAPI.Clients.ApiResponse
+Return: IEEEDouble, OpenAPI.Clients.ApiResponse
 """
 function get_time_step(_api::TimeInformationApi; _mediaType = nothing)
   _ctx = _oacinternal_get_time_step(_api; _mediaType = _mediaType)

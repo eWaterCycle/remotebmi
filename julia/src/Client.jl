@@ -40,7 +40,7 @@ end
 
 function BMI.update_until(m::BMIClient, time::Float64)
   api = IRFApi(OpenAPI.Clients.Client(m.base_url))
-  data, response = update_until(api, IEEEDoubleNoNaN(encode(time)))
+  data, response = update_until(api, IEEEDouble(encode(time)))
   return nothing
 end
 
