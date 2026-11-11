@@ -50,9 +50,7 @@ def make_fake_client(
     with httpx.Client(
         base_url="http://testserver", transport=httpx.MockTransport(handler)
     ) as httpclient:
-        yield RemoteBmiClient(
-            base_url="http://testserver", client=httpclient, compression="never"
-        )
+        yield RemoteBmiClient(base_url="http://testserver", client=httpclient)
 
 
 class TestNonFiniteFloat32Model:

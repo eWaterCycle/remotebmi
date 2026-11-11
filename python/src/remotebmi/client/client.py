@@ -9,11 +9,7 @@ from httpx import Client, Limits
 from numpy import ndarray
 
 from remotebmi.capabilities import RemotebmiCapabilities
-from remotebmi.client.compression import (
-    Compression,
-    CompressionClient,
-    validate_compression,
-)
+from remotebmi.client.compression import CompressionClient
 from remotebmi.nonfinite import decode_many, encode, encode_many
 
 from .utils import validate_url
@@ -26,7 +22,7 @@ class RemoteBmiClient(Bmi):
         timeout: int = 60 * 60 * 24,
         max_keepalive_connections: int = 0,
         client: Client | None = None,
-        compression: Compression = "auto",
+        compression: bool = False,
     ):
         """RemoteBmiClient constructor
 
@@ -38,13 +34,12 @@ class RemoteBmiClient(Bmi):
                 connections" allow reusing of connections which is more efficient.
                 However, the R server implementation can break when they are used.
             client: An optional httpx.Client instance to use. Mainly used for testing.
-            compression: Value-transfer compression: auto negotiates server support,
-                never disables it, and always requires it. Defaults to auto.
+            compression: Enable zstd value-transfer compression when supported by
+                the server, falling back to uncompressed transfers.
 
         Raises:
             ValueError: If the base_url is invalid.
         """
-        validate_compression(compression)
         validate_url(base_url)
         self.compression = compression
         # In some Python environments the reusing connection causes `illegal status line: bytesarray(b'14')` error
@@ -74,25 +69,18 @@ class RemoteBmiClient(Bmi):
         response.raise_for_status()
         return cast("RemotebmiCapabilities", response.json())
 
-    def _use_zstd(self) -> bool:
-        if self.compression == "never":
+    def _should_compress(self) -> bool:
+        if not self.compression:
             return False
         capabilities = self.capabilities
-        supports_zstd = (
-            capabilities is not None and capabilities.get("supports_zstd") is True
-        )
-        if self.compression == "always" and not supports_zstd:
-            msg = "Server does not support zstd compression"
-            raise RuntimeError(msg)
-        return supports_zstd
+        return capabilities is not None and capabilities.get("supports_zstd") is True
 
     @contextmanager
     def _compression_client(self) -> Generator[CompressionClient, None, None]:
         with ExitStack() as responses:
             yield CompressionClient(
                 client=self.client,
-                compress=self._use_zstd(),
-                require_compressed_response=self.compression == "always",
+                compress=self._should_compress(),
                 responses=responses,
             )
 

@@ -3,7 +3,6 @@
 
 import sys
 from importlib.metadata import version
-from typing import Literal
 
 import numpy as np
 import pytest
@@ -500,16 +499,15 @@ class TestCompression:
     @pytest.mark.parametrize(
         "compression, accept_encoding, content_encoding",
         [
-            ("auto", "zstd", "zstd"),
-            ("never", "identity", None),
-            ("always", "zstd", "zstd"),
+            (True, "zstd", "zstd"),
+            (False, "identity", None),
         ],
     )
     def test_value_transfers(
         self,
         fake_app: AsyncApp,
         model: Float32Model,
-        compression: Literal["auto", "never", "always"],
+        compression: bool,
         accept_encoding: str,
         content_encoding: str | None,
     ):
