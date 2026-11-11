@@ -31,6 +31,8 @@ dependencies = [
     "numpy",
     # client
     "httpx[zstd]>=0.27.2",
+    "jsonschema",
+    "pyyaml",
     # server
     "connexion",
     "uvicorn",
@@ -50,6 +52,8 @@ dev = [
     "types-docker",
     "simplejson",
     "types-simplejson",
+    "types-jsonschema",
+    "types-pyyaml",
 ]
 
 [project.scripts]

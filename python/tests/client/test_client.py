@@ -10,8 +10,18 @@ import pytest
 import zstandard
 from numpy.testing import assert_array_equal
 
+from remotebmi.capabilities import RemotebmiCapabilities
 from remotebmi.client.client import RemoteBmiClient
 from remotebmi.nonfinite import IEEENumber
+
+CAPABILITIES = RemotebmiCapabilities(
+    bmi_version="2.0",
+    remotebmi_version="0.1.1",
+    supports_binary=False,
+    index_type="int64",
+    byte_order="little",
+    supports_zstd=True,
+)
 
 
 @pytest.mark.parametrize(
@@ -280,8 +290,8 @@ class TestCompression:
         "response, expected",
         [
             (
-                httpx.Response(200, json={"supports_zstd": False}),
-                {"supports_zstd": False},
+                httpx.Response(200, json={**CAPABILITIES, "supports_zstd": False}),
+                {**CAPABILITIES, "supports_zstd": False},
             ),
             (httpx.Response(404), None),
         ],
@@ -356,8 +366,7 @@ class TestCompression:
     @pytest.mark.parametrize(
         "capabilities",
         [
-            httpx.Response(200, json={"supports_zstd": False}),
-            httpx.Response(200, json={}),
+            httpx.Response(200, json={**CAPABILITIES, "supports_zstd": False}),
             httpx.Response(404),
         ],
     )
@@ -429,7 +438,7 @@ class TestCompression:
 
     def test_compressed_indexed_get(self):
         responses = [
-            httpx.Response(200, json={"supports_zstd": True}),
+            httpx.Response(200, json=CAPABILITIES),
             self.compressed_response([2.0]),
         ]
         with self.make_client(responses, compression=True) as (client, requests, _):
@@ -458,7 +467,7 @@ class TestCompression:
 
     def test_compressed_setters_accept_no_content_response(self):
         responses = [
-            httpx.Response(200, json={"supports_zstd": True}),
+            httpx.Response(200, json=CAPABILITIES),
             httpx.Response(204),
             httpx.Response(204),
         ]
@@ -495,7 +504,7 @@ class TestCompression:
 
     def test_enabled_accepts_uncompressed_value_response(self):
         responses = [
-            httpx.Response(200, json={"supports_zstd": True}),
+            httpx.Response(200, json=CAPABILITIES),
             httpx.Response(200, json=[1.0]),
         ]
         with self.make_client(responses, compression=True) as (client, _, _):
@@ -503,7 +512,7 @@ class TestCompression:
 
     def test_enabled_propagates_value_error_without_retry(self):
         responses = [
-            httpx.Response(200, json={"supports_zstd": True}),
+            httpx.Response(200, json=CAPABILITIES),
             httpx.Response(500),
         ]
         with self.make_client(responses, compression=True) as (client, requests, _):
@@ -515,7 +524,10 @@ class TestCompression:
         "mode, capabilities",
         [
             (False, []),
-            (True, [httpx.Response(200, json={"supports_zstd": False})]),
+            (
+                True,
+                [httpx.Response(200, json={**CAPABILITIES, "supports_zstd": False})],
+            ),
             (True, [httpx.Response(404)]),
         ],
     )
@@ -551,7 +563,7 @@ class TestCompression:
 
     def test_setter_error_is_not_retried(self):
         responses = [
-            httpx.Response(200, json={"supports_zstd": True}),
+            httpx.Response(200, json=CAPABILITIES),
             httpx.Response(500),
         ]
         with self.make_client(responses, compression=True) as (client, requests, _):

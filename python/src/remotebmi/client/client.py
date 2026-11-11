@@ -1,14 +1,13 @@
 from collections.abc import Generator
 from contextlib import ExitStack, contextmanager
 from functools import cached_property
-from typing import cast
 
 import numpy as np
 from bmipy import Bmi
 from httpx import Client, Limits
 from numpy import ndarray
 
-from remotebmi.capabilities import RemotebmiCapabilities
+from remotebmi.capabilities import RemotebmiCapabilities, parse_capabilities
 from remotebmi.client.compression import CompressionClient
 from remotebmi.nonfinite import decode_many, encode, encode_many
 
@@ -67,7 +66,7 @@ class RemoteBmiClient(Bmi):
         if response.status_code == 404:
             return None
         response.raise_for_status()
-        return cast("RemotebmiCapabilities", response.json())
+        return parse_capabilities(response.json())
 
     def _should_compress(self) -> bool:
         if not self.compression:
