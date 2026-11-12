@@ -28,6 +28,26 @@ Documentation for the available implementations can be found at:
 
 For the OpenAPI specification [reference documentation](https://redocly.github.io/redoc/?url=https://github.com/eWaterCycle/remotebmi/raw/main/openapi.yaml) is available.
 
+### Secure communication
+
+Use an ssh tunnel to securely communicate with the remote BMI server.
+
+For example, to forward local port 8000 to the remote server's port 8000:
+
+```bash
+ssh -L 8000:localhost:8000 user@remotehost
+```
+
+### Compression
+
+Over slow Internet connections, it is recommended to use compression to reduce the amount of data transferred.
+
+With ssh you can enable compression by using the `-C` flag, for example:
+
+```bash
+ssh -C 8000:localhost:8000 user@remotehost
+```
+
 ## Repository structure
 
 This repository is a monorepo containing packages for different languages.
