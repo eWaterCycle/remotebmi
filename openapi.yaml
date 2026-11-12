@@ -50,7 +50,7 @@ tags:
     description: >
       Paths not part of BMI spec, for remoteBMI server/client communication
       only.
-      Mainly used for compatibility checks.    
+      Mainly used for compatibility checks.
 paths:
   /initialize:
     post:
@@ -599,7 +599,7 @@ paths:
           schema:
             $ref: "#/components/schemas/VarName"
       tags:
-        - Getters        
+        - Getters
   /get_value_at_indices/{name}:
     post:
       operationId: get_value_at_indices
@@ -636,7 +636,8 @@ paths:
   /get_value_at_indices_binary/{name}:
     post:
       operationId: get_value_at_indices_binary
-      description: Get the value of a variable at specific indices as binary stream.
+      description: >
+        Get the value of a variable at specific indices as binary stream.
       externalDocs:
         url: https://bmi.readthedocs.io/en/stable/#get-value-at-indices
       responses:
@@ -739,7 +740,7 @@ paths:
                 See variable information and remotebmi capabilities for details
                 on the data format.
       tags:
-        - Setters        
+        - Setters
   /set_value_at_indices/{name}:
     post:
       operationId: set_value_at_indices
@@ -772,7 +773,8 @@ paths:
   /set_value_at_indices_binary/{name}:
     post:
       operationId: set_value_at_indices_binary
-      description: Set the value of a variable at specific indices as binary data.
+      description: >
+        Set the value of a variable at specific indices as binary data.
       externalDocs:
         url: https://bmi.readthedocs.io/en/stable/#set-value-at-indices
       responses:
@@ -1289,7 +1291,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProblemDetails"
       tags:
-        - RemoteBMI        
+        - RemoteBMI
 components:
   schemas:
     RemotebmiCapabilities:
