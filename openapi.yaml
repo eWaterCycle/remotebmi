@@ -1338,6 +1338,7 @@ components:
       example: 1.0
       oneOf:
         - type: number
+        - type: boolean
         - type: string
           description: Non-finite IEEE 754 floating-point values.
           enum:
@@ -1463,7 +1464,7 @@ components:
           description: |
             Element type used for binary values:
 
-            - `binary32` and `binary64` are IEEE 754
+            - `binary16`, `binary32` and `binary64` are IEEE 754
               binary interchange formats with the indicated width in bits.
             - `float` and `double` are legacy aliases for `binary32` and
               `binary64`, respectively.
@@ -1493,6 +1494,7 @@ components:
           enum:
             - float
             - double
+            - binary16
             - binary32
             - binary64
             - bool

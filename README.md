@@ -38,6 +38,8 @@ For example, to forward local port 8000 to the remote server's port 8000:
 ssh -L 8000:localhost:8000 user@remotehost
 ```
 
+For Kubernetes deployments, you can use [port forwarding](https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/) to securely communicate with the remote BMI server.
+
 ### Compression
 
 Over slow Internet connections, it is recommended to use compression to reduce the amount of data transferred.
@@ -47,6 +49,8 @@ With ssh you can enable compression by using the `-C` flag, for example:
 ```bash
 ssh -C 8000:localhost:8000 user@remotehost
 ```
+
+For publicly accessible Kubernetes deployments, you can use an [ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) to compress data.
 
 ## Repository structure
 
